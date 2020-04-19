@@ -1,19 +1,27 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { StyleSheet, View, Button } from "react-native";
+
+import config from "./config";
+
+import NavigationContainer from "./navigation/NavigationContainer";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
-}
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `http://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&i=batman`
+  //     );
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  //     if (!response.ok) {
+  //       throw new Error("failed response");
+  //     }
+
+  //     const resData = await response.json();
+  //     console.log(resData);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+  return <NavigationContainer />;
+}
