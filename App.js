@@ -1,27 +1,22 @@
 import React from "react";
-import { StyleSheet, View, Button } from "react-native";
+import MoviesReducer from "./store/reducers/MoviesReducer";
 
-import config from "./config";
+import { combineReducers, applyMiddleware, createStore } from "redux";
+import ReduxThunk from "redux-thunk";
+import { Provider } from "react-redux";
 
 import NavigationContainer from "./navigation/NavigationContainer";
 
 export default function App() {
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `http://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&i=batman`
-  //     );
+  const rootReducer = combineReducers({
+    Movies: MoviesReducer,
+  });
 
-  //     if (!response.ok) {
-  //       throw new Error("failed response");
-  //     }
+  const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
-  //     const resData = await response.json();
-  //     console.log(resData);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
-  return <NavigationContainer />;
+  return (
+    <Provider store={store}>
+      <NavigationContainer />
+    </Provider>
+  );
 }
