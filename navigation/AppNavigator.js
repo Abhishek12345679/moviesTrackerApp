@@ -1,10 +1,16 @@
 import React from "react";
-
+import { Text } from "react-native";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 
-import MoviesScreen from "../screens/MoviesScreen";
-import MoviesDetailsScreen from "../screens/MoviesDetailScreen";
-import SearchScreen from "../screens/SearchScreen";
+import MoviesScreen, {
+  screenOptions as MovieScreenOptions,
+} from "../screens/MoviesScreen";
+import MoviesDetailsScreen, {
+  screenOptions as MoviesDetailScreenOptions,
+} from "../screens/MoviesDetailScreen";
+import SearchScreen, {
+  screenOptions as SearchScreenOptions,
+} from "../screens/SearchScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 
 import { createStackNavigator } from "@react-navigation/stack";
@@ -12,25 +18,27 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const defaultStackNavigationOptions = {
   headerStyle: {
-    backgroundColor: "#121212",
+    backgroundColor: "#fff",
     shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
   },
   headerTitleStyle: {
     //   fontFamily: "standard-apple-bold",
     fontSize: 20,
   },
-  headerTintColor: "white",
+  headerTintColor: "#000",
   headerBackTitle: "Back",
 };
 
 const defaultBottomTabNavigationOptions = {
-  defaultNavigationOptions: {
-    tabBarOptions: {
-      activeTintColor: "#fff",
-      style: { backgroundColor: "#ffffff", height: 20 },
-      inactiveTintColor: "#000",
-    },
-  },
+  activeTintColor: "#000",
+  style: { backgroundColor: "#fff", height: 50 },
+  inactiveTintColor: "#fff",
+  showLabel: false,
+  shadowColor: "#fff",
 };
 
 const MoviesScreenStackNavigator = createStackNavigator();
@@ -43,10 +51,12 @@ const moviesScreenNavigator = () => {
       <MoviesScreenStackNavigator.Screen
         name="MovieScreen"
         component={MoviesScreen}
+        options={MovieScreenOptions}
       />
       <MoviesScreenStackNavigator.Screen
         name="MoviesDetailsScreen"
         component={MoviesDetailsScreen}
+        options={MoviesDetailScreenOptions}
       />
     </MoviesScreenStackNavigator.Navigator>
   );
@@ -62,6 +72,12 @@ const searchScreenNavigator = () => {
       <SearchScreenStackNavigator.Screen
         name="SearchScreen"
         component={SearchScreen}
+        options={SearchScreenOptions}
+      />
+      <SearchScreenStackNavigator.Screen
+        name="MoviesDetailsScreen"
+        component={MoviesDetailsScreen}
+        options={MoviesDetailScreenOptions}
       />
     </SearchScreenStackNavigator.Navigator>
   );
@@ -88,31 +104,28 @@ const BottomNavigationBar = createBottomTabNavigator();
 export const AppNavigator = () => {
   return (
     <BottomNavigationBar.Navigator
-      screenOptions={{
-        activeTintColor: "#fff",
-        style: { backgroundColor: "#000", height: 0 },
-        inactiveTintColor: "#000",
-      }}
+      tabBarOptions={defaultBottomTabNavigationOptions}
     >
       <BottomNavigationBar.Screen
         name="MoviesScreenNavigator"
         component={moviesScreenNavigator}
+        tabBarOptions={{ showLabel: false }}
         options={{
-          tabBarLabel: "Products",
           tabBarIcon: ({ focused, size }) => (
-            <AntDesign
-              name="home"
-              size={focused ? size + 5 : size}
-              color={focused ? "#000" : "#121212"}
-            />
+            <Text
+              style={{ fontFamily: "apple-bold", fontSize: focused ? 20 : 15 }}
+            >
+              M
+            </Text>
           ),
+          showLabel: false,
         }}
       />
       <BottomNavigationBar.Screen
         name="SearchScreenNavigator"
         component={searchScreenNavigator}
         options={{
-          tabBarLabel: "Search",
+          tabBarLabel: "sdsd",
           tabBarIcon: ({ focused, color, size }) => (
             <AntDesign
               name="search1"
@@ -127,7 +140,6 @@ export const AppNavigator = () => {
         name="profileScreenNavigator"
         component={ProfileScreenNavigator}
         options={{
-          tabBarLabel: "Products",
           tabBarIcon: ({ focused, color, size }) => (
             <MaterialCommunityIcons
               name="human-greeting"

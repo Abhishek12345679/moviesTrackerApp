@@ -10,7 +10,8 @@ import {
 const MovieItem = (props) => {
   return (
     <TouchableOpacity
-      style={styles.movieItem}
+      style={{ ...styles.movieItem, ...props.style }}
+      activeOpacity={0.85}
       onPress={props.onPress}
     >
       <ImageBackground
@@ -53,22 +54,22 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 10,
     justifyContent: "flex-end",
-    overflow:'hidden'
+    overflow: "hidden",
   },
   footer: {
-    marginStart: 5,
     flexDirection: "row",
     justifyContent: "space-between",
-    margin: 10,
     backgroundColor: "#000",
-    opacity: 0.8,
+    opacity: 0.5,
   },
   description: {
     flexDirection: "column",
+    marginBottom: 5,
   },
   text: {
     color: "#fff",
-    marginVertical: 1,
+    marginStart: 10,
+    fontFamily: "apple-regular",
   },
 });
 
