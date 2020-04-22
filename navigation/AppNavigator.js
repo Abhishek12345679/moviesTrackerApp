@@ -11,7 +11,12 @@ import MoviesDetailsScreen, {
 import SearchScreen, {
   screenOptions as SearchScreenOptions,
 } from "../screens/SearchScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import GenreScreen, {
+  screenOptions as GenreScreenOptions,
+} from "../screens/GenreScreen";
+import ProfileScreen, {
+  screenOptions as ProfileScreenOptions,
+} from "../screens/ProfileScreen";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -19,14 +24,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const defaultStackNavigationOptions = {
   headerStyle: {
     backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
   },
   headerTitleStyle: {
-    //   fontFamily: "standard-apple-bold",
+    fontFamily: "apple-bold",
     fontSize: 20,
   },
   headerTintColor: "#000",
@@ -57,6 +57,11 @@ const moviesScreenNavigator = () => {
         name="MoviesDetailsScreen"
         component={MoviesDetailsScreen}
         options={MoviesDetailScreenOptions}
+      />
+      <MoviesScreenStackNavigator.Screen
+        name="GenreScreen"
+        component={GenreScreen}
+        options={GenreScreenOptions}
       />
     </MoviesScreenStackNavigator.Navigator>
   );
@@ -93,6 +98,7 @@ const ProfileScreenNavigator = () => {
       <ProfileScreenStackNavigator.Screen
         name="ProfileScreen"
         component={ProfileScreen}
+        options={ProfileScreenOptions}
       />
     </ProfileScreenStackNavigator.Navigator>
   );

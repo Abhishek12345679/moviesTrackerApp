@@ -1,10 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const ProfileScreen = (props) => {
+const GenreScreen = (props) => {
   return (
     <View style={styles.screen}>
-      <Text></Text>
     </View>
   );
 };
@@ -17,9 +16,10 @@ const styles = StyleSheet.create({
 });
 
 export const screenOptions = (navData) => {
+  const headerTitle = navData.route.params.GenreName;
   return {
-    headerTitle: "Profile",
+    headerTitle: headerTitle,
   };
 };
 
-export default ProfileScreen;
+export default GenreScreen;

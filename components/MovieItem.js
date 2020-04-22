@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
   movieItem: {
     width: 200,
     height: 200,
-    borderRadius: 10,
     shadowColor: "#000",
     shadowOpacity: 0.7,
     shadowOffset: {
@@ -61,15 +60,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "#000",
     opacity: 0.5,
+    height:45,
+    alignItems:'center'
   },
   description: {
     flexDirection: "column",
     marginBottom: 5,
   },
   text: {
-    color: "#fff",
+    color: "#FFF",
     marginStart: 10,
-    fontFamily: "apple-regular",
+    fontFamily: "apple-bold",
   },
 });
 

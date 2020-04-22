@@ -46,10 +46,16 @@ export const loadTrendingMovies = () => {
 };
 
 export const loadNewReleases = (MovieTitle) => {
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
   return async (dispatch) => {
     try {
+      // const response = await fetch(
+      //   `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=${MovieTitle}`
+      // );
       const response = await fetch(
-        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=${MovieTitle}`
+        `https://api.themoviedb.org/3/trending/all/${"week"}?api_key=${
+          config.TMDB_API_KEY
+        }`
       );
 
       if (!response.ok) {
@@ -61,16 +67,32 @@ export const loadNewReleases = (MovieTitle) => {
 
       const loadedMovies = [];
 
-      for (let i = 0; i <= 2; i++) {
+      // for (let i = 0; i <= 2; i++) {
+      //   loadedMovies.push(
+      //     new Movie(
+      //       resData.Search[i].imdbID,
+      //       resData.Search[i].Title,
+      //       resData.Search[i].Poster,
+      //       resData.Search[i].Year
+      //     )
+      //   );
+      // }
+
+      for (let i = 0; i < 5; i++) {
         loadedMovies.push(
           new Movie(
-            resData.Search[i].imdbID,
-            resData.Search[i].Title,
-            resData.Search[i].Poster,
-            resData.Search[i].Year
+            resData.results[i].id.toString(),
+            resData.results[i].media_type === "movie"
+              ? resData.results[i].title
+              : resData.results[i].name,
+            posterBaseUrl + resData.results[i].poster_path,
+            resData.results[i].media_type === "movie"
+              ? resData.results[i].release_date
+              : resData.results[i].first_air_date
           )
         );
       }
+
       dispatch({ type: LOAD_NEW_RELEASES, new_releases: loadedMovies });
     } catch (err) {
       console.log(err);

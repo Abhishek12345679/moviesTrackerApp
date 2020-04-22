@@ -23,7 +23,10 @@ const styles = StyleSheet.create({
 });
 
 export const screenOptions = (navData) => {
-  const title = navData.route.params.movieTitle;
+  let title = navData.route.params.movieTitle;
+  if (title.length > 18) {
+    title = title.substr(0, 18) + "...";
+  }
   return {
     headerTitle: title,
   };

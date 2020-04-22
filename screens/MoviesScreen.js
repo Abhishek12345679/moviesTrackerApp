@@ -7,11 +7,11 @@ import {
   Dimensions,
   ScrollView,
   StatusBar,
+  TouchableOpacity,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import MovieItem from "../components/MovieItem";
-
 import { useSelector, useDispatch } from "react-redux";
-
 import * as MoviesAction from "../store/actions/MoviesAction";
 
 const MoviesScreen = (props) => {
@@ -25,16 +25,28 @@ const MoviesScreen = (props) => {
 
   const dispatch = useDispatch();
 
+  const genres = [
+    { id: 0, genreName: "Mystery", genreColor: "#1abc9c" },
+    { id: 1, genreName: "Horror", genreColor: "#34495e" },
+    { id: 2, genreName: "K-Drama", genreColor: "#2980b9" },
+    { id: 3, genreName: "Anime", genreColor: "#d35400" },
+  ];
+
   useEffect(() => {
     dispatch(MoviesAction.loadTrendingMovies());
     dispatch(MoviesAction.loadNewReleases("dog"));
   }, [dispatch]);
 
   return (
-    <View style={styles.screen}>
+    <ScrollView style={styles.screen} showsVerticalScrollIndicator={false}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.headerCont}>
-        <Text style={styles.headerText}>Trending</Text>
+        <Text style={styles.headerText}>Movies You Viewed</Text>
+
+        <View style={{ flexDirection: "row", marginEnd: 15 }}>
+          <Text style={styles.headerText}>see all</Text>
+          <Ionicons name="ios-arrow-forward" size={25} color="#000" />
+        </View>
       </View>
       <View>
         <FlatList
@@ -51,6 +63,7 @@ const MoviesScreen = (props) => {
                   name: "MoviesDetailsScreen",
                   params: {
                     movieTitle: itemData.item.title,
+                    posterUrl: itemData.item.posterUrl,
                   },
                 });
               }}
@@ -60,7 +73,12 @@ const MoviesScreen = (props) => {
       </View>
       <View>
         <View style={styles.headerCont}>
-          <Text style={styles.headerText}>New Releases</Text>
+          <Text style={styles.headerText}>Trending</Text>
+
+          <View style={{ flexDirection: "row", marginEnd: 15 }}>
+            <Text style={styles.headerText}>see all</Text>
+            <Ionicons name="ios-arrow-forward" size={25} color="#000" />
+          </View>
         </View>
         <FlatList
           horizontal={true}
@@ -72,12 +90,63 @@ const MoviesScreen = (props) => {
               movieTitle={itemData.item.title}
               posterUrl={itemData.item.posterUrl}
               year={itemData.item.year}
-              onPress={() => {}}
+              onPress={() => {
+                props.navigation.navigate({
+                  name: "MoviesDetailsScreen",
+                  params: {
+                    movieTitle: itemData.item.title,
+                    posterUrl: itemData.item.posterUrl,
+                  },
+                });
+              }}
             />
           )}
         />
       </View>
-    </View>
+
+      <View>
+        <View style={styles.headerCont}>
+          <Text style={styles.headerText}>Genre</Text>
+
+          <View style={{ flexDirection: "row", marginEnd: 15 }}>
+            <Text style={styles.headerText}>see all</Text>
+            <Ionicons name="ios-arrow-forward" size={25} color="#000" />
+          </View>
+        </View>
+        <FlatList
+          scrollEnabled={false}
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "space-around",
+          }}
+          numColumns={2}
+          horizontal={false}
+          data={genres}
+          keyExtractor={(item) => item.id}
+          renderItem={(itemData) => (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => {
+                props.navigation.navigate({
+                  name: "GenreScreen",
+                  params: {
+                    GenreName: itemData.item.genreName,
+                  },
+                });
+              }}
+              style={{
+                ...styles.genreTab,
+                backgroundColor: itemData.item.genreColor,
+              }}
+            >
+              <Text style={{ ...styles.headerText, fontSize: 17 }}>
+                {itemData.item.genreName}
+              </Text>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -95,15 +164,33 @@ const styles = StyleSheet.create({
   headerCont: {
     width: "100%",
     marginStart: 10,
-    marginTop: 5,
+    marginVertical: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   headerText: {
-    fontFamily: "apple-bold",
-    fontSize: 30,
+    fontFamily: "apple-regular",
+    fontSize: 20,
+    marginEnd: 5,
   },
   new_releases: {
     flex: 1,
     width: Dimensions.get("window").width - 50,
+  },
+  genreTab: {
+    marginVertical: 10,
+    marginHorizontal: 15,
+    width: 160,
+    height: 100,
+    backgroundColor: "orange",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
   },
 });
 
