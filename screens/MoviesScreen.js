@@ -21,27 +21,29 @@ const MoviesScreen = (props) => {
 
   // console.log("trending movies : ", trending_movies);
   // console.log("new movies : ", new_releases);
-  console.log("searched movies : ", searched_movies);
+  // console.log("searched movies : ", searched_movies);
 
   const dispatch = useDispatch();
 
   const genres = [
-    { id: 0, genreName: "Mystery", genreColor: "#1abc9c" },
-    { id: 1, genreName: "Horror", genreColor: "#34495e" },
-    { id: 2, genreName: "K-Drama", genreColor: "#2980b9" },
-    { id: 3, genreName: "Anime", genreColor: "#d35400" },
+    { id: 9648, genreName: "Mystery", genreColor: "#1abc9c" },
+    { id: 27, genreName: "Horror", genreColor: "#34495e" },
+    { id: 18, genreName: "Drama", genreColor: "#2980b9" },
+    { id: 16, genreName: "Anime", genreColor: "#d35400" },
   ];
 
   useEffect(() => {
-    dispatch(MoviesAction.loadTrendingMovies());
+    dispatch(MoviesAction.loadStories());
     dispatch(MoviesAction.loadNewReleases("dog"));
   }, [dispatch]);
+
+  // const matchGenres = (genreId) => {};
 
   return (
     <ScrollView style={styles.screen} showsVerticalScrollIndicator={false}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.headerCont}>
-        <Text style={styles.headerText}>Movies You Viewed</Text>
+        <Text style={styles.headerText}>Stories</Text>
 
         <View style={{ flexDirection: "row", marginEnd: 15 }}>
           <Text style={styles.headerText}>see all</Text>
@@ -54,16 +56,25 @@ const MoviesScreen = (props) => {
           data={trending_movies}
           renderItem={(itemData) => (
             <MovieItem
+              style={{
+                width: 90,
+                height: 90,
+                borderRadius: 45,
+                borderWidth: 2.3,
+                borderColor: "green",
+              }}
+              imageStyle={{ width: 90, height: 90, borderRadius: 45 }}
               id={itemData.item.id}
-              movieTitle={itemData.item.title}
+              // movieTitle={itemData.item.title}
               posterUrl={itemData.item.posterUrl}
-              year={itemData.item.year}
+              // year={itemData.item.year}
               onPress={() => {
                 props.navigation.navigate({
-                  name: "MoviesDetailsScreen",
+                  name: "MoviesDetailScreen",
                   params: {
                     movieTitle: itemData.item.title,
                     posterUrl: itemData.item.posterUrl,
+                    movieId: itemData.item.id,
                   },
                 });
               }}
@@ -91,13 +102,15 @@ const MoviesScreen = (props) => {
               posterUrl={itemData.item.posterUrl}
               year={itemData.item.year}
               onPress={() => {
-                props.navigation.navigate({
-                  name: "MoviesDetailsScreen",
-                  params: {
-                    movieTitle: itemData.item.title,
-                    posterUrl: itemData.item.posterUrl,
-                  },
-                });
+                // props.navigation.navigate({
+                //   name: "MoviesWRTGenreDetailScreen",
+                //   params: {
+                //     movieTitle: itemData.item.title,
+                //     posterUrl: itemData.item.posterUrl,
+                //     movieId: itemData.item.id,
+                //     //   itemData: itemData,
+                //   },
+                // });
               }}
             />
           )}
@@ -127,6 +140,7 @@ const MoviesScreen = (props) => {
             <TouchableOpacity
               activeOpacity={0.85}
               onPress={() => {
+                dispatch(MoviesAction.loadMoviesWithGenres(itemData.item.id));
                 props.navigation.navigate({
                   name: "GenreScreen",
                   params: {

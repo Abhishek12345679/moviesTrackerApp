@@ -18,15 +18,15 @@ const MovieItem = (props) => {
         source={{
           uri: props.posterUrl,
         }}
-        style={styles.image}
+        style={{ ...styles.image, ...props.imageStyle }}
       >
-        <View style={styles.footer}>
+        <View style={{ ...styles.footer, ...props.footerStyle }}>
           <View style={styles.description}>
             <Text style={styles.text}>{props.movieTitle}</Text>
             <Text style={styles.text}>{props.year}</Text>
           </View>
           <View style={styles.ratings}>
-            <Text style={styles.text}>{props.imdbRatings}</Text>
+            <Text style={styles.text}>{props.ratings}</Text>
           </View>
         </View>
       </ImageBackground>
@@ -45,13 +45,14 @@ const styles = StyleSheet.create({
       height: 3,
     },
     backgroundColor: "#000",
-    margin: 10,
+    marginHorizontal: 7.5,
+    marginVertical: 7.5,
     flexDirection: "column",
   },
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 10,
+    borderRadius: 0,
     justifyContent: "flex-end",
     overflow: "hidden",
   },
@@ -60,8 +61,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "#000",
     opacity: 0.5,
-    height:45,
-    alignItems:'center'
+    height: 45,
+    alignItems: "center",
   },
   description: {
     flexDirection: "column",

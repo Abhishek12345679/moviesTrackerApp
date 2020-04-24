@@ -1,8 +1,9 @@
 import {
-  LOAD_TRENDING_MOVIES,
+  LOAD_STORIES,
   LOAD_NEW_RELEASES,
   SEARCH_MOVIES,
   CLEAR_SEARCH_LIST,
+  LOAD_MOVIES_WITH_GENRES,
 } from "../actions/MoviesAction";
 
 const initialState = {
@@ -10,12 +11,13 @@ const initialState = {
   userMovies: [],
   new_releases: [],
   searched_movies: [],
-  searchListState:''
+  searchListState: "",
+  moviesWRTGenre: [],
 };
 
 const MoviesReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_TRENDING_MOVIES:
+    case LOAD_STORIES:
       return {
         ...state,
         movies: action.movies,
@@ -34,6 +36,11 @@ const MoviesReducer = (state = initialState, action) => {
       return {
         ...state,
         searched_movies: [],
+      };
+    case LOAD_MOVIES_WITH_GENRES:
+      return {
+        ...state,
+        moviesWRTGenre: action.moviesWRTGenre,
       };
     default:
       return state;

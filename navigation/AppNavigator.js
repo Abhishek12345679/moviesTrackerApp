@@ -5,9 +5,15 @@ import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import MoviesScreen, {
   screenOptions as MovieScreenOptions,
 } from "../screens/MoviesScreen";
-import MoviesDetailsScreen, {
+
+import MoviesWRTGenreDetailScreen, {
+  screenOptions as MoviesWRTGenreDetailScreenOptions,
+} from "../screens/MoviesWRTGenreDetailScreen";
+
+import MoviesDetailScreen, {
   screenOptions as MoviesDetailScreenOptions,
-} from "../screens/MoviesDetailScreen";
+} from "../screens/MovieDetailScreen";
+
 import SearchScreen, {
   screenOptions as SearchScreenOptions,
 } from "../screens/SearchScreen";
@@ -54,8 +60,13 @@ const moviesScreenNavigator = () => {
         options={MovieScreenOptions}
       />
       <MoviesScreenStackNavigator.Screen
-        name="MoviesDetailsScreen"
-        component={MoviesDetailsScreen}
+        name="MoviesWRTGenreDetailScreen"
+        component={MoviesWRTGenreDetailScreen}
+        options={MoviesWRTGenreDetailScreenOptions}
+      />
+      <MoviesScreenStackNavigator.Screen
+        name="MoviesDetailScreen"
+        component={MoviesDetailScreen}
         options={MoviesDetailScreenOptions}
       />
       <MoviesScreenStackNavigator.Screen
@@ -78,11 +89,6 @@ const searchScreenNavigator = () => {
         name="SearchScreen"
         component={SearchScreen}
         options={SearchScreenOptions}
-      />
-      <SearchScreenStackNavigator.Screen
-        name="MoviesDetailsScreen"
-        component={MoviesDetailsScreen}
-        options={MoviesDetailScreenOptions}
       />
     </SearchScreenStackNavigator.Navigator>
   );
