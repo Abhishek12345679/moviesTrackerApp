@@ -5,54 +5,63 @@ import { useSelector } from "react-redux";
 
 import CastMember from "../components/CastMember";
 
+import { LinearGradient } from "expo-linear-gradient";
+
 const MovieDetailScreen = (props) => {
-  const selectedMovieId = props.route.params.movieId;
-  const movies = useSelector((state) => state.Movies.movies);
-  const selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
-  console.log("selctedMovie", selectedMovie);
+  let selectedMovieId, movies, selectedMovie;
+  if (!props.route.params.searchScreen) {
+    selectedMovieId = props.route.params.movieId;
+    movies = useSelector((state) => state.Movies.movies);
+    selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
+    console.log("selctedMovie", selectedMovie);
+  } else {
+    selectedMovieId = props.route.params.movieId;
+    movies = useSelector((state) => state.Movies.searched_movies);
+    selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
+    console.log("selctedMovie", selectedMovie);
+  }
 
   return (
     <ScrollView style={styles.screen}>
-      <View>
-        <View style={styles.header}>
-          <MovieItem
-            footerStyle={{
-              backgroundColor: null,
+      <LinearGradient
+        colors={["green", "#3b5998", "#000"]}
+        style={styles.header}
+      >
+        <MovieItem
+          footerStyle={{
+            backgroundColor: null,
+          }}
+          style={{ width: 160, height: 160, shadowColor: "#fff" }}
+          id={selectedMovieId}
+          posterUrl={selectedMovie.posterUrl}
+          onPress={() => {}}
+          // ratings={selectedMovie.ratings}
+        />
+        <View style={styles.basicdetails}>
+          <Text style={styles.text}> {selectedMovie.title} </Text>
+          <Text
+            style={{
+              ...styles.text,
+              fontSize: 16,
+              fontFamily: "apple-bold",
+              color: "#c2c2c2",
             }}
-            style={{ width: 160, height: 160, shadowColor: "#fff" }}
-            id={selectedMovieId}
-            posterUrl={selectedMovie.posterUrl}
-            onPress={() => {}}
-            // ratings={selectedMovie.ratings}
-          />
-          <View style={styles.basicdetails}>
-            <Text style={styles.text}> {selectedMovie.title} </Text>
-            <Text
-              style={{
-                ...styles.text,
-                fontSize: 12,
-                fontFamily: "apple-bold",
-                color: "#c2c2c2",
-              }}
-            >
-              {selectedMovie.year}
-            </Text>
-            <Text
-              style={{
-                ...styles.text,
-                fontSize: 12,
-                fontFamily: "apple-bold",
-                color: "#c2c2c2",
-              }}
-            >
-              {/* {itemData.item.plot.substr(0, itemData.item.plot.indexOf(".")) +
-                            "."} */}
-              {/* {itemData.item.plot.substr(0, 20)} */}
-            </Text>
-          </View>
+          >
+            {selectedMovie.year}
+          </Text>
         </View>
-      </View>
+      </LinearGradient>
       <View>
+        <Text
+          style={{
+            ...styles.text,
+            fontSize: 12,
+            fontFamily: "apple-bold",
+            color: "#121212",
+          }}
+        >
+          {selectedMovie.plot}
+        </Text>
         <Text style={styles.headerText}> Cast </Text>
         <ScrollView
           horizontal={true}

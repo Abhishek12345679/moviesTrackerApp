@@ -24,6 +24,8 @@ import ProfileScreen, {
   screenOptions as ProfileScreenOptions,
 } from "../screens/ProfileScreen";
 
+import NewReleasesModalScreen from "../screens/NewReleasesModalScreen";
+
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -54,10 +56,16 @@ const moviesScreenNavigator = () => {
     <MoviesScreenStackNavigator.Navigator
       screenOptions={defaultStackNavigationOptions}
     >
-      <MoviesScreenStackNavigator.Screen
+      {/* <MoviesScreenStackNavigator.Screen
         name="MovieScreen"
         component={MoviesScreen}
         options={MovieScreenOptions}
+      /> */}
+
+      <MoviesScreenStackNavigator.Screen
+        name="NewReleasesNavigator"
+        component={newReleasesNavigator}
+        options={{ headerTitle: "Movies" }}
       />
       <MoviesScreenStackNavigator.Screen
         name="MoviesWRTGenreDetailScreen"
@@ -69,12 +77,36 @@ const moviesScreenNavigator = () => {
         component={MoviesDetailScreen}
         options={MoviesDetailScreenOptions}
       />
+
       <MoviesScreenStackNavigator.Screen
         name="GenreScreen"
         component={GenreScreen}
         options={GenreScreenOptions}
       />
     </MoviesScreenStackNavigator.Navigator>
+  );
+};
+
+const NewReleasesStackNavigator = createStackNavigator();
+
+const newReleasesNavigator = () => {
+  return (
+    <NewReleasesStackNavigator.Navigator
+      screenOptions={defaultStackNavigationOptions}
+      initialRouteName="MovieScreen"
+      mode="modal"
+    >
+      <NewReleasesStackNavigator.Screen
+        name="MovieScreen"
+        component={MoviesScreen}
+        options={{ ...MovieScreenOptions, headerShown: false }}
+      />
+      <NewReleasesStackNavigator.Screen
+        name="NewReleasesModalScreen"
+        component={NewReleasesModalScreen}
+        options={{ headerShown: false }}
+      />
+    </NewReleasesStackNavigator.Navigator>
   );
 };
 
@@ -89,6 +121,11 @@ const searchScreenNavigator = () => {
         name="SearchScreen"
         component={SearchScreen}
         options={SearchScreenOptions}
+      />
+      <MoviesScreenStackNavigator.Screen
+        name="MoviesDetailScreen"
+        component={MoviesDetailScreen}
+        options={MoviesDetailScreenOptions}
       />
     </SearchScreenStackNavigator.Navigator>
   );
@@ -125,7 +162,11 @@ export const AppNavigator = () => {
         options={{
           tabBarIcon: ({ focused, size }) => (
             <Text
-              style={{ fontFamily: "apple-bold", fontSize: focused ? 20 : 15 }}
+              style={{
+                fontFamily: "apple-bold",
+                fontSize: focused ? 20 : 15,
+                color: focused ? "orange" : "#121212",
+              }}
             >
               M
             </Text>
@@ -142,7 +183,7 @@ export const AppNavigator = () => {
             <AntDesign
               name="search1"
               size={focused ? size + 5 : size}
-              color={focused ? "#000" : "#121212"}
+              color={focused ? "orange" : "#121212"}
             />
           ),
         }}
@@ -156,7 +197,7 @@ export const AppNavigator = () => {
             <MaterialCommunityIcons
               name="human-greeting"
               size={focused ? size + 5 : size}
-              color={focused ? "#000" : "#121212"}
+              color={focused ? "orange" : "#121212"}
             />
           ),
         }}

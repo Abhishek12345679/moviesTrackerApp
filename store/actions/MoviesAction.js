@@ -115,7 +115,7 @@ export const searchMovies = (MovieTitle) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=${MovieTitle}`
+        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=${MovieTitle}&plot=full`
       );
 
       if (!response.ok) {
@@ -140,7 +140,14 @@ export const searchMovies = (MovieTitle) => {
             resData.Search[i].imdbID,
             resData.Search[i].Title,
             resData.Search[i].Poster,
-            resData.Search[i].Year
+            resData.Search[i].Year,
+            [
+              { name: "Andy Samberg" },
+              { name: "Andy Samberg" },
+              { name: "Andy Samberg" },
+              { name: "Andy Samberg" },
+            ],
+            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem, numquam cupiditate obcaecati commodi dolores veritatis nam ad consequatur laudantium provident nobis dolore maiores dicta voluptas exercitationem soluta dolorem. Ullam, totam."
           )
         );
       }
@@ -210,42 +217,42 @@ export const loadMoviesWithGenres = (genreId) => {
   };
 };
 
-export const loadCast = (movieId) => {
-  const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
-  return async (dispatch) => {
-    try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}?api_key=${config.TMDB_API_KEY}&append_to_response=credits`
-      );
+// export const loadCast = (movieId) => {
+//   const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
+//   return async (dispatch) => {
+//     try {
+//       const response = await fetch(
+//         `https://api.themoviedb.org/3/movie/${movieId}?api_key=${config.TMDB_API_KEY}&append_to_response=credits`
+//       );
 
-      if (!response.ok) {
-        throw new Error("failed response");
-      }
+//       if (!response.ok) {
+//         throw new Error("failed response");
+//       }
 
-      const resData = await response.json();
-      console.log(resData);
+//       const resData = await response.json();
+//       console.log(resData);
 
-      const loadedMoviesWRTGenre = [];
+//       const loadedMoviesWRTGenre = [];
 
-      for (let i = 0; i < 5; i++) {
-        loadedMoviesWRTGenre.push(
-          new Movie(
-            resData.results[i].id.toString(),
-            resData.results[i].title,
-            posterBaseUrl + resData.results[i].backdrop_path,
-            resData.results[i].release_date
-          )
-        );
-      }
+//       for (let i = 0; i < 5; i++) {
+//         loadedMoviesWRTGenre.push(
+//           new Movie(
+//             resData.results[i].id.toString(),
+//             resData.results[i].title,
+//             posterBaseUrl + resData.results[i].backdrop_path,
+//             resData.results[i].release_date
+//           )
+//         );
+//       }
 
-      console.log("moviesWRTGenre", loadedMoviesWRTGenre);
+//       console.log("moviesWRTGenre", loadedMoviesWRTGenre);
 
-      dispatch({
-        type: LOAD_MOVIES_WITH_GENRES,
-        moviesWRTGenre: loadedMoviesWRTGenre,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-};
+//       dispatch({
+//         type: LOAD_MOVIES_WITH_GENRES,
+//         moviesWRTGenre: loadedMoviesWRTGenre,
+//       });
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   };
+// };

@@ -17,11 +17,6 @@ import * as MoviesAction from "../store/actions/MoviesAction";
 const MoviesScreen = (props) => {
   const trending_movies = useSelector((state) => state.Movies.movies);
   const new_releases = useSelector((state) => state.Movies.new_releases);
-  const searched_movies = useSelector((state) => state.Movies.searched_movies);
-
-  // console.log("trending movies : ", trending_movies);
-  // console.log("new movies : ", new_releases);
-  // console.log("searched movies : ", searched_movies);
 
   const dispatch = useDispatch();
 
@@ -43,7 +38,7 @@ const MoviesScreen = (props) => {
     <ScrollView style={styles.screen} showsVerticalScrollIndicator={false}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.headerCont}>
-        <Text style={styles.headerText}>Stories</Text>
+        <Text style={styles.headerText}>New Releases</Text>
 
         <View style={{ flexDirection: "row", marginEnd: 15 }}>
           <Text style={styles.headerText}>see all</Text>
@@ -52,6 +47,7 @@ const MoviesScreen = (props) => {
       </View>
       <View>
         <FlatList
+          showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={trending_movies}
           renderItem={(itemData) => (
@@ -70,7 +66,7 @@ const MoviesScreen = (props) => {
               // year={itemData.item.year}
               onPress={() => {
                 props.navigation.navigate({
-                  name: "MoviesDetailScreen",
+                  name: "NewReleasesModalScreen",
                   params: {
                     movieTitle: itemData.item.title,
                     posterUrl: itemData.item.posterUrl,
@@ -92,6 +88,7 @@ const MoviesScreen = (props) => {
           </View>
         </View>
         <FlatList
+          showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={new_releases}
           renderItem={(itemData) => (
