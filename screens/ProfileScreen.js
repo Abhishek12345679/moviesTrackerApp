@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
@@ -13,7 +14,10 @@ import { AntDesign } from "@expo/vector-icons";
 const ProfileScreen = (props) => {
   const [clickedDP, setClickedDP] = useState(false);
   return (
-    <View style={styles.screen}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={{ alignItems: "center" }}
+    >
       <View style={styles.header}>
         <View style={styles.followers}>
           <Text style={styles.titleText}>Followers</Text>
@@ -56,7 +60,16 @@ const ProfileScreen = (props) => {
           placeholder="Github Link here..."
         />
       </View>
-    </View>
+      <View style={styles.tabContainer}>
+        <View style={styles.row}>
+          <View style={styles.tab}></View>
+          <View style={styles.tab}></View>
+        </View>
+        <View style={styles.row}>
+          <View style={{ ...styles.tab, width: "90%" }}></View>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -64,7 +77,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
   },
   header: {
     width: "100%",
@@ -121,13 +133,37 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     marginVertical: 10,
     textAlign: "center",
-    borderRadius: 10 ,
+    borderRadius: 10,
+  },
+  tabContainer: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  tab: {
+    marginTop: 20,
+    width: "40%",
+    height: 130,
+    marginHorizontal: 20,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
 export const screenOptions = (navData) => {
   return {
-    headerTitle: "Profile",
+    headerTitle: "tapforabhi",
   };
 };
 
