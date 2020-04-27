@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import MoviesReducer from "./store/reducers/MoviesReducer";
+import UserMoviesReducer from "./store/reducers/UserReducers";
 
 import { combineReducers, applyMiddleware, createStore } from "redux";
 import ReduxThunk from "redux-thunk";
@@ -15,6 +16,7 @@ export default function App() {
 
   const rootReducer = combineReducers({
     Movies: MoviesReducer,
+    UserMovies: UserMoviesReducer,
   });
 
   const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

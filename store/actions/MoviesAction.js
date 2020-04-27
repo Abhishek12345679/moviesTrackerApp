@@ -141,12 +141,7 @@ export const searchMovies = (MovieTitle) => {
             resData.Search[i].Title,
             resData.Search[i].Poster,
             resData.Search[i].Year,
-            [
-              { name: "Andy Samberg" },
-              { name: "Andy Samberg" },
-              { name: "Andy Samberg" },
-              { name: "Andy Samberg" },
-            ],
+            [],
             "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem, numquam cupiditate obcaecati commodi dolores veritatis nam ad consequatur laudantium provident nobis dolore maiores dicta voluptas exercitationem soluta dolorem. Ullam, totam."
           )
         );

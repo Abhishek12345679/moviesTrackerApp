@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, Dimensions } from "react-native";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import MoviesScreen, {
@@ -29,6 +29,8 @@ import NewReleasesModalScreen from "../screens/NewReleasesModalScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+import { isIphoneX } from "../Helpers/iPhoneModel";
+
 const defaultStackNavigationOptions = {
   headerStyle: {
     backgroundColor: "#fff",
@@ -43,7 +45,10 @@ const defaultStackNavigationOptions = {
 
 const defaultBottomTabNavigationOptions = {
   activeTintColor: "#000",
-  style: { backgroundColor: "#fff", height: 50 },
+  style: {
+    backgroundColor: "#fff",
+    height: Dimensions.get("window").height >= 800 ? 75 : 50,
+  },
   inactiveTintColor: "#fff",
   showLabel: false,
   shadowColor: "#fff",
