@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
 
@@ -13,8 +20,9 @@ const ProfileScreen = (props) => {
           <Text style={styles.text}>420</Text>
         </View>
         <TouchableOpacity
+          activeOpacity={0.86}
           style={styles.profilepicture}
-          onPress={(prevState) => setClickedDP(!prevState)}
+          onPress={() => setClickedDP((prevState) => !prevState)}
         >
           {clickedDP ? (
             <Image
@@ -33,6 +41,21 @@ const ProfileScreen = (props) => {
           <Text style={styles.text}>69</Text>
         </View>
       </View>
+      <View style={styles.infotab}>
+        <Text style={styles.titleText}>About You</Text>
+        <TextInput
+          style={styles.input}
+          value={""}
+          onChangeText={() => {}}
+          placeholder="Type Name..."
+        />
+        <TextInput
+          style={styles.input}
+          value={""}
+          onChangeText={() => {}}
+          placeholder="Github Link here..."
+        />
+      </View>
     </View>
   );
 };
@@ -41,6 +64,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: "#fff",
+    alignItems: "center",
   },
   header: {
     width: "100%",
@@ -75,6 +99,30 @@ const styles = StyleSheet.create({
     color: "#a9a9a9",
   },
   followers: {},
+  infotab: {
+    width: "94%",
+    height: 130,
+    marginHorizontal: 20,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  input: {
+    width: "97%",
+    height: 30,
+    borderWidth: 1,
+    borderColor: "#000",
+    marginVertical: 10,
+    textAlign: "center",
+    borderRadius: 10 ,
+  },
 });
 
 export const screenOptions = (navData) => {
