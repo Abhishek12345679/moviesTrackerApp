@@ -210,3 +210,17 @@ export const AppNavigator = () => {
     </BottomNavigationBar.Navigator>
   );
 };
+
+// const MainNavigator = createStackNavigator();
+
+// export const MainStackNavigator = () => {
+//   return (
+//     <MainNavigator.Navigator screenOptions={{ headerShown: false }}>
+//       <MainNavigator.Screen name="bottom-tab" component={AppNavigator} />
+//       <MainNavigator.Screen
+//         name="NewReleasesModalNavigator"
+//         component={newReleasesNavigator}
+//       />
+//     </MainNavigator.Navigator>
+//   );
+// };
