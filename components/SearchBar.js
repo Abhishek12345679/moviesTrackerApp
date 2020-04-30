@@ -1,43 +1,42 @@
 import React from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from "react-native";
 
 import { EvilIcons } from "@expo/vector-icons";
 
 const SearchBar = (props) => {
   return (
-    <View style={{ width: "100%", alignItems: "center" }}>
+    <TouchableWithoutFeedback
+      style={{ width: "100%", alignItems: "center" }}
+      onPress={props.onPress}
+    >
       <View style={{ ...styles.searchbar, ...props.style }}>
         <View style={styles.inputContainer}>
-          <TextInput
-            {...props}
-            placeholderTextColor="#ccc"
-            style={styles.searchInput}
-            placeholder={props.placeholder}
-            value={props.value}
-            onChangeText={props.onChangeText}
-            onSubmitEditing={props.onSubmitEditing}
-          />
+          <Text style={styles.searchInput}>Type Here...</Text>
           <View>
             <EvilIcons name="search" size={30} color="#7d7d7d" />
           </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   searchbar: {
     width: "90%",
-    height: 40,
+    height: 50,
     backgroundColor: "#fff",
-    // borderWidth: 1,
     marginTop: -20,
     justifyContent: "center",
     shadowColor: "#000",
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.3,
     shadowOffset: {
-      width: 5,
+      width: 2,
       height: 5,
     },
     borderRadius: 5,
@@ -46,12 +45,13 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: "apple-regular",
     fontSize: 15,
-    color: "#000",
+    color: "#ccc",
   },
   inputContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginHorizontal:10
+    marginHorizontal: 10,
+    alignItems: "center",
   },
 });
 

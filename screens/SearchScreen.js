@@ -1,102 +1,82 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Image, FlatList, Text } from "react-native";
-
-// import { SearchBar } from "react-native-elements";
-import { useSelector, useDispatch } from "react-redux";
-import * as UserMoviesActions from "../store/actions/UserActions";
+import React from "react";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 
 import SearchBar from "../components/SearchBar";
 
-// import MovieListItem from "../components/MovieListItem";
-import SwipeableListItem from "../components/SwipeableListItem";
-
-import * as MoviesActions from "../store/actions/MoviesAction";
+import { useDispatch } from "react-redux";
+import * as MoviesAction from "../store/actions/MoviesAction";
 
 const SearchScreen = (props) => {
-  const [searchValue, setSearchValue] = useState("");
-  const [scrollEnabled, setScrollEnabled] = useState(true);
-  const SearchList = useSelector((state) => state.Movies.searched_movies);
+  const genres = [
+    { id: 9648, genreName: "Mystery", genreColor: "#1abc9c" },
+    { id: 27, genreName: "Horror", genreColor: "#34495e" },
+    { id: 18, genreName: "Drama", genreColor: "#2980b9" },
+    { id: 16, genreName: "Anime", genreColor: "#d35400" },
+    { id: 16, genreName: "Adult", genreColor: "#d37400" },
+    { id: 16, genreName: "Realism", genreColor: "#435400" },
+  ];
 
   const dispatch = useDispatch();
-
-  const userMovies = useSelector((state) => state.UserMovies.userMovies);
-
-  const searchValueChangeHandler = (text) => {
-    dispatch(MoviesActions.clearSearchList());
-    setSearchValue(text);
-    dispatch(MoviesActions.searchMovies(text.trim()));
-  };
-  useEffect(() => {
-    dispatch(MoviesActions.clearSearchList());
-  }, [dispatch]);
-
   return (
-    <View style={styles.screen}>
-      <View style={{ flex: 1 }}>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.image}
-            source={require("../assets/Images/searchScreenHeader.jpeg")}
-          />
-        </View>
-        <View>
-          <SearchBar
-            placeholder="Type here..."
-            value={searchValue}
-            onChangeText={searchValueChangeHandler}
-            platform="ios"
-            onCancel={() => dispatch(MoviesActions.clearSearchList())}
-            onSubmitEditing={() => {
-              dispatch(MoviesActions.searchMovies(searchValue));
-            }}
-          />
-        </View>
-        {!!SearchList && searchValue.length > 2 && SearchList.length !== 0 ? (
-          <FlatList
-            scrollEnabled={scrollEnabled}
-            style={{ backgroundColor: "#fff", marginTop: 2 }}
-            keyExtractor={(item) => item.id}
-            data={SearchList}
-            renderItem={(itemData) => (
-              <SwipeableListItem
-                setScrollEnabled={(enabled) => setScrollEnabled(enabled)}
-                movieTitle={itemData.item.title}
-                year={itemData.item.year}
-                onPress={() => {
-                  dispatch(
-                    UserMoviesActions.saveMovies(
-                      itemData.item.id,
-                      itemData.item.title,
-                      itemData.item.posterUrl,
-                      itemData.item.year
-                    )
-                  );
-                  console.log("userMovies", userMovies);
-                  props.navigation.navigate({
-                    name: "MoviesDetailScreen",
-                    params: {
-                      movieId: itemData.item.id,
-                      movieTitle: itemData.item.title,
-                      searchScreen: true,
-                    },
-                  });
-                }}
-              />
-            )}
-          />
-        ) : (
-          <View style={styles.centered}>
-            <Image
-              style={{ width: 50, height: 50 }}
-              source={{
-                uri: "https://png.pngtree.com/svg/20161014/nodata_800139.png",
-              }}
-            />
-            <Text style={styles.text}>No Movies urghhh...</Text>
-          </View>
-        )}
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.imageContainer}>
+        <Image
+          style={styles.image}
+          source={require("../assets/Images/searchScreenHeader.jpeg")}
+        />
       </View>
-    </View>
+      <SearchBar
+        onPress={() => {
+          props.navigation.navigate("SearchDetailScreen");
+        }}
+      />
+      <FlatList
+        style={{ marginTop: 30 }}
+        scrollEnabled={false}
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "space-around",
+        }}
+        numColumns={2}
+        horizontal={false}
+        data={genres}
+        keyExtractor={(item) => item.id}
+        renderItem={(itemData) => (
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={() => {
+              dispatch(MoviesAction.loadMoviesWithGenres(itemData.item.id));
+              props.navigation.navigate({
+                name: "GenreScreen",
+                params: {
+                  GenreName: itemData.item.genreName,
+                },
+              });
+            }}
+            style={{
+              ...styles.genreTab,
+              backgroundColor: itemData.item.genreColor,
+            }}
+          >
+            <Text style={{ ...styles.headerText, fontSize: 17 }}>
+              {itemData.item.genreName}
+            </Text>
+          </TouchableOpacity>
+        )}
+      />
+    </ScrollView>
   );
 };
 
@@ -119,15 +99,20 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
   },
-  centered: {
-    flex: 1,
-    alignItems: "center",
+  genreTab: {
+    marginVertical: 10,
+    marginHorizontal: 15,
+    width: 160,
+    height: 100,
+    backgroundColor: "orange",
     justifyContent: "center",
-  },
-  text: {
-    fontFamily: "apple-regular",
-    fontSize: 12,
-    color: "#121212",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
   },
 });
 

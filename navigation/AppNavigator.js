@@ -24,6 +24,10 @@ import ProfileScreen, {
   screenOptions as ProfileScreenOptions,
 } from "../screens/ProfileScreen";
 
+import SearchDetailScreen, {
+  screenOptions as SearchDetailScreenOptions,
+} from "../screens/SearchDetailScreen";
+
 import NewReleasesModalScreen from "../screens/NewReleasesModalScreen";
 
 import { createStackNavigator } from "@react-navigation/stack";
@@ -127,7 +131,12 @@ const searchScreenNavigator = () => {
         component={SearchScreen}
         options={SearchScreenOptions}
       />
-      <MoviesScreenStackNavigator.Screen
+      <SearchScreenStackNavigator.Screen
+        name="SearchDetailScreen"
+        component={SearchDetailScreen}
+        options={SearchDetailScreenOptions}
+      />
+      <SearchScreenStackNavigator.Screen
         name="MoviesDetailScreen"
         component={MoviesDetailScreen}
         options={MoviesDetailScreenOptions}
