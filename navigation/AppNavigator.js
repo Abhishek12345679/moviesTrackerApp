@@ -29,11 +29,14 @@ import SearchDetailScreen, {
 } from "../screens/SearchDetailScreen";
 
 import NewReleasesModalScreen from "../screens/NewReleasesModalScreen";
+import SeeAllScreen, {
+  screenOptions as SeeAllScreenOptions,
+} from "../screens/SeeAllScreen";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { isIphoneX } from "../Helpers/iPhoneModel";
+// import { isIphoneX } from "../Helpers/iPhoneModel";
 
 const defaultStackNavigationOptions = {
   headerStyle: {
@@ -80,6 +83,11 @@ const moviesScreenNavigator = () => {
         name="MoviesWRTGenreDetailScreen"
         component={MoviesWRTGenreDetailScreen}
         options={MoviesWRTGenreDetailScreenOptions}
+      />
+      <MoviesScreenStackNavigator.Screen
+        name="SeeAllScreen"
+        component={SeeAllScreen}
+        options={SeeAllScreenOptions}
       />
       <MoviesScreenStackNavigator.Screen
         name="MoviesDetailScreen"

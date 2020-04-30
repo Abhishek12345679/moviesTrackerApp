@@ -8,6 +8,7 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MovieItem from "../components/MovieItem";
@@ -19,13 +20,6 @@ const MoviesScreen = (props) => {
   const new_releases = useSelector((state) => state.Movies.new_releases);
 
   const dispatch = useDispatch();
-
-  const genres = [
-    { id: 9648, genreName: "Mystery", genreColor: "#1abc9c" },
-    { id: 27, genreName: "Horror", genreColor: "#34495e" },
-    { id: 18, genreName: "Drama", genreColor: "#2980b9" },
-    { id: 16, genreName: "Anime", genreColor: "#d35400" },
-  ];
 
   useEffect(() => {
     dispatch(MoviesAction.loadStories());
@@ -39,11 +33,6 @@ const MoviesScreen = (props) => {
       <StatusBar barStyle="dark-content" />
       <View style={styles.headerCont}>
         <Text style={styles.headerText}>New Releases</Text>
-
-        <View style={{ flexDirection: "row", marginEnd: 15 }}>
-          <Text style={styles.headerText}>see all</Text>
-          <Ionicons name="ios-arrow-forward" size={25} color="#000" />
-        </View>
       </View>
       <View>
         <FlatList
@@ -82,10 +71,16 @@ const MoviesScreen = (props) => {
         <View style={styles.headerCont}>
           <Text style={styles.headerText}>Trending</Text>
 
-          <View style={{ flexDirection: "row", marginEnd: 15 }}>
-            <Text style={styles.headerText}>see all</Text>
-            <Ionicons name="ios-arrow-forward" size={25} color="#000" />
-          </View>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              props.navigation.navigate("SeeAllScreen");
+            }}
+          >
+            <View style={{ flexDirection: "row", marginEnd: 15 }}>
+              <Text style={styles.headerText}>see all</Text>
+              <Ionicons name="ios-arrow-forward" size={25} color="#000" />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
         <FlatList
           showsHorizontalScrollIndicator={false}
@@ -110,50 +105,6 @@ const MoviesScreen = (props) => {
                 // });
               }}
             />
-          )}
-        />
-      </View>
-
-      <View>
-        <View style={styles.headerCont}>
-          <Text style={styles.headerText}>Genre</Text>
-
-          <View style={{ flexDirection: "row", marginEnd: 15 }}>
-            <Text style={styles.headerText}>see all</Text>
-            <Ionicons name="ios-arrow-forward" size={25} color="#000" />
-          </View>
-        </View>
-        <FlatList
-          scrollEnabled={false}
-          contentContainerStyle={{
-            alignItems: "center",
-            justifyContent: "space-around",
-          }}
-          numColumns={2}
-          horizontal={false}
-          data={genres}
-          keyExtractor={(item) => item.id}
-          renderItem={(itemData) => (
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={() => {
-                dispatch(MoviesAction.loadMoviesWithGenres(itemData.item.id));
-                props.navigation.navigate({
-                  name: "GenreScreen",
-                  params: {
-                    GenreName: itemData.item.genreName,
-                  },
-                });
-              }}
-              style={{
-                ...styles.genreTab,
-                backgroundColor: itemData.item.genreColor,
-              }}
-            >
-              <Text style={{ ...styles.headerText, fontSize: 17 }}>
-                {itemData.item.genreName}
-              </Text>
-            </TouchableOpacity>
           )}
         />
       </View>

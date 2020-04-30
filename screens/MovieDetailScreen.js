@@ -3,23 +3,21 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import MovieItem from "../components/MovieItem";
 import { useSelector } from "react-redux";
 
-import CastMember from "../components/CastMember";
+// import CastMember from "../components/CastMember";
 
 import { LinearGradient } from "expo-linear-gradient";
 
 const MovieDetailScreen = (props) => {
   let selectedMovieId, movies, selectedMovie;
-  if (!props.route.params.searchScreen) {
-    selectedMovieId = props.route.params.movieId;
-    movies = useSelector((state) => state.Movies.movies);
-    selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
-    console.log("selctedMovie", selectedMovie);
-  } else {
-    selectedMovieId = props.route.params.movieId;
-    movies = useSelector((state) => state.Movies.searched_movies);
-    selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
-    console.log("selctedMovie", selectedMovie);
-  }
+  selectedMovieId = props.route.params.movieId;
+
+  const new_releases = props.route.params.new_releases;
+
+  movies = useSelector((state) =>
+    new_releases ? state.Movies.new_releases : state.Movies.movies
+  );
+  selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
+  console.log("selctedMovie", selectedMovie);
 
   return (
     <ScrollView style={styles.screen}>
@@ -63,7 +61,7 @@ const MovieDetailScreen = (props) => {
           {selectedMovie.plot}
         </Text>
         <Text style={styles.headerText}> Cast </Text>
-        <ScrollView
+        {/* <ScrollView
           horizontal={true}
           style={{ height: 150 }}
           showsHorizontalScrollIndicator={false}
@@ -71,7 +69,7 @@ const MovieDetailScreen = (props) => {
           {selectedMovie.cast.map((cast) => {
             return <CastMember castName={cast.name} />;
           })}
-        </ScrollView>
+        </ScrollView> */}
       </View>
     </ScrollView>
   );
