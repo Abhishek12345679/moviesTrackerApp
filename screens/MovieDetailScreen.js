@@ -6,23 +6,31 @@ import { useSelector } from "react-redux";
 // import CastMember from "../components/CastMember";
 
 import { LinearGradient } from "expo-linear-gradient";
+import Colors from "../constants/Colors";
 
 const MovieDetailScreen = (props) => {
   let selectedMovieId, movies, selectedMovie;
   selectedMovieId = props.route.params.movieId;
 
   const new_releases = props.route.params.new_releases;
+  const all_movies = props.route.params.all_movies;
+  const searched_movies = props.route.params.searched_movies;
 
-  movies = useSelector((state) =>
-    new_releases ? state.Movies.new_releases : state.Movies.movies
-  );
+  if (new_releases) {
+    movies = useSelector((state) => state.Movies.new_releases);
+  } else if (all_movies) {
+    movies = useSelector((state) => state.Movies.movies);
+  } else if (searched_movies) {
+    movies = useSelector((state) => state.Movies.searched_movies);
+  }
+
   selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
   console.log("selctedMovie", selectedMovie);
 
   return (
     <ScrollView style={styles.screen}>
       <LinearGradient
-        colors={["green", "#3b5998", "#000"]}
+        colors={[Colors.secondaryColor, Colors.lightblue]}
         style={styles.header}
       >
         <MovieItem
@@ -48,20 +56,20 @@ const MovieDetailScreen = (props) => {
             {selectedMovie.year}
           </Text>
         </View>
-      </LinearGradient>
-      <View>
-        <Text
-          style={{
-            ...styles.text,
-            fontSize: 12,
-            fontFamily: "apple-bold",
-            color: "#121212",
-          }}
-        >
-          {selectedMovie.plot}
-        </Text>
-        <Text style={styles.headerText}> Cast </Text>
-        {/* <ScrollView
+
+        <View>
+          <Text
+            style={{
+              ...styles.text,
+              fontSize: 12,
+              fontFamily: "apple-bold",
+              color: "#121212",
+            }}
+          >
+            {selectedMovie.plot}
+          </Text>
+          <Text style={styles.headerText}> Cast </Text>
+          {/* <ScrollView
           horizontal={true}
           style={{ height: 150 }}
           showsHorizontalScrollIndicator={false}
@@ -70,7 +78,8 @@ const MovieDetailScreen = (props) => {
             return <CastMember castName={cast.name} />;
           })}
         </ScrollView> */}
-      </View>
+        </View>
+      </LinearGradient>
     </ScrollView>
   );
 };
@@ -78,7 +87,7 @@ const MovieDetailScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.primaryColor,
   },
 
   header: {
@@ -86,7 +95,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     height: 300,
-    backgroundColor: "#000",
+    backgroundColor: Colors.primaryColor,
     paddingHorizontal: 20,
   },
   basicdetails: {

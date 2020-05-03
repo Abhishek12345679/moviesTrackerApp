@@ -35,30 +35,40 @@ import SeeAllScreen, {
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Colors from "../constants/Colors";
 
 // import { isIphoneX } from "../Helpers/iPhoneModel";
 
 const defaultStackNavigationOptions = {
   headerStyle: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.secondaryColor,
+    shadowOpacity: 0,
+    shadowOffset: {
+      height: 0,
+      width: 0,
+    },
   },
   headerTitleStyle: {
     fontFamily: "apple-bold",
     fontSize: 20,
   },
-  headerTintColor: "#000",
+  headerTintColor: Colors.lightblue,
   headerBackTitle: "Back",
 };
 
 const defaultBottomTabNavigationOptions = {
-  activeTintColor: "#000",
+  activeTintColor: Colors.white,
   style: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.secondaryColor,
     height: Dimensions.get("window").height >= 800 ? 75 : 50,
+    shadowOpacity: 0,
+    shadowOffset: {
+      height: 0,
+      width: 0,
+    },
+    borderTopWidth: 0,
   },
-  inactiveTintColor: "#fff",
   showLabel: false,
-  shadowColor: "#fff",
 };
 
 const MoviesScreenStackNavigator = createStackNavigator();
@@ -77,7 +87,7 @@ const moviesScreenNavigator = () => {
       <MoviesScreenStackNavigator.Screen
         name="NewReleasesNavigator"
         component={newReleasesNavigator}
-        options={{ headerTitle: "Movies" }}
+        options={{ headerTitle: "Moviéy" }}
       />
       <MoviesScreenStackNavigator.Screen
         name="MoviesWRTGenreDetailScreen"
@@ -187,7 +197,7 @@ export const AppNavigator = () => {
               style={{
                 fontFamily: "apple-bold",
                 fontSize: focused ? 20 : 15,
-                color: focused ? "orange" : "#121212",
+                color: focused ? Colors.lightblue : Colors.grey,
               }}
             >
               M
@@ -205,7 +215,7 @@ export const AppNavigator = () => {
             <AntDesign
               name="search1"
               size={focused ? size + 5 : size}
-              color={focused ? "orange" : "#121212"}
+              color={focused ? Colors.lightblue : Colors.grey}
             />
           ),
         }}
@@ -219,7 +229,7 @@ export const AppNavigator = () => {
             <MaterialCommunityIcons
               name="human-greeting"
               size={focused ? size + 5 : size}
-              color={focused ? "orange" : "#121212"}
+              color={focused ? Colors.lightblue : Colors.grey}
             />
           ),
         }}
@@ -227,17 +237,3 @@ export const AppNavigator = () => {
     </BottomNavigationBar.Navigator>
   );
 };
-
-// const MainNavigator = createStackNavigator();
-
-// export const MainStackNavigator = () => {
-//   return (
-//     <MainNavigator.Navigator screenOptions={{ headerShown: false }}>
-//       <MainNavigator.Screen name="bottom-tab" component={AppNavigator} />
-//       <MainNavigator.Screen
-//         name="NewReleasesModalNavigator"
-//         component={newReleasesNavigator}
-//       />
-//     </MainNavigator.Navigator>
-//   );
-// };

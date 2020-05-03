@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image, Text, FlatList } from "react-native";
 
-import { SearchBar } from "react-native-elements";
+// import { SearchBar } from "react-native-elements";
 import { useSelector, useDispatch } from "react-redux";
 import * as UserMoviesActions from "../store/actions/UserActions";
 
-// import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/SearchBar";
 
 import MovieListItem from "../components/MovieListItem";
 // import SwipeableListItem from "../components/SwipeableListItem";
 
 import * as MoviesActions from "../store/actions/MoviesAction";
+import Colors from "../constants/Colors";
 
 const SearchDetailScreen = (props) => {
   const [searchValue, setSearchValue] = useState("");
@@ -33,9 +34,10 @@ const SearchDetailScreen = (props) => {
   return (
     <View style={styles.screen}>
       <SearchBar
-        platform="defauv"
+        style={styles.searchbar}
         value={searchValue}
         onChangeText={searchValueChangeHandler}
+        searchfunction={true}
         // onCancel={}
       />
       {!!searchValue &&
@@ -67,7 +69,7 @@ const SearchDetailScreen = (props) => {
                   params: {
                     movieId: itemData.item.id,
                     movieTitle: itemData.item.title,
-                    searchScreen: true,
+                    searched_movies: true,
                   },
                 });
               }}
@@ -77,7 +79,7 @@ const SearchDetailScreen = (props) => {
       ) : (
         <View style={styles.centered}>
           <Image
-            style={{ width: 50, height: 50, color: "white" }}
+            style={{ width: 50, height: 50 }}
             source={{
               uri: "https://png.pngtree.com/svg/20161014/nodata_800139.png",
             }}
@@ -99,7 +101,8 @@ export const screenOptions = {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#393e42",
+    backgroundColor: Colors.primaryColor,
+    justifyContent: "center",
   },
   centered: {
     flex: 1,
@@ -109,7 +112,12 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "apple-regular",
     fontSize: 12,
-    color: "#c2c2c2",
+    color: Colors.grey,
+  },
+  searchbar: {
+    marginTop: 5,
+    width: "100%",
+    shadowColor: "#000",
   },
 });
 export default SearchDetailScreen;

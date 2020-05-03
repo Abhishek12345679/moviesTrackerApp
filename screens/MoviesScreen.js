@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import MovieItem from "../components/MovieItem";
 import { useSelector, useDispatch } from "react-redux";
 import * as MoviesAction from "../store/actions/MoviesAction";
+import Colors from "../constants/Colors";
 
 const MoviesScreen = (props) => {
   const trending_movies = useSelector((state) => state.Movies.movies);
@@ -26,11 +27,10 @@ const MoviesScreen = (props) => {
     dispatch(MoviesAction.loadNewReleases("dog"));
   }, [dispatch]);
 
-  // const matchGenres = (genreId) => {};
-
   return (
     <ScrollView style={styles.screen} showsVerticalScrollIndicator={false}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
+      {/* new releases stories */}
       <View style={styles.headerCont}>
         <Text style={styles.headerText}>New Releases</Text>
       </View>
@@ -42,13 +42,26 @@ const MoviesScreen = (props) => {
           renderItem={(itemData) => (
             <MovieItem
               style={{
-                width: 90,
-                height: 90,
-                borderRadius: 45,
-                borderWidth: 2.3,
-                borderColor: "green",
+                width: 80,
+                height: 80,
+                borderRadius: 40,
+                shadowColor: Colors.white,
+                shadowOpacity: 0,
+                shadowOffset: {
+                  width: 0,
+                  height: 0,
+                },
               }}
-              imageStyle={{ width: 90, height: 90, borderRadius: 45 }}
+              footerStyle={{
+                opacity: 0,
+              }}
+              imageStyle={{
+                width: 80,
+                height: 80,
+                borderRadius: 40,
+                borderWidth: 2,
+                borderColor: Colors.lightblue,
+              }}
               id={itemData.item.id}
               // movieTitle={itemData.item.title}
               posterUrl={itemData.item.posterUrl}
@@ -67,18 +80,31 @@ const MoviesScreen = (props) => {
           )}
         />
       </View>
+      {/* new releases stories */}
+
+      {/*...
+
+       TOP MOVIE THAT WEEK 
+       
+       ...
+       */}
+
       <View>
         <View style={styles.headerCont}>
-          <Text style={styles.headerText}>Trending</Text>
-
           <TouchableWithoutFeedback
             onPress={() => {
               props.navigation.navigate("SeeAllScreen");
             }}
           >
-            <View style={{ flexDirection: "row", marginEnd: 15 }}>
-              <Text style={styles.headerText}>see all</Text>
-              <Ionicons name="ios-arrow-forward" size={25} color="#000" />
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.headerText}>Trending</Text>
+
+              <Ionicons
+                style={{ marginStart: 5 }}
+                name="ios-arrow-forward"
+                size={22}
+                color={Colors.lightblue}
+              />
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -93,17 +119,7 @@ const MoviesScreen = (props) => {
               movieTitle={itemData.item.title}
               posterUrl={itemData.item.posterUrl}
               year={itemData.item.year}
-              onPress={() => {
-                // props.navigation.navigate({
-                //   name: "MoviesWRTGenreDetailScreen",
-                //   params: {
-                //     movieTitle: itemData.item.title,
-                //     posterUrl: itemData.item.posterUrl,
-                //     movieId: itemData.item.id,
-                //     //   itemData: itemData,
-                //   },
-                // });
-              }}
+              onPress={() => {}}
             />
           )}
         />
@@ -119,40 +135,25 @@ export const screenOptions = {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
-    // alignItems:'center',
-    // justifyContent:'center'
+    backgroundColor: Colors.primaryColor,
   },
   headerCont: {
     width: "100%",
     marginStart: 10,
-    marginVertical: 10,
+    marginTop: 5,
     flexDirection: "row",
     justifyContent: "space-between",
   },
   headerText: {
-    fontFamily: "apple-regular",
-    fontSize: 20,
+    color: Colors.lightblue,
+    fontFamily: "apple-bold",
+    fontSize: 17,
     marginEnd: 5,
   },
   new_releases: {
     flex: 1,
-    width: Dimensions.get("window").width - 50,
-  },
-  genreTab: {
-    marginVertical: 10,
-    marginHorizontal: 15,
-    width: 160,
-    height: 100,
-    backgroundColor: "orange",
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.5,
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
+    width: 200,
+    height: 150,
   },
 });
 

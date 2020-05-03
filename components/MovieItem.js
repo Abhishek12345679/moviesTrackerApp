@@ -45,9 +45,10 @@ const styles = StyleSheet.create({
       height: 3,
     },
     backgroundColor: "#000",
-    marginHorizontal: 7.5,
+    marginHorizontal: 10,
     marginVertical: 7.5,
     flexDirection: "column",
+    borderRadius: 5,
   },
   image: {
     width: "100%",
@@ -55,6 +56,7 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     justifyContent: "flex-end",
     overflow: "hidden",
+    borderRadius:5
   },
   footer: {
     flexDirection: "row",

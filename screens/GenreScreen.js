@@ -3,16 +3,14 @@ import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { useSelector } from "react-redux";
 
 import MovieItem from "../components/MovieItem";
+import Colors from "../constants/Colors";
 
 const GenreScreen = (props) => {
   const moviesWRTGenre = useSelector((state) => state.Movies.moviesWRTGenre);
   return (
     <View style={styles.screen}>
       <FlatList
-        contentContainerStyle={{
-          //   alignItems: "center",
-          justifyContent: "space-between",
-        }}
+        contentContainerStyle={styles.flatlist}
         numColumns={2}
         data={moviesWRTGenre}
         renderItem={(itemData) => (
@@ -30,7 +28,6 @@ const GenreScreen = (props) => {
                   movieTitle: itemData.item.title,
                   posterUrl: itemData.item.posterUrl,
                   movieId: itemData.item.id,
-                  //   itemData: itemData,
                 },
               });
             }}
@@ -44,8 +41,12 @@ const GenreScreen = (props) => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.primaryColor,
     flex: 1,
+  },
+  flatlist: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

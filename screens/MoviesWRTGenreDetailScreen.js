@@ -1,9 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Button } from "react-native";
 import MovieItem from "../components/MovieItem";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { LinearGradient } from "expo-linear-gradient";
+
+import * as UserActions from "../store/actions/UserActions";
 
 import CastMember from "../components/CastMember";
 
@@ -14,12 +16,11 @@ const MoviesWRTGenreDetailScreen = (props) => {
     (movie) => movie.id === selectedMovieId
   );
   console.log("selctedMovie", selectedMovie);
+
+  const dispatch = useDispatch();
   return (
     <ScrollView style={styles.screen}>
-      <LinearGradient
-        colors={["green", "#3b5998", "#000"]}
-        style={styles.header}
-      >
+      <LinearGradient colors={["green", "#000"]} style={styles.header}>
         <MovieItem
           footerStyle={{
             backgroundColor: null,
@@ -52,9 +53,23 @@ const MoviesWRTGenreDetailScreen = (props) => {
           >
             {/* {itemData.item.plot.substr(0, itemData.item.plot.indexOf(".")) +
                 "."} */}
-            {/* {itemData.item.plot.substr(0, 20)} */}
+            {selectedMovie.plot.substr(0, 20)}
           </Text>
         </View>
+        <Button
+          title="add to my movies"
+          color="white"
+          onPress={() => {
+            dispatch(
+              UserActions.saveMovies(
+                selectedMovieId,
+                selectedMovie.title,
+                selectedMovie.posterUrl,
+                selectedMovie.year
+              )
+            );
+          }}
+        />
       </LinearGradient>
       <View style={styles.castReel}>
         <Text style={styles.headerText}>Cast</Text>

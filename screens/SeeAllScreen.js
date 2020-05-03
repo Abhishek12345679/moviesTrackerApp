@@ -4,16 +4,14 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useSelector } from "react-redux";
 
 import MovieItem from "../components/MovieItem";
+import Colors from "../constants/Colors";
 
 const SeeAllScreen = (props) => {
   const trendingMovies = useSelector((state) => state.Movies.new_releases);
   return (
     <View style={styles.screen}>
       <FlatList
-        contentContainerStyle={{
-          //   alignItems: "center",
-          justifyContent: "space-between",
-        }}
+        contentContainerStyle={styles.flatlist}
         numColumns={2}
         data={trendingMovies}
         renderItem={(itemData) => (
@@ -43,8 +41,12 @@ const SeeAllScreen = (props) => {
 };
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.primaryColor,
     flex: 1,
+  },
+  flatlist: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

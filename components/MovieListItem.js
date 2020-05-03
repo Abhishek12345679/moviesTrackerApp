@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Image } from "react-native";
+import Colors from "../constants/Colors";
 
 const MovieListItem = (props) => {
   return (
@@ -16,7 +17,7 @@ const MovieListItem = (props) => {
           <Text
             style={{
               ...styles.text,
-              color: "#ccc",
+              color: Colors.grey,
               fontFamily: "apple-bold",
             }}
           >
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
   listItem: {
     width: "100%",
     height: 50,
-    backgroundColor: "#393e42",
+    backgroundColor: Colors.primaryColor,
     justifyContent: "flex-start",
     alignItems: "flex-start",
     marginVertical: 10,
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "apple-regular",
     fontSize: 15,
-    color: "#fff",
+    color: Colors.white,
     marginStart: 20,
     marginBottom: 5,
   },

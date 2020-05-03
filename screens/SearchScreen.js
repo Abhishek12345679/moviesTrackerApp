@@ -13,6 +13,7 @@ import SearchBar from "../components/SearchBar";
 
 import { useDispatch } from "react-redux";
 import * as MoviesAction from "../store/actions/MoviesAction";
+import Colors from "../constants/Colors";
 
 const SearchScreen = (props) => {
   const genres = [
@@ -87,7 +88,7 @@ export const screenOptions = {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.primaryColor,
   },
   imageContainer: {
     width: "100%",
@@ -107,8 +108,8 @@ const styles = StyleSheet.create({
     backgroundColor: "orange",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.5,
+    shadowColor: Colors.white,
+    shadowOpacity: 0.15,
     shadowOffset: {
       width: 2,
       height: 2,

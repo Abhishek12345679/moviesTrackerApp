@@ -1,6 +1,8 @@
 import { SAVE_MOVIES } from "../actions/UserActions";
 import Movie from "../../models/Movie";
 
+import { AsyncStorage } from "react-native";
+
 const initialState = {
   userMovies: [],
 };
@@ -12,17 +14,33 @@ const UserMoviesReducer = (state = initialState, action) => {
         action.userMovie.id,
         action.userMovie.title,
         action.userMovie.posterUrl,
-        action.userMovie.year,
+        action.userMovie.year
         // action.userMovie.cast,
         // action.userMovie.plot
       );
-      console.log('saving...',savedMovie)
+      console.log("saving...", savedMovie);
+
+      console.log(saveUserData(state.userMovies));
+
       return {
         ...state,
         userMovies: state.userMovies.concat(savedMovie),
       };
     default:
       return state;
+  }
+};
+
+const saveUserData = async (userMovies) => {
+  try {
+    await AsyncStorage.setItem(
+      "UserData",
+      JSON.stringify({
+        userMovies: userMovies,
+      })
+    );
+  } catch (error) {
+    console.log(error);
   }
 };
 

@@ -7,17 +7,20 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  FlatList,
 } from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+import Colors from "../constants/Colors";
+
+import MovieListItem from "../components/MovieListItem";
 
 const ProfileScreen = (props) => {
   const [clickedDP, setClickedDP] = useState(false);
+  const saved_movies = useSelector((state) => state.UserMovies.userMovies);
   return (
-    <ScrollView
-      style={styles.screen}
-      contentContainerStyle={{ alignItems: "center" }}
-    >
+    <ScrollView style={styles.screen}>
       <View style={styles.header}>
         <View style={styles.followers}>
           <Text style={styles.titleText}>Followers</Text>
@@ -45,30 +48,19 @@ const ProfileScreen = (props) => {
           <Text style={styles.text}>69</Text>
         </View>
       </View>
-      <View style={styles.infotab}>
-        <Text style={styles.titleText}>About You</Text>
-        <TextInput
-          style={styles.input}
-          value={""}
-          onChangeText={() => {}}
-          placeholder="Type Name..."
-        />
-        <TextInput
-          style={styles.input}
-          value={""}
-          onChangeText={() => {}}
-          placeholder="Github Link here..."
-        />
+      <View style={{ margin: 10 }}>
+        <Text style={{ ...styles.titleText, fontSize: 20 }}>My Movies</Text>
       </View>
-      <View style={styles.tabContainer}>
-        <View style={styles.row}>
-          <View style={styles.tab}></View>
-          <View style={styles.tab}></View>
-        </View>
-        <View style={styles.row}>
-          <View style={{ ...styles.tab, width: "90%" }}></View>
-        </View>
-      </View>
+      <FlatList
+        data={saved_movies}
+        renderItem={(itemData) => (
+          <MovieListItem
+            posterUrl={itemData.item.posterUrl}
+            movieTitle={itemData.item.title}
+            year={itemData.item.year}
+          />
+        )}
+      />
     </ScrollView>
   );
 };
@@ -76,15 +68,15 @@ const ProfileScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.primaryColor,
   },
   header: {
     width: "100%",
-    height: "35%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 15,
+    marginTop: 10,
   },
   dp: {
     width: "100%",
@@ -96,7 +88,7 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 75,
     borderWidth: 4,
-    borderColor: "#ff8c00",
+    borderColor: Colors.lightblue,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000",
@@ -104,60 +96,12 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: "apple-bold",
     fontSize: 15,
+    color: Colors.white,
   },
   text: {
     fontFamily: "apple-bold",
     fontSize: 12,
-    color: "#a9a9a9",
-  },
-  followers: {},
-  infotab: {
-    width: "94%",
-    height: 130,
-    marginHorizontal: 20,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOpacity: 0.5,
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  input: {
-    width: "97%",
-    height: 30,
-    borderWidth: 1,
-    borderColor: "#000",
-    marginVertical: 10,
-    textAlign: "center",
-    borderRadius: 10,
-  },
-  tabContainer: {
-    flex: 1,
-    flexDirection: "column",
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  tab: {
-    marginTop: 20,
-    width: "40%",
-    height: 130,
-    marginHorizontal: 20,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOpacity: 0.5,
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
+    color: Colors.grey,
   },
 });
 
