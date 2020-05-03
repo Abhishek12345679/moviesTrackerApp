@@ -1,64 +1,67 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, Button } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Button,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import MovieItem from "../components/MovieItem";
 import { useSelector, useDispatch } from "react-redux";
 
 import { LinearGradient } from "expo-linear-gradient";
 
 import * as UserActions from "../store/actions/UserActions";
+import Colors from "../constants/Colors";
 
-import CastMember from "../components/CastMember";
+// import CastMember from "../components/CastMember";
 
 const MoviesWRTGenreDetailScreen = (props) => {
   const selectedMovieId = props.route.params.movieId;
   const moviesWRTGenre = useSelector((state) => state.Movies.moviesWRTGenre);
+  const user_movies = useSelector((state) => state.UserMovies.userMovies);
   const selectedMovie = moviesWRTGenre.find(
     (movie) => movie.id === selectedMovieId
+  );
+  const alreadySaved = user_movies.find(
+    (userMovie) => userMovie.id === selectedMovieId
   );
   console.log("selctedMovie", selectedMovie);
 
   const dispatch = useDispatch();
   return (
     <ScrollView style={styles.screen}>
-      <LinearGradient colors={["green", "#000"]} style={styles.header}>
-        <MovieItem
-          footerStyle={{
-            backgroundColor: null,
-          }}
-          style={{ width: 160, height: 160, shadowColor: "#fff" }}
-          id={selectedMovieId}
-          posterUrl={selectedMovie.posterUrl}
-          onPress={() => {}}
-          ratings={selectedMovie.ratings}
-        />
-        <View style={styles.basicdetails}>
-          <Text style={styles.text}>{selectedMovie.title}</Text>
-          <Text
-            style={{
-              ...styles.text,
-              fontSize: 12,
-              fontFamily: "apple-bold",
-              color: "#c2c2c2",
+      <LinearGradient
+        colors={["black", Colors.lightblue]}
+        style={styles.header}
+      >
+        <View style={styles.row}>
+          <MovieItem
+            footerStyle={{
+              backgroundColor: null,
             }}
-          >
-            {selectedMovie.year}
-          </Text>
-          <Text
-            style={{
-              ...styles.text,
-              fontSize: 12,
-              fontFamily: "apple-bold",
-              color: "#c2c2c2",
-            }}
-          >
-            {/* {itemData.item.plot.substr(0, itemData.item.plot.indexOf(".")) +
-                "."} */}
-            {selectedMovie.plot.substr(0, 20)}
-          </Text>
+            style={{ width: 160, height: 160, shadowColor: "#fff" }}
+            id={selectedMovieId}
+            posterUrl={selectedMovie.posterUrl}
+            onPress={() => {}}
+            ratings={selectedMovie.ratings}
+          />
+          <View style={styles.basicdetails}>
+            <Text style={styles.text}>{selectedMovie.title}</Text>
+            <Text style={styles.yearText}>
+              {selectedMovie.year.substr(0, 4)}
+            </Text>
+            <Text style={{ ...styles.text, color: "gold" }}>
+              {selectedMovie.ratings}
+            </Text>
+          </View>
         </View>
-        <Button
-          title="add to my movies"
-          color="white"
+
+        <TouchableOpacity
+          disabled={!!alreadySaved}
+          style={styles.addtomymoviesbtn}
           onPress={() => {
             dispatch(
               UserActions.saveMovies(
@@ -69,20 +72,14 @@ const MoviesWRTGenreDetailScreen = (props) => {
               )
             );
           }}
-        />
-      </LinearGradient>
-      <View style={styles.castReel}>
-        <Text style={styles.headerText}>Cast</Text>
-        <ScrollView
-          horizontal={true}
-          style={{ height: 150 }}
-          showsHorizontalScrollIndicator={false}
         >
-          {selectedMovie.cast.map((cast) => {
-            return <CastMember key={selectedMovieId} castName={cast.name} />;
-          })}
-        </ScrollView>
-      </View>
+          {!alreadySaved ? (
+            <Text style={styles.text}>Add to My Movies</Text>
+          ) : (
+            <Text style={styles.text}>Watched</Text>
+          )}
+        </TouchableOpacity>
+      </LinearGradient>
     </ScrollView>
   );
 };
@@ -94,12 +91,9 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    height: 300,
+    flex: 1,
+    height: Dimensions.get("window").height,
     backgroundColor: "#000",
-    paddingHorizontal: 20,
     shadowColor: "#000",
     shadowOpacity: 0.7,
     shadowOffset: {
@@ -107,10 +101,9 @@ const styles = StyleSheet.create({
       height: 5,
     },
     shadowRadius: 10,
-    // overflow: "hidden",
   },
   basicdetails: {
-    justifyContent: "flex-start",
+    flexDirection: "column",
   },
   text: {
     fontFamily: "apple-bold",
@@ -121,10 +114,30 @@ const styles = StyleSheet.create({
     fontFamily: "apple-bold",
     color: "#000",
     fontSize: 30,
-    paddingHorizontal: 10,
   },
   castReel: {
     marginTop: 10,
+  },
+  yearText: {
+    fontSize: 12,
+    fontFamily: "apple-bold",
+    color: "#c2c2c2",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    paddingHorizontal: 15,
+  },
+  addtomymoviesbtn: {
+    marginBottom: 5,
+    marginHorizontal: 20,
+    backgroundColor: "black",
+    width: 200,
+    height: 60,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

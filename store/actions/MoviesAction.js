@@ -16,7 +16,7 @@ export const loadStories = () => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=Brooklyn`
+        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=sex`
       );
 
       // const responseWithCast = await fetch(
@@ -58,7 +58,7 @@ export const loadStories = () => {
   };
 };
 
-export const loadNewReleases = (MovieTitle) => {
+export const loadNewReleases = () => {
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
   return async (dispatch) => {
     try {

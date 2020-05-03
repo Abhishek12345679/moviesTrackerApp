@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import MovieItem from "../components/MovieItem";
 import { useSelector, useDispatch } from "react-redux";
 import * as MoviesAction from "../store/actions/MoviesAction";
+import * as UserActions from "../store/actions/UserActions";
 import Colors from "../constants/Colors";
 
 const MoviesScreen = (props) => {
@@ -24,8 +25,24 @@ const MoviesScreen = (props) => {
 
   useEffect(() => {
     dispatch(MoviesAction.loadStories());
-    dispatch(MoviesAction.loadNewReleases("dog"));
+    dispatch(MoviesAction.loadNewReleases());
   }, [dispatch]);
+
+  const fetchMovies = useCallback(async () => {
+    // setLoading(true);
+    try {
+      await dispatch(UserActions.loadMovies());
+    } catch (err) {
+      console.log(err);
+    }
+    // setLoading(false);
+  }, [
+    dispatch, //setLoading
+  ]);
+
+  useEffect(() => {
+    fetchMovies();
+  }, [fetchMovies]);
 
   return (
     <ScrollView style={styles.screen} showsVerticalScrollIndicator={false}>

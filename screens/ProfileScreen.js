@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,17 +8,38 @@ import {
   TextInput,
   ScrollView,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Colors from "../constants/Colors";
+
+import * as UserActions from "../store/actions/UserActions";
 
 import MovieListItem from "../components/MovieListItem";
 
 const ProfileScreen = (props) => {
   const [clickedDP, setClickedDP] = useState(false);
+  const [loading, setLoading] = useState(false);
   const saved_movies = useSelector((state) => state.UserMovies.userMovies);
+
+  const dispatch = useDispatch();
+
+  const fetchMovies = useCallback(async () => {
+    setLoading(true);
+    try {
+      await dispatch(UserActions.loadMovies());
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  }, [dispatch,setLoading]);
+
+  useEffect(() => {
+    fetchMovies();
+  }, [fetchMovies]);
+
   return (
     <ScrollView style={styles.screen}>
       <View style={styles.header}>
@@ -51,16 +72,21 @@ const ProfileScreen = (props) => {
       <View style={{ margin: 10 }}>
         <Text style={{ ...styles.titleText, fontSize: 20 }}>My Movies</Text>
       </View>
-      <FlatList
-        data={saved_movies}
-        renderItem={(itemData) => (
-          <MovieListItem
-            posterUrl={itemData.item.posterUrl}
-            movieTitle={itemData.item.title}
-            year={itemData.item.year}
-          />
-        )}
-      />
+      {!loading ? (
+        <FlatList
+          data={saved_movies}
+          keyExtractor={(item) => item.id}
+          renderItem={(itemData) => (
+            <MovieListItem
+              posterUrl={itemData.item.posterUrl}
+              movieTitle={itemData.item.title}
+              year={itemData.item.year}
+            />
+          )}
+        />
+      ) : (
+        <ActivityIndicator size="large" color={Colors.lightblue} />
+      )}
     </ScrollView>
   );
 };

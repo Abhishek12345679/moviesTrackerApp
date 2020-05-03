@@ -1,4 +1,4 @@
-import { SAVE_MOVIES } from "../actions/UserActions";
+import { SAVE_MOVIES, LOAD_MOVIES } from "../actions/UserActions";
 import Movie from "../../models/Movie";
 
 import { AsyncStorage } from "react-native";
@@ -25,6 +25,11 @@ const UserMoviesReducer = (state = initialState, action) => {
       return {
         ...state,
         userMovies: state.userMovies.concat(savedMovie),
+      };
+    case LOAD_MOVIES:
+      return {
+        ...state,
+        userMovies: action.userMovies,
       };
     default:
       return state;
