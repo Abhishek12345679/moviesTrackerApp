@@ -13,41 +13,32 @@ export const clearSearchList = () => {
 };
 
 export const loadStories = () => {
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
   return async (dispatch) => {
     try {
       const response = await fetch(
-        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=sex`
+        `https://api.themoviedb.org/3/movie/upcoming?api_key=${config.TMDB_API_KEY}&language=en-US`
       );
-
-      // const responseWithCast = await fetch(
-      //   `https://api.themoviedb.org/3/movie/150540?api_key=${config.TMDB_API_KEY}&append_to_response=credits`
+      // const response = await fetch(
+      //   `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=sex`
       // );
-
-      // const resDataWithCast = await responseWithCast.json();
-      // console.log("cast", resDataWithCast);
 
       if (!response.ok) {
         throw new Error("failed response");
       }
 
       const resData = await response.json();
-      console.log(resData);
+      console.log("NEW RELEASES", resData);
 
       const loadedMovies = [];
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < resData.results.length; i++) {
         loadedMovies.push(
           new Movie(
-            resData.Search[i].imdbID,
-            resData.Search[i].Title,
-            resData.Search[i].Poster,
-            resData.Search[i].Year,
-            [
-              { name: "Andy Samberg" },
-              { name: "Andy Samberg" },
-              { name: "Andy Samberg" },
-              { name: "Andy Samberg" },
-            ]
+            resData.results[i].id,
+            resData.results[i].title,
+            posterBaseUrl + resData.results[i].poster_path,
+            resData.results[i].release_date
           )
         );
       }
@@ -62,9 +53,6 @@ export const loadNewReleases = () => {
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
   return async (dispatch) => {
     try {
-      // const response = await fetch(
-      //   `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=${MovieTitle}`
-      // );
       const response = await fetch(
         `https://api.themoviedb.org/3/trending/all/day?api_key=${config.TMDB_API_KEY}`
       );
@@ -77,17 +65,6 @@ export const loadNewReleases = () => {
       console.log(resData);
 
       const loadedMovies = [];
-
-      // for (let i = 0; i <= 2; i++) {
-      //   loadedMovies.push(
-      //     new Movie(
-      //       resData.Search[i].imdbID,
-      //       resData.Search[i].Title,
-      //       resData.Search[i].Poster,
-      //       resData.Search[i].Year
-      //     )
-      //   );
-      // }
 
       for (let i = 0; i < 5; i++) {
         loadedMovies.push(

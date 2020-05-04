@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  TextInput,
   ScrollView,
   FlatList,
   ActivityIndicator,
@@ -22,23 +21,43 @@ import MovieListItem from "../components/MovieListItem";
 const ProfileScreen = (props) => {
   const [clickedDP, setClickedDP] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const saved_movies = useSelector((state) => state.UserMovies.userMovies);
 
   const dispatch = useDispatch();
 
   const fetchMovies = useCallback(async () => {
-    setLoading(true);
+    setRefreshing(true);
     try {
       await dispatch(UserActions.loadMovies());
     } catch (err) {
       console.log(err);
     }
-    setLoading(false);
-  }, [dispatch,setLoading]);
+
+    setRefreshing(false);
+  }, [dispatch, setRefreshing]);
 
   useEffect(() => {
-    fetchMovies();
+    setLoading(true);
+    fetchMovies().then(() => {
+      setLoading(false);
+    });
+  }, [fetchMovies, setLoading]);
+
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener("focus", fetchMovies);
+    return () => {
+      unsubscribe();
+    };
   }, [fetchMovies]);
+
+  if (loading) {
+    return (
+      <View style={styles.screen}>
+        <ActivityIndicator size="small" color={Colors.white} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.screen}>
@@ -72,21 +91,21 @@ const ProfileScreen = (props) => {
       <View style={{ margin: 10 }}>
         <Text style={{ ...styles.titleText, fontSize: 20 }}>My Movies</Text>
       </View>
-      {!loading ? (
-        <FlatList
-          data={saved_movies}
-          keyExtractor={(item) => item.id}
-          renderItem={(itemData) => (
-            <MovieListItem
-              posterUrl={itemData.item.posterUrl}
-              movieTitle={itemData.item.title}
-              year={itemData.item.year}
-            />
-          )}
-        />
-      ) : (
-        <ActivityIndicator size="large" color={Colors.lightblue} />
-      )}
+
+      <FlatList
+        scrollEnabled={true}
+        refreshing={refreshing}
+        onRefresh={fetchMovies}
+        data={saved_movies}
+        keyExtractor={(item) => item.id}
+        renderItem={(itemData) => (
+          <MovieListItem
+            posterUrl={itemData.item.posterUrl}
+            movieTitle={itemData.item.title}
+            year={itemData.item.year}
+          />
+        )}
+      />
     </ScrollView>
   );
 };

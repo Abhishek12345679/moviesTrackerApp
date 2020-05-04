@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
   StatusBar,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MovieItem from "../components/MovieItem";
@@ -21,81 +23,131 @@ const MoviesScreen = (props) => {
   const trending_movies = useSelector((state) => state.Movies.movies);
   const new_releases = useSelector((state) => state.Movies.new_releases);
 
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(MoviesAction.loadStories());
-    dispatch(MoviesAction.loadNewReleases());
-  }, [dispatch]);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    loadScreen().then(() => setRefreshing(false));
+  }, [refreshing]);
 
-  const fetchMovies = useCallback(async () => {
-    // setLoading(true);
+  const loadScreen = useCallback(async () => {
+    setRefreshing(true);
     try {
+      await dispatch(MoviesAction.loadStories());
+      await dispatch(MoviesAction.loadNewReleases());
       await dispatch(UserActions.loadMovies());
     } catch (err) {
       console.log(err);
     }
-    // setLoading(false);
-  }, [
-    dispatch, //setLoading
-  ]);
+    setRefreshing(false);
+  }, [dispatch, setRefreshing]);
 
   useEffect(() => {
-    fetchMovies();
-  }, [fetchMovies]);
+    setLoading(true);
+    loadScreen().then(() => setLoading(false));
+  }, [loadScreen, setLoading]);
 
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener("focus", loadScreen);
+    return () => {
+      unsubscribe();
+    };
+  }, [loadScreen]);
+
+  if (loading) {
+    return (
+      <View style={styles.screen}>
+        <ActivityIndicator size="small" color={Colors.white} />
+      </View>
+    );
+  }
   return (
-    <ScrollView style={styles.screen} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.screen}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <StatusBar barStyle="light-content" />
       {/* new releases stories */}
       <View style={styles.headerCont}>
         <Text style={styles.headerText}>New Releases</Text>
       </View>
       <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          data={trending_movies}
-          renderItem={(itemData) => (
-            <MovieItem
-              style={{
-                width: 80,
-                height: 80,
-                borderRadius: 40,
-                shadowColor: Colors.white,
-                shadowOpacity: 0,
-                shadowOffset: {
-                  width: 0,
-                  height: 0,
-                },
-              }}
-              footerStyle={{
-                opacity: 0,
-              }}
-              imageStyle={{
-                width: 80,
-                height: 80,
-                borderRadius: 40,
-                borderWidth: 2,
-                borderColor: Colors.lightblue,
-              }}
-              id={itemData.item.id}
-              // movieTitle={itemData.item.title}
-              posterUrl={itemData.item.posterUrl}
-              // year={itemData.item.year}
-              onPress={() => {
-                props.navigation.navigate({
-                  name: "NewReleasesModalScreen",
-                  params: {
-                    movieTitle: itemData.item.title,
-                    posterUrl: itemData.item.posterUrl,
-                    movieId: itemData.item.id,
+        {!!trending_movies ? (
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            data={trending_movies}
+            renderItem={(itemData) => (
+              <MovieItem
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 40,
+                  shadowColor: Colors.white,
+                  shadowOpacity: 0,
+                  shadowOffset: {
+                    width: 0,
+                    height: 0,
                   },
-                });
-              }}
-            />
-          )}
-        />
+                }}
+                footerStyle={{
+                  opacity: 0,
+                }}
+                imageStyle={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 40,
+                  borderWidth: 2,
+                  borderColor: Colors.lightblue,
+                }}
+                id={itemData.item.id}
+                // movieTitle={itemData.item.title}
+                posterUrl={itemData.item.posterUrl}
+                // year={itemData.item.year}
+                onPress={() => {
+                  props.navigation.navigate({
+                    name: "NewReleasesModalScreen",
+                    params: {
+                      movieTitle: itemData.item.title,
+                      posterUrl: itemData.item.posterUrl,
+                      movieId: itemData.item.id,
+                    },
+                  });
+                }}
+              />
+            )}
+          />
+        ) : (
+          <MovieItem
+            style={{
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              shadowColor: Colors.white,
+              shadowOpacity: 0,
+              shadowOffset: {
+                width: 0,
+                height: 0,
+              },
+            }}
+            footerStyle={{
+              opacity: 0,
+            }}
+            imageStyle={{
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              borderWidth: 2,
+              borderColor: Colors.lightblue,
+            }}
+          />
+        )}
       </View>
       {/* new releases stories */}
 
