@@ -1,20 +1,34 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import MovieItem from "../components/MovieItem";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import { AntDesign } from "@expo/vector-icons";
 
 // import CastMember from "../components/CastMember";
+
+import * as UserActions from "../store/actions/UserActions";
 
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../constants/Colors";
 
 const MovieDetailScreen = (props) => {
+  const dispatch = useDispatch();
   let selectedMovieId, movies, selectedMovie;
+
   selectedMovieId = props.route.params.movieId;
 
   const new_releases = props.route.params.new_releases;
   const all_movies = props.route.params.all_movies;
   const searched_movies = props.route.params.searched_movies;
+  const user_movies = useSelector((state) => state.UserMovies.userMovies);
 
   if (new_releases) {
     movies = useSelector((state) => state.Movies.new_releases);
@@ -27,57 +41,95 @@ const MovieDetailScreen = (props) => {
   selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
   console.log("selctedMovie", selectedMovie);
 
+  const selectedMovieTitle = selectedMovie.title;
+
+  const alreadySaved = user_movies.find(
+    (movie) => movie.id === selectedMovie.id
+  );
+
   return (
     <ScrollView style={styles.screen}>
       <LinearGradient
-        colors={[Colors.secondaryColor, Colors.lightblue]}
+        colors={["black", Colors.lightblue]}
         style={styles.header}
       >
-        <MovieItem
-          footerStyle={{
-            backgroundColor: null,
-          }}
-          style={{ width: 160, height: 160, shadowColor: "#fff" }}
-          id={selectedMovieId}
-          posterUrl={selectedMovie.posterUrl}
-          onPress={() => {}}
-          // ratings={selectedMovie.ratings}
-        />
-        <View style={styles.basicdetails}>
-          <Text style={styles.text}> {selectedMovie.title} </Text>
-          <Text
-            style={{
-              ...styles.text,
-              fontSize: 16,
-              fontFamily: "apple-bold",
-              color: "#c2c2c2",
+        <View style={styles.row}>
+          <MovieItem
+            footerStyle={{
+              backgroundColor: null,
             }}
-          >
-            {selectedMovie.year}
-          </Text>
+            style={{ width: 160, height: 160, shadowColor: "#fff" }}
+            id={selectedMovieId}
+            posterUrl={selectedMovie.posterUrl}
+            onPress={() => {}}
+            ratings={selectedMovie.ratings}
+          />
+          {!selectedMovieTitle > 15 ? (
+            <View style={styles.basicdetails}>
+              <View>
+                <Text style={styles.text}>{selectedMovieTitle}</Text>
+              </View>
+
+              <Text style={styles.yearText}>
+                {selectedMovie.year.substr(0, 4)}
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={{ ...styles.text, color: "gold" }}>
+                  {selectedMovie.ratings}
+                </Text>
+                <AntDesign name="star" color="gold" size={23} />
+              </View>
+            </View>
+          ) : (
+            <View style={{ ...styles.basicdetails, marginHorizontal: 75 }}>
+              <View>
+                <Text style={{ ...styles.text, fontSize: 15 }}>
+                  {selectedMovieTitle}
+                </Text>
+              </View>
+
+              <Text style={styles.yearText}>
+                {selectedMovie.year.substr(0, 4)}
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={{ ...styles.text, color: "gold" }}>
+                  {selectedMovie.ratings}
+                </Text>
+                <AntDesign name="star" color="gold" size={23} />
+              </View>
+            </View>
+          )}
+        </View>
+        <View style={styles.plotcontainer}>
+          <Text style={styles.plotText}>{selectedMovie.plot}</Text>
         </View>
 
-        <View>
-          <Text
-            style={{
-              ...styles.text,
-              fontSize: 12,
-              fontFamily: "apple-bold",
-              color: "#121212",
+        <View style={{ width: "100%", height: 65, alignItems: "center" }}>
+          <TouchableOpacity
+            disabled={!!alreadySaved}
+            style={styles.addtomymoviesbtn}
+            onPress={() => {
+              dispatch(
+                UserActions.saveMovies(
+                  selectedMovieId,
+                  selectedMovie.title,
+                  selectedMovie.posterUrl,
+                  selectedMovie.year
+                )
+              );
             }}
           >
-            {selectedMovie.plot}
+            {!alreadySaved ? (
+              <Text style={styles.text}>Add to My Movies</Text>
+            ) : (
+              <Text style={styles.text}>Watched</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+        <View style={styles.plotcontainer}>
+          <Text style={{ ...styles.plotText, color: Colors.grey }}>
+            This is the intellectual properrty of Moviéy (2020-)
           </Text>
-          <Text style={styles.headerText}> Cast </Text>
-          {/* <ScrollView
-          horizontal={true}
-          style={{ height: 150 }}
-          showsHorizontalScrollIndicator={false}
-        >
-          {selectedMovie.cast.map((cast) => {
-            return <CastMember castName={cast.name} />;
-          })}
-        </ScrollView> */}
         </View>
       </LinearGradient>
     </ScrollView>
@@ -87,19 +139,24 @@ const MovieDetailScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: Colors.primaryColor,
+    backgroundColor: "#fff",
   },
 
   header: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    height: 300,
-    backgroundColor: Colors.primaryColor,
-    paddingHorizontal: 20,
+    flex: 1,
+    height: Dimensions.get("window").height,
+    backgroundColor: "#000",
+    shadowColor: "#000",
+    shadowOpacity: 0.7,
+    shadowOffset: {
+      width: 5,
+      height: 5,
+    },
+    shadowRadius: 10,
+    padding: 10,
   },
   basicdetails: {
-    justifyContent: "flex-start",
+    flexDirection: "column",
   },
   text: {
     fontFamily: "apple-bold",
@@ -110,7 +167,41 @@ const styles = StyleSheet.create({
     fontFamily: "apple-bold",
     color: "#000",
     fontSize: 30,
-    margin: 20,
+  },
+  castReel: {
+    marginTop: 10,
+  },
+  yearText: {
+    fontSize: 12,
+    fontFamily: "apple-bold",
+    color: "#c2c2c2",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    paddingHorizontal: 15,
+  },
+  addtomymoviesbtn: {
+    marginBottom: 5,
+    marginHorizontal: 20,
+    backgroundColor: "black",
+    width: 200,
+    height: 60,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  plotcontainer: {
+    padding: 20,
+    marginVertical: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  plotText: {
+    color: Colors.white,
+    fontFamily: "apple-regular",
+    fontSize: 12,
   },
 });
 

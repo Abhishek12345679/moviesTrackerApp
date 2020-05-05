@@ -4,6 +4,7 @@ import {
   SEARCH_MOVIES,
   CLEAR_SEARCH_LIST,
   LOAD_MOVIES_WITH_GENRES,
+  CLEAR_GENRE_SCREEN,
 } from "../actions/MoviesAction";
 
 const initialState = {
@@ -11,12 +12,16 @@ const initialState = {
   userMovies: [],
   new_releases: [],
   searched_movies: [],
-  searchListState: "",
   moviesWRTGenre: [],
 };
 
 const MoviesReducer = (state = initialState, action) => {
   switch (action.type) {
+    case CLEAR_GENRE_SCREEN:
+      return {
+        ...state,
+        moviesWRTGenre: [],
+      };
     case LOAD_STORIES:
       return {
         ...state,

@@ -1,8 +1,9 @@
-export const LOAD_STORIES = "LOAD_MOVIES";
+export const LOAD_STORIES = "LOAD_STORIES";
 export const LOAD_NEW_RELEASES = "LOAD_NEW_RELEASES";
 export const SEARCH_MOVIES = "SEARCH_MOVIES";
 export const CLEAR_SEARCH_LIST = "CLEAR_SEARCH_LIST";
 export const LOAD_MOVIES_WITH_GENRES = "LOAD_MOVIES_WITH_GENRES";
+export const CLEAR_GENRE_SCREEN = "CLEAR_GENRE_SCREEN";
 
 import Movie from "../../models/Movie";
 
@@ -12,16 +13,23 @@ export const clearSearchList = () => {
   return { type: CLEAR_SEARCH_LIST };
 };
 
+export const clearGenreScreen = () => {
+  return {
+    type: CLEAR_GENRE_SCREEN,
+  };
+};
+
 export const loadStories = () => {
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/upcoming?api_key=${config.TMDB_API_KEY}&language=en-US`
-      );
+      //problem with this link
       // const response = await fetch(
-      //   `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=sex`
+      //   `https://api.themoviedb.org/3/movie/upcoming?api_key=${config.TMDB_API_KEY}&language=en-US`
       // );
+      const response = await fetch(
+        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=sex`
+      );
 
       if (!response.ok) {
         throw new Error("failed response");
@@ -32,16 +40,17 @@ export const loadStories = () => {
 
       const loadedMovies = [];
 
-      for (let i = 0; i < resData.results.length; i++) {
+      for (let i = 0; i < resData.Search.length; i++) {
         loadedMovies.push(
           new Movie(
-            resData.results[i].id,
-            resData.results[i].title,
-            posterBaseUrl + resData.results[i].poster_path,
-            resData.results[i].release_date
+            resData.Search[i].imdbID,
+            resData.Search[i].Title,
+            resData.Search[i].Poster,
+            resData.Search[i].Year
           )
         );
       }
+      console.log("STORIES", getState());
       dispatch({ type: LOAD_STORIES, movies: loadedMovies });
     } catch (err) {
       console.log(err);
@@ -64,10 +73,10 @@ export const loadNewReleases = () => {
       const resData = await response.json();
       console.log(resData);
 
-      const loadedMovies = [];
+      const LoadedNewReleases = [];
 
       for (let i = 0; i < 5; i++) {
-        loadedMovies.push(
+        LoadedNewReleases.push(
           new Movie(
             resData.results[i].id.toString(),
             resData.results[i].media_type === "movie"
@@ -76,12 +85,15 @@ export const loadNewReleases = () => {
             posterBaseUrl + resData.results[i].poster_path,
             resData.results[i].media_type === "movie"
               ? resData.results[i].release_date
-              : resData.results[i].first_air_date
+              : resData.results[i].first_air_date,
+            "",
+            resData.results[i].overview,
+            resData.results[i].vote_average
           )
         );
       }
 
-      dispatch({ type: LOAD_NEW_RELEASES, new_releases: loadedMovies });
+      dispatch({ type: LOAD_NEW_RELEASES, new_releases: LoadedNewReleases });
     } catch (err) {
       console.log(err);
     }
@@ -120,6 +132,7 @@ export const searchMovies = (MovieTitle) => {
             resData.Search[i].Year,
             [],
             "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem, numquam cupiditate obcaecati commodi dolores veritatis nam ad consequatur laudantium provident nobis dolore maiores dicta voluptas exercitationem soluta dolorem. Ullam, totam."
+            // resData.Search[i].imdbratings
           )
         );
       }
@@ -137,6 +150,7 @@ export const loadMoviesWithGenres = (genreId) => {
   let response;
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
   return async (dispatch) => {
+    dispatch(clearGenreScreen());
     try {
       response = await fetch(
         `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&api_key=${config.TMDB_API_KEY}`
@@ -163,14 +177,9 @@ export const loadMoviesWithGenres = (genreId) => {
           new Movie(
             resData.results[i].id.toString(),
             resData.results[i].title,
-            posterBaseUrl + resData.results[i].backdrop_path,
+            posterBaseUrl + resData.results[i].poster_path,
             resData.results[i].release_date,
-            [
-              { name: "Andy Samberg" },
-              { name: "Andy Samberg" },
-              { name: "Andy Samberg" },
-              { name: "Andy Samberg" },
-            ],
+            "",
             resData.results[i].overview,
             resData.results[i].vote_average
           )

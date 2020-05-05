@@ -55,14 +55,6 @@ const SearchDetailScreen = (props) => {
               posterUrl={itemData.item.posterUrl}
               year={itemData.item.year}
               onPress={() => {
-                dispatch(
-                  UserMoviesActions.saveMovies(
-                    itemData.item.id,
-                    itemData.item.title,
-                    itemData.item.posterUrl,
-                    itemData.item.year
-                  )
-                );
                 console.log("userMovies", userMovies);
                 props.navigation.navigate({
                   name: "MoviesDetailScreen",

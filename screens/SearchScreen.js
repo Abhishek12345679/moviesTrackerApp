@@ -14,15 +14,16 @@ import SearchBar from "../components/SearchBar";
 import { useDispatch } from "react-redux";
 import * as MoviesAction from "../store/actions/MoviesAction";
 import Colors from "../constants/Colors";
+import { LinearGradient } from "expo-linear-gradient";
 
 const SearchScreen = (props) => {
   const genres = [
     { id: 9648, genreName: "Mystery", genreColor: "#1abc9c" },
     { id: 27, genreName: "Horror", genreColor: "#34495e" },
     { id: 18, genreName: "Drama", genreColor: "#2980b9" },
-    { id: 16, genreName: "Anime", genreColor: "#d35400" },
-    { id: 16, genreName: "Adult", genreColor: "#d37400" },
-    { id: 16, genreName: "Realism", genreColor: "#435400" },
+    { id: 16, genreName: "Anime", genreColor: "#12ff" },
+    { id: 16, genreName: "Adult", genreColor: "#45fe" },
+    { id: 16, genreName: "Realism", genreColor: "#45f4" },
   ];
 
   const dispatch = useDispatch();
@@ -66,14 +67,18 @@ const SearchScreen = (props) => {
                 },
               });
             }}
-            style={{
-              ...styles.genreTab,
-              backgroundColor: itemData.item.genreColor,
-            }}
           >
-            <Text style={{ ...styles.headerText, fontSize: 17 }}>
-              {itemData.item.genreName}
-            </Text>
+            <LinearGradient
+              colors={[itemData.item.genreColor, Colors.primaryColor]}
+              style={{
+                ...styles.genreTab,
+                // backgroundColor: itemData.item.genreColor,
+              }}
+            >
+              <Text style={{ ...styles.headerText, fontSize: 17 }}>
+                {itemData.item.genreName}
+              </Text>
+            </LinearGradient>
           </TouchableOpacity>
         )}
       />

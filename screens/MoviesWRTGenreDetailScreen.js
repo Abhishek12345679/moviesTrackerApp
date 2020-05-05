@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -9,11 +9,16 @@ import {
   TouchableOpacity,
 } from "react-native";
 import MovieItem from "../components/MovieItem";
+import { useIsFocused } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { LinearGradient } from "expo-linear-gradient";
 
+import { AntDesign } from "@expo/vector-icons";
+
 import * as UserActions from "../store/actions/UserActions";
+import * as MovieAction from "../store/actions/MoviesAction";
+
 import Colors from "../constants/Colors";
 
 // import CastMember from "../components/CastMember";
@@ -25,10 +30,24 @@ const MoviesWRTGenreDetailScreen = (props) => {
   const selectedMovie = moviesWRTGenre.find(
     (movie) => movie.id === selectedMovieId
   );
+  const selectedMovieTitle = selectedMovie.title;
   const alreadySaved = user_movies.find(
     (userMovie) => userMovie.id === selectedMovieId
   );
   console.log("selctedMovie", selectedMovie);
+
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("focus", () => {
+  //      moviesWRTGenre = useSelector(
+  //       (state) => state.Movies.moviesWRTGenre
+  //     );
+  //     // The screen is focused
+  //     // Call any action
+  //   });
+
+  //   // Return the function to unsubscribe from the event so it gets removed on unmount
+  //   return unsubscribe;
+  // }, [navigation]);
 
   const dispatch = useDispatch();
   return (
@@ -48,37 +67,73 @@ const MoviesWRTGenreDetailScreen = (props) => {
             onPress={() => {}}
             ratings={selectedMovie.ratings}
           />
-          <View style={styles.basicdetails}>
-            <Text style={styles.text}>{selectedMovie.title}</Text>
-            <Text style={styles.yearText}>
-              {selectedMovie.year.substr(0, 4)}
-            </Text>
-            <Text style={{ ...styles.text, color: "gold" }}>
-              {selectedMovie.ratings}
-            </Text>
-          </View>
+          {!selectedMovieTitle >= 15 ? (
+            <View style={styles.basicdetails}>
+              <View>
+                <Text style={styles.text}>{selectedMovieTitle}</Text>
+              </View>
+
+              <Text style={styles.yearText}>
+                {selectedMovie.year.substr(0, 4)}
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={{ ...styles.text, color: "gold" }}>
+                  {selectedMovie.ratings}
+                </Text>
+                <AntDesign name="star" color="gold" size={23} />
+              </View>
+            </View>
+          ) : (
+            <View style={{ ...styles.basicdetails, marginHorizontal: 75 }}>
+              <View>
+                <Text style={{ ...styles.text, fontSize: 15 }}>
+                  {selectedMovieTitle}
+                </Text>
+              </View>
+
+              <Text style={styles.yearText}>
+                {selectedMovie.year.substr(0, 4)}
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={{ ...styles.text, color: "gold" }}>
+                  {selectedMovie.ratings}
+                </Text>
+                <AntDesign name="star" color="gold" size={23} />
+              </View>
+            </View>
+          )}
+        </View>
+        <View style={styles.plotcontainer}>
+          <Text style={styles.plotText}>{selectedMovie.plot}</Text>
         </View>
 
-        <TouchableOpacity
-          disabled={!!alreadySaved}
-          style={styles.addtomymoviesbtn}
-          onPress={() => {
-            dispatch(
-              UserActions.saveMovies(
-                selectedMovieId,
-                selectedMovie.title,
-                selectedMovie.posterUrl,
-                selectedMovie.year
-              )
-            );
-          }}
-        >
-          {!alreadySaved ? (
-            <Text style={styles.text}>Add to My Movies</Text>
-          ) : (
-            <Text style={styles.text}>Watched</Text>
-          )}
-        </TouchableOpacity>
+        <View style={{ width: "100%", height: 65, alignItems: "center" }}>
+          <TouchableOpacity
+            disabled={!!alreadySaved}
+            style={styles.addtomymoviesbtn}
+            onPress={() => {
+              dispatch(
+                UserActions.saveMovies(
+                  selectedMovieId,
+                  selectedMovie.title,
+                  selectedMovie.posterUrl,
+                  selectedMovie.year
+                )
+              );
+            }}
+          >
+            {!alreadySaved ? (
+              <Text style={styles.text}>Add to My Movies</Text>
+            ) : (
+              <Text style={styles.text}>Watched</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+        <View style={styles.plotcontainer}>
+          <Text style={{ ...styles.plotText, color: Colors.grey }}>
+            This is the intellectual properrty of Moviéy (2020-)
+          </Text>
+        </View>
       </LinearGradient>
     </ScrollView>
   );
@@ -101,6 +156,7 @@ const styles = StyleSheet.create({
       height: 5,
     },
     shadowRadius: 10,
+    padding: 10,
   },
   basicdetails: {
     flexDirection: "column",
@@ -138,6 +194,17 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
+  },
+  plotcontainer: {
+    padding: 20,
+    marginVertical: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  plotText: {
+    color: Colors.white,
+    fontFamily: "apple-regular",
+    fontSize: 12,
   },
 });
 

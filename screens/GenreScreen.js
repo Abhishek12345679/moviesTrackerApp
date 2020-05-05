@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import MovieItem from "../components/MovieItem";
 import Colors from "../constants/Colors";
 
+import * as MovieAction from "../store/actions/MoviesAction";
+
+import { useIsFocused } from "@react-navigation/native";
+
+// This hook returns `true` if the screen is focused, `false` otherwise
+
 const GenreScreen = (props) => {
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+
+  // if (!isFocused) {
+  //   dispatch(MovieAction.clearGenreScreen());
+  // }
   const moviesWRTGenre = useSelector((state) => state.Movies.moviesWRTGenre);
   return (
     <View style={styles.screen}>

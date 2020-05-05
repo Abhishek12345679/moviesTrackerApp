@@ -21,7 +21,9 @@ import Colors from "../constants/Colors";
 
 const MoviesScreen = (props) => {
   const trending_movies = useSelector((state) => state.Movies.movies);
+  // console.log("ON LAUNCH STORIES", trending_movies);
   const new_releases = useSelector((state) => state.Movies.new_releases);
+  // console.log("ON LAUNCH NEW RELEASES", new_releases);
 
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -59,8 +61,8 @@ const MoviesScreen = (props) => {
 
   if (loading) {
     return (
-      <View style={styles.screen}>
-        <ActivityIndicator size="small" color={Colors.white} />
+      <View style={styles.centered}>
+        <ActivityIndicator size="small" color={Colors.lightblue} />
       </View>
     );
   }
@@ -69,7 +71,11 @@ const MoviesScreen = (props) => {
       style={styles.screen}
       showsVerticalScrollIndicator={false}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          tintColor={Colors.lightblue}
+        />
       }
     >
       <StatusBar barStyle="light-content" />
@@ -80,6 +86,7 @@ const MoviesScreen = (props) => {
       <View>
         {!!trending_movies ? (
           <FlatList
+            keyExtractor={(item) => item.id}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             data={trending_movies}
@@ -223,6 +230,12 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 200,
     height: 150,
+  },
+  centered: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    backgroundColor: Colors.primaryColor,
   },
 });
 

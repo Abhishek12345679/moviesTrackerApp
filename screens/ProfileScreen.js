@@ -8,6 +8,7 @@ import {
   ScrollView,
   FlatList,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
@@ -25,6 +26,11 @@ const ProfileScreen = (props) => {
   const saved_movies = useSelector((state) => state.UserMovies.userMovies);
 
   const dispatch = useDispatch();
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchMovies().then(() => setRefreshing(false));
+  }, [refreshing]);
 
   const fetchMovies = useCallback(async () => {
     setRefreshing(true);
@@ -53,14 +59,23 @@ const ProfileScreen = (props) => {
 
   if (loading) {
     return (
-      <View style={styles.screen}>
-        <ActivityIndicator size="small" color={Colors.white} />
+      <View style={styles.centered}>
+        <ActivityIndicator size="small" color={Colors.lightblue} />
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.screen}>
+    <ScrollView
+      style={styles.screen}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          tintColor={Colors.lightblue}
+        />
+      }
+    >
       <View style={styles.header}>
         <View style={styles.followers}>
           <Text style={styles.titleText}>Followers</Text>
@@ -94,8 +109,6 @@ const ProfileScreen = (props) => {
 
       <FlatList
         scrollEnabled={true}
-        refreshing={refreshing}
-        onRefresh={fetchMovies}
         data={saved_movies}
         keyExtractor={(item) => item.id}
         renderItem={(itemData) => (
@@ -147,6 +160,12 @@ const styles = StyleSheet.create({
     fontFamily: "apple-bold",
     fontSize: 12,
     color: Colors.grey,
+  },
+  centered: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    backgroundColor: Colors.primaryColor,
   },
 });
 

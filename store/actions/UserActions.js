@@ -3,8 +3,6 @@ import Movie from "../../models/Movie";
 export const SAVE_MOVIES = "SAVE_MOVIES";
 export const LOAD_MOVIES = "LOAD_MOVIES";
 
-// import Movie from "../../models/Movie";
-
 export const loadMovies = () => {
   return async (dispatch) => {
     // WAIT FOR THIS TO LOAD

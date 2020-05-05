@@ -89,11 +89,7 @@ const moviesScreenNavigator = () => {
         component={newReleasesNavigator}
         options={{ headerTitle: "Moviéy" }}
       />
-      <MoviesScreenStackNavigator.Screen
-        name="MoviesWRTGenreDetailScreen"
-        component={MoviesWRTGenreDetailScreen}
-        options={MoviesWRTGenreDetailScreenOptions}
-      />
+
       <MoviesScreenStackNavigator.Screen
         name="SeeAllScreen"
         component={SeeAllScreen}
@@ -103,12 +99,6 @@ const moviesScreenNavigator = () => {
         name="MoviesDetailScreen"
         component={MoviesDetailScreen}
         options={MoviesDetailScreenOptions}
-      />
-
-      <MoviesScreenStackNavigator.Screen
-        name="GenreScreen"
-        component={GenreScreen}
-        options={GenreScreenOptions}
       />
     </MoviesScreenStackNavigator.Navigator>
   );
@@ -158,6 +148,16 @@ const searchScreenNavigator = () => {
         name="MoviesDetailScreen"
         component={MoviesDetailScreen}
         options={MoviesDetailScreenOptions}
+      />
+      <SearchScreenStackNavigator.Screen
+        name="GenreScreen"
+        component={GenreScreen}
+        options={GenreScreenOptions}
+      />
+      <SearchScreenStackNavigator.Screen
+        name="MoviesWRTGenreDetailScreen"
+        component={MoviesWRTGenreDetailScreen}
+        options={MoviesWRTGenreDetailScreenOptions}
       />
     </SearchScreenStackNavigator.Navigator>
   );
