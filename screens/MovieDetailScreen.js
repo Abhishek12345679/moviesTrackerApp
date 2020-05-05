@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  Picker,
+  ActivityIndicator,
 } from "react-native";
 import MovieItem from "../components/MovieItem";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,6 +17,8 @@ import { AntDesign } from "@expo/vector-icons";
 // import CastMember from "../components/CastMember";
 
 import * as UserActions from "../store/actions/UserActions";
+
+// import { Picker } from "expo";
 
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../constants/Colors";
@@ -46,6 +50,13 @@ const MovieDetailScreen = (props) => {
   const alreadySaved = user_movies.find(
     (movie) => movie.id === selectedMovie.id
   );
+
+  const [data, setData] = useState({
+    state: "add to my movies",
+  });
+
+  const [watched, setWatched] = useState(!!alreadySaved);
+  const [loading, setLoading] = useState(false);
 
   return (
     <ScrollView style={styles.screen}>
@@ -103,13 +114,13 @@ const MovieDetailScreen = (props) => {
         <View style={styles.plotcontainer}>
           <Text style={styles.plotText}>{selectedMovie.plot}</Text>
         </View>
-
         <View style={{ width: "100%", height: 65, alignItems: "center" }}>
           <TouchableOpacity
             disabled={!!alreadySaved}
             style={styles.addtomymoviesbtn}
-            onPress={() => {
-              dispatch(
+            onPress={async () => {
+              setLoading(true);
+              await dispatch(
                 UserActions.saveMovies(
                   selectedMovieId,
                   selectedMovie.title,
@@ -117,20 +128,34 @@ const MovieDetailScreen = (props) => {
                   selectedMovie.year
                 )
               );
+              setLoading(false);
+              setWatched(true);
             }}
           >
-            {!alreadySaved ? (
-              <Text style={styles.text}>Add to My Movies</Text>
+            {!loading ? (
+              <Text style={styles.text}>
+                {!watched ? "Add to My Movies" : "Watched"}
+              </Text>
             ) : (
-              <Text style={styles.text}>Watched</Text>
+              <ActivityIndicator size="small" color={Colors.lightblue} />
             )}
           </TouchableOpacity>
         </View>
         <View style={styles.plotcontainer}>
           <Text style={{ ...styles.plotText, color: Colors.grey }}>
-            This is the intellectual properrty of Moviéy (2020-)
+            This is the intellectual property of Moviéy (2020-)
           </Text>
         </View>
+        <Picker
+          selectedValue={data}
+          style={{ height: 50, width: "100%" }}
+          onValueChange={(itemValue, itemIndex) =>
+            setData({ state: itemValue })
+          }
+        >
+          <Picker.Item label="Watched" value="Watched" />
+          <Picker.Item label="currently watching" value="currently watching" />
+        </Picker>
       </LinearGradient>
     </ScrollView>
   );
@@ -139,7 +164,7 @@ const MovieDetailScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.primaryColor,
   },
 
   header: {
