@@ -1,5 +1,5 @@
 # Moviéy App
-<></>
+
 <table>
   <tr>
     <td>Home Screen</td>
