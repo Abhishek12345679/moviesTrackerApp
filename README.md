@@ -1,3 +1,3 @@
 # Moviéy App
 
-![alt text](screenshots/1.png)
+<img src='screenshots/1.png' width='200'/>
