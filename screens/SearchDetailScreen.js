@@ -40,10 +40,7 @@ const SearchDetailScreen = (props) => {
         searchfunction={true}
         // onCancel={}
       />
-      {!!searchValue &&
-      !!SearchList &&
-      searchValue.length > 2 &&
-      SearchList.length !== 0 ? (
+      {!!searchValue && !!SearchList && searchValue.length > 2 ? (
         <FlatList
           scrollEnabled={scrollEnabled}
           keyExtractor={(item) => item.id}
@@ -70,13 +67,6 @@ const SearchDetailScreen = (props) => {
         />
       ) : (
         <View style={styles.centered}>
-          <Image
-            style={{ width: 50, height: 50 }}
-            source={{
-              uri: "https://png.pngtree.com/svg/20161014/nodata_800139.png",
-            }}
-          />
-
           <Text style={{ ...styles.text, fontSize: 16 }}>
             {searchValue} not found
           </Text>
@@ -104,7 +94,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "apple-regular",
     fontSize: 12,
-    color: Colors.grey,
+    color: Colors.lightblue,
   },
   searchbar: {
     marginTop: 5,

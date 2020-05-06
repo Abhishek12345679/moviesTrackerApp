@@ -146,7 +146,7 @@ const MovieDetailScreen = (props) => {
             This is the intellectual property of Moviéy (2020-)
           </Text>
         </View>
-        <Picker
+        {/* <Picker
           selectedValue={data}
           style={{ height: 50, width: "100%" }}
           onValueChange={(itemValue, itemIndex) =>
@@ -155,7 +155,7 @@ const MovieDetailScreen = (props) => {
         >
           <Picker.Item label="Watched" value="Watched" />
           <Picker.Item label="currently watching" value="currently watching" />
-        </Picker>
+        </Picker> */}
       </LinearGradient>
     </ScrollView>
   );

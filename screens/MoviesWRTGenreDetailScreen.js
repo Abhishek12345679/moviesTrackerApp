@@ -1,15 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
-  Button,
   Dimensions,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import MovieItem from "../components/MovieItem";
-import { useIsFocused } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -17,11 +16,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 
 import * as UserActions from "../store/actions/UserActions";
-import * as MovieAction from "../store/actions/MoviesAction";
 
 import Colors from "../constants/Colors";
-
-// import CastMember from "../components/CastMember";
 
 const MoviesWRTGenreDetailScreen = (props) => {
   const selectedMovieId = props.route.params.movieId;
@@ -35,21 +31,11 @@ const MoviesWRTGenreDetailScreen = (props) => {
     (userMovie) => userMovie.id === selectedMovieId
   );
   console.log("selctedMovie", selectedMovie);
-
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener("focus", () => {
-  //      moviesWRTGenre = useSelector(
-  //       (state) => state.Movies.moviesWRTGenre
-  //     );
-  //     // The screen is focused
-  //     // Call any action
-  //   });
-
-  //   // Return the function to unsubscribe from the event so it gets removed on unmount
-  //   return unsubscribe;
-  // }, [navigation]);
-
   const dispatch = useDispatch();
+
+  const [loading, setLoading] = useState(false);
+  const [watched, setWatched] = useState(false);
+
   return (
     <ScrollView style={styles.screen}>
       <LinearGradient
@@ -111,8 +97,9 @@ const MoviesWRTGenreDetailScreen = (props) => {
           <TouchableOpacity
             disabled={!!alreadySaved}
             style={styles.addtomymoviesbtn}
-            onPress={() => {
-              dispatch(
+            onPress={async () => {
+              setLoading(true);
+              await dispatch(
                 UserActions.saveMovies(
                   selectedMovieId,
                   selectedMovie.title,
@@ -120,12 +107,16 @@ const MoviesWRTGenreDetailScreen = (props) => {
                   selectedMovie.year
                 )
               );
+              setLoading(false);
+              setWatched(true);
             }}
           >
-            {!alreadySaved ? (
-              <Text style={styles.text}>Add to My Movies</Text>
+            {!loading ? (
+              <Text style={styles.text}>
+                {!watched ? "Add to My Movies" : "Watched"}
+              </Text>
             ) : (
-              <Text style={styles.text}>Watched</Text>
+              <ActivityIndicator size="small" color={Colors.lightblue} />
             )}
           </TouchableOpacity>
         </View>

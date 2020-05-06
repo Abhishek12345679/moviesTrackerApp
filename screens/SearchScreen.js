@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
 
 import SearchBar from "../components/SearchBar";
@@ -81,7 +82,7 @@ const SearchScreen = (props) => {
             </LinearGradient>
           </TouchableOpacity>
         )}
-      />
+      /> 
     </ScrollView>
   );
 };

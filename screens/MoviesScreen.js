@@ -195,7 +195,16 @@ const MoviesScreen = (props) => {
               movieTitle={itemData.item.title}
               posterUrl={itemData.item.posterUrl}
               year={itemData.item.year}
-              onPress={() => {}}
+              onPress={() => {
+                props.navigation.navigate({
+                  name: "MoviesDetailScreen",
+                  params: {
+                    movieId: itemData.item.id,
+                    movieTitle: itemData.item.title,
+                    new_releases: true,
+                  },
+                });
+              }}
             />
           )}
         />
