@@ -1,24 +1,5 @@
 # Moviéy App
-
-<p float='left'>
-
-
-
-</p>
-
-<p float='left'>
-
-
-
-<img src='screenshots/4.png' width='300'/>
-
-<img src='screenshots/5.png' width='300'/>
-
-<img src='screenshots/6.png' width='300'/>
-
-</p>
-
-
+<></>
 <table>
   <tr>
     <td>Home Screen</td>
@@ -34,9 +15,9 @@
  
  <table>
   <tr>
-    <td>First Screen Page</td>
-     <td>Holiday Mention</td>
-     <td>Present day in purple and selected day in pink</td>
+    <td>Stories</td>
+     <td>List of trending movies from the home screen</td>
+     <td>Movie Details Screen</td>
   </tr>
   <tr>
     <td><img src="screenshots/4.png" width=300/></td>
