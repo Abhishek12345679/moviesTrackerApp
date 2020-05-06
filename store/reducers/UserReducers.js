@@ -5,6 +5,9 @@ import { AsyncStorage } from "react-native";
 
 const initialState = {
   userMovies: [],
+  watched:[],
+  currentlywatching:[],
+  wanttowatch:[]
 };
 
 const UserMoviesReducer = (state = initialState, action) => {

@@ -18,6 +18,7 @@ import { AntDesign } from "@expo/vector-icons";
 import * as UserActions from "../store/actions/UserActions";
 
 import Colors from "../constants/Colors";
+import StatePicker from "../components/StatePicker";
 
 const MoviesWRTGenreDetailScreen = (props) => {
   const selectedMovieId = props.route.params.movieId;
@@ -91,10 +92,26 @@ const MoviesWRTGenreDetailScreen = (props) => {
         </View>
         <View style={styles.plotcontainer}>
           <Text style={styles.plotText}>{selectedMovie.plot}</Text>
+          <StatePicker
+            disabled={!!alreadySaved}
+            onPressWatched={() => {
+              setLoading(true);
+              dispatch(
+                UserActions.saveMovies(
+                  selectedMovieId,
+                  selectedMovie.title,
+                  selectedMovie.posterUrl,
+                  selectedMovie.year
+                )
+              );
+              setLoading(false);
+              setWatched(true);
+            }}
+            onPressWatching={}
+          />
         </View>
 
-        <View style={{ width: "100%", height: 65, alignItems: "center" }}>
-          <TouchableOpacity
+        {/* <TouchableOpacity
             disabled={!!alreadySaved}
             style={styles.addtomymoviesbtn}
             onPress={async () => {
@@ -118,8 +135,8 @@ const MoviesWRTGenreDetailScreen = (props) => {
             ) : (
               <ActivityIndicator size="small" color={Colors.lightblue} />
             )}
-          </TouchableOpacity>
-        </View>
+          </TouchableOpacity> */}
+
         <View style={styles.plotcontainer}>
           <Text style={{ ...styles.plotText, color: Colors.grey }}>
             This is the intellectual properrty of Moviéy (2020-)
@@ -133,7 +150,7 @@ const MoviesWRTGenreDetailScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.primaryColor,
   },
 
   header: {
@@ -177,8 +194,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   addtomymoviesbtn: {
-    marginBottom: 5,
-    marginHorizontal: 20,
+    marginVertical: 5,
     backgroundColor: "black",
     width: 200,
     height: 60,

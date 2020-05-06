@@ -118,7 +118,7 @@ const MovieDetailScreen = (props) => {
           <TouchableOpacity
             disabled={!!alreadySaved}
             style={styles.addtomymoviesbtn}
-            onPress={async () => {
+            onPressWatched={async () => {
               setLoading(true);
               await dispatch(
                 UserActions.saveMovies(
