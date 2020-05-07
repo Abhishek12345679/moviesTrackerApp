@@ -121,7 +121,7 @@ const MovieDetailScreen = (props) => {
             onPressWatched={async () => {
               setLoading(true);
               await dispatch(
-                UserActions.saveMovies(
+                UserActions.saveMoviesWatched(
                   selectedMovieId,
                   selectedMovie.title,
                   selectedMovie.posterUrl,

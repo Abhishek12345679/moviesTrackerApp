@@ -41,12 +41,12 @@ const StatePicker = (props) => {
           pressed ? fadeOutAnim() : fadeInAnim();
         }}
       >
-        {props.onPressWatched ? (
+        {/* {!!!props.onPressWatched || !!!props.onPressWatching ? (
           <Text style={styles.text}>Add to My Movies</Text>
         ) : (
           <Text style={styles.text}>Watched</Text>
         )}
-        {props.children}
+        {props.children} */}
       </TouchableOpacity>
       <Animated.View style={{ height: initialHeight }}>
         <TouchableOpacity

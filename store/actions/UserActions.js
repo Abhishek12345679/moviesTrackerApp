@@ -1,6 +1,8 @@
 import Movie from "../../models/Movie";
 
-export const SAVE_MOVIES = "SAVE_MOVIES";
+export const SAVE_MOVIES_WATCHED = "SAVE_MOVIES";
+export const SAVE_MOVIES_WATCHING = "SAVE_MOVIES";
+export const SAVE_MOVIES_WILL_WATCH = "SAVE_MOVIES";
 export const LOAD_MOVIES = "LOAD_MOVIES";
 
 export const loadMovies = () => {
@@ -39,11 +41,11 @@ export const loadMovies = () => {
   };
 };
 
-export const saveMovies = (id, title, posterUrl, year) => {
+export const saveMoviesWatched = (id, title, posterUrl, year) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
-        "https://moviey-e67d9.firebaseio.com/userMovies.json",
+        "https://moviey-e67d9.firebaseio.com/userMoviesWatched.json",
         {
           method: "POST",
           headers: {
@@ -63,8 +65,84 @@ export const saveMovies = (id, title, posterUrl, year) => {
       console.log(resData);
 
       dispatch({
-        type: SAVE_MOVIES,
-        userMovie: {
+        type: SAVE_MOVIES_WATCHED,
+        userMovieWatched: {
+          id,
+          title,
+          posterUrl,
+          year,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const saveMoviesWatching = (id, title, posterUrl, year) => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(
+        "https://moviey-e67d9.firebaseio.com/userMoviesWatching.json",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id,
+            title,
+            posterUrl,
+            year,
+          }),
+        }
+      );
+
+      const resData = await response.json();
+
+      console.log(resData);
+
+      dispatch({
+        type: SAVE_MOVIES_WATCHING,
+        userMovieWatching: {
+          id,
+          title,
+          posterUrl,
+          year,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const saveMoviesWillWatch = (id, title, posterUrl, year) => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(
+        "https://moviey-e67d9.firebaseio.com/userMoviesWillWatch.json",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id,
+            title,
+            posterUrl,
+            year,
+          }),
+        }
+      );
+
+      const resData = await response.json();
+
+      console.log(resData);
+
+      dispatch({
+        type: SAVE_MOVIES_WILL_WATCH,
+        userMovieWillWatch: {
           id,
           title,
           posterUrl,

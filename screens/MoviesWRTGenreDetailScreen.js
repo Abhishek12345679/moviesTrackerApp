@@ -93,11 +93,11 @@ const MoviesWRTGenreDetailScreen = (props) => {
         <View style={styles.plotcontainer}>
           <Text style={styles.plotText}>{selectedMovie.plot}</Text>
           <StatePicker
-            disabled={!!alreadySaved}
+            // disabled={!!alreadySaved}
             onPressWatched={() => {
               setLoading(true);
               dispatch(
-                UserActions.saveMovies(
+                UserActions.saveMoviesWatched(
                   selectedMovieId,
                   selectedMovie.title,
                   selectedMovie.posterUrl,
@@ -107,7 +107,19 @@ const MoviesWRTGenreDetailScreen = (props) => {
               setLoading(false);
               setWatched(true);
             }}
-            onPressWatching={}
+            onPressWatching={()=>{
+              setLoading(true);
+              dispatch(
+                UserActions.saveMoviesWatching(
+                  selectedMovieId,
+                  selectedMovie.title,
+                  selectedMovie.posterUrl,
+                  selectedMovie.year
+                )
+              );
+              setLoading(false);
+              setWatched(true);
+            }}
           />
         </View>
 
