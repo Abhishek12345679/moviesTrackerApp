@@ -20,12 +20,96 @@ import { useScrollToTop } from "@react-navigation/native";
 
 const SearchScreen = (props) => {
   const genres = [
-    { id: 9648, genreName: "Mystery", genreColor: "#1abc9c" },
-    { id: 27, genreName: "Horror", genreColor: "#34495e" },
-    { id: 18, genreName: "Drama", genreColor: "#2980b9" },
-    { id: 16, genreName: "Anime", genreColor: "#12ff" },
-    { id: 16, genreName: "Adult", genreColor: "#45fe" },
-    { id: 16, genreName: "Realism", genreColor: "#45f4" },
+    {
+      id: 28,
+      name: "Action",
+      genreColor: "#581b98",
+    },
+    {
+      id: 12,
+      name: "Adventure",
+      genreColor: "#2d6cdf",
+    },
+    {
+      id: 16,
+      name: "Animation",
+      genreColor: "#cabbe9",
+    },
+    {
+      id: 35,
+      name: "Comedy",
+      genreColor: "#1e2a78",
+    },
+    {
+      id: 80,
+      name: "Crime",
+      genreColor: "#f9ff21",
+    },
+    {
+      id: 99,
+      name: "Documentary",
+      genreColor: "#3d6cb9",
+    },
+    {
+      id: 18,
+      name: "Drama",
+      genreColor: "#3b9a9c",
+    },
+    {
+      id: 10751,
+      name: "Family",
+      genreColor: "#586b98",
+    },
+    {
+      id: 14,
+      name: "Fantasy",
+      genreColor: "#1e2a78",
+    },
+    {
+      id: 36,
+      name: "History",
+      genreColor: "#3b9a9c",
+    },
+    {
+      id: 27,
+      name: "Horror",
+      genreColor: "#ff9a9c",
+    },
+    {
+      id: 10402,
+      name: "Music",
+      genreColor: "#f1ff21",
+    },
+    {
+      id: 9648,
+      name: "Mystery",
+      genreColor: "#1e2f78",
+    },
+    {
+      id: 10749,
+      name: "Romance",
+      genreColor: "#d72323",
+    },
+    {
+      id: 878,
+      name: "Science Fiction",
+      genreColor: "#3e3636",
+    },
+    {
+      id: 10770,
+      name: "TV Movie",
+      genreColor: "#c86f5e",
+    },
+    {
+      id: 53,
+      name: "Thriller",
+      genreColor: "#0b8457",
+    },
+    {
+      id: 10752,
+      name: "War",
+      genreColor: "#226089",
+    },
   ];
 
   const dispatch = useDispatch();
@@ -74,14 +158,14 @@ const SearchScreen = (props) => {
             }}
           >
             <LinearGradient
-              colors={[itemData.item.genreColor, Colors.primaryColor]}
+              colors={[Colors.lightblue, itemData.item.genreColor]}
               style={{
                 ...styles.genreTab,
                 // backgroundColor: itemData.item.genreColor,
               }}
             >
               <Text style={{ ...styles.headerText, fontSize: 17 }}>
-                {itemData.item.genreName}
+                {itemData.item.name}
               </Text>
             </LinearGradient>
           </TouchableOpacity>
@@ -124,6 +208,9 @@ const styles = StyleSheet.create({
       width: 2,
       height: 2,
     },
+  },
+  headerText: {
+    fontFamily: "apple-bold",
   },
 });
 

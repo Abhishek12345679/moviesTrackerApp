@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Colors from "../constants/Colors";
 
 import * as UserActions from "../store/actions/UserActions";
-
+import { useScrollToTop } from "@react-navigation/native";
 import MovieListItem from "../components/MovieListItem";
 
 const ProfileScreen = (props) => {
@@ -26,6 +26,8 @@ const ProfileScreen = (props) => {
   const saved_movies = useSelector((state) => state.UserMovies.userMovies);
 
   const dispatch = useDispatch();
+  const scrollRef = React.useRef(null);
+  useScrollToTop(scrollRef);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -67,6 +69,7 @@ const ProfileScreen = (props) => {
 
   return (
     <ScrollView
+      ref={scrollRef}
       style={styles.screen}
       refreshControl={
         <RefreshControl
