@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import * as MoviesAction from "../store/actions/MoviesAction";
 import Colors from "../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
+import { useScrollToTop } from "@react-navigation/native";
 
 const SearchScreen = (props) => {
   const genres = [
@@ -28,8 +29,11 @@ const SearchScreen = (props) => {
   ];
 
   const dispatch = useDispatch();
+  const scrollRef = React.useRef(null);
+  useScrollToTop(scrollRef);
   return (
     <ScrollView
+      ref={scrollRef}
       style={styles.screen}
       contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}
       showsVerticalScrollIndicator={false}
@@ -82,7 +86,7 @@ const SearchScreen = (props) => {
             </LinearGradient>
           </TouchableOpacity>
         )}
-      /> 
+      />
     </ScrollView>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,8 @@ import * as MoviesAction from "../store/actions/MoviesAction";
 import * as UserActions from "../store/actions/UserActions";
 import Colors from "../constants/Colors";
 
+import { useScrollToTop } from "@react-navigation/native";
+
 const MoviesScreen = (props) => {
   const trending_movies = useSelector((state) => state.Movies.movies);
   // console.log("ON LAUNCH STORIES", trending_movies);
@@ -29,6 +31,8 @@ const MoviesScreen = (props) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const dispatch = useDispatch();
+  const scrollRef = useRef(null);
+  useScrollToTop(scrollRef);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -68,6 +72,7 @@ const MoviesScreen = (props) => {
   }
   return (
     <ScrollView
+      ref={scrollRef}
       style={styles.screen}
       showsVerticalScrollIndicator={false}
       refreshControl={
