@@ -24,6 +24,7 @@ const ProfileScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const saved_movies = useSelector((state) => state.UserMovies.userMovies);
+  const watching = useSelector((state) => state.UserMovies.watching);
 
   const dispatch = useDispatch();
   const scrollRef = React.useRef(null);
@@ -81,8 +82,8 @@ const ProfileScreen = (props) => {
     >
       <View style={styles.header}>
         <View style={styles.followers}>
-          <Text style={styles.titleText}>Followers</Text>
-          <Text style={styles.text}>420</Text>
+          <Text style={styles.titleText}> Followers </Text>
+          <Text style={styles.text}> 420 </Text>
         </View>
         <TouchableOpacity
           activeOpacity={0.86}
@@ -102,17 +103,28 @@ const ProfileScreen = (props) => {
           )}
         </TouchableOpacity>
         <View style={styles.followers}>
-          <Text style={styles.titleText}>Following</Text>
-          <Text style={styles.text}>69</Text>
+          <Text style={styles.titleText}> Following </Text>
+          <Text style={styles.text}> 69 </Text>
         </View>
       </View>
       <View style={{ margin: 10 }}>
-        <Text style={{ ...styles.titleText, fontSize: 20 }}>My Movies</Text>
+        <Text style={{ ...styles.titleText, fontSize: 20 }}> My Movies </Text>
       </View>
-
-      <FlatList
+      {/* <FlatList
         scrollEnabled={true}
         data={saved_movies}
+        keyExtractor={(item) => item.id}
+        renderItem={(itemData) => (
+          <MovieListItem
+            posterUrl={itemData.item.posterUrl}
+            movieTitle={itemData.item.title}
+            year={itemData.item.year}
+          />
+        )}
+      /> */}
+      <FlatList
+        scrollEnabled={true}
+        data={watching}
         keyExtractor={(item) => item.id}
         renderItem={(itemData) => (
           <MovieListItem

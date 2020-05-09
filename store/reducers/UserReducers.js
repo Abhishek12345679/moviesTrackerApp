@@ -1,10 +1,11 @@
 import { SAVE_MOVIES, LOAD_MOVIES } from "../actions/UserActions";
 import Movie from "../../models/Movie";
 
-import { AsyncStorage } from "react-native";
-
 const initialState = {
   userMovies: [],
+  watched: [],
+  currently_watching: [],
+  want_to_watch: [],
 };
 
 const UserMoviesReducer = (state = initialState, action) => {
@@ -14,38 +15,38 @@ const UserMoviesReducer = (state = initialState, action) => {
         action.userMovie.id,
         action.userMovie.title,
         action.userMovie.posterUrl,
-        action.userMovie.year
-        // action.userMovie.cast,
-        // action.userMovie.plot
+        action.userMovie.year,
+        action.userMovie.cast,
+        // action.userMovie.plot,
+        action.userMovie.ratings,
+        action.userMovie.language,
+        action.userMovie.location
       );
       console.log("saving...", savedMovie);
 
-      console.log(saveUserData(state.userMovies));
+      // console.log(saveUserData(state.userMovies));
 
       return {
         ...state,
         userMovies: state.userMovies.concat(savedMovie),
+        watched:state.watched.concat(savedMovie)
       };
     case LOAD_MOVIES:
       return {
         ...state,
         userMovies: action.userMovies,
+        watched: action.userMovies.filter(
+          (movie) => movie.location === "ALREADY_WATCHED"
+        ),
+        currently_watching: action.userMovies.filter(
+          (movie) => movie.location === "CURRENTLY_WATCHING"
+        ),
+        want_to_watch: action.userMovies.filter(
+          (movie) => movie.location === "WANT_TO_WATCH"
+        ),
       };
     default:
       return state;
-  }
-};
-
-const saveUserData = async (userMovies) => {
-  try {
-    await AsyncStorage.setItem(
-      "UserData",
-      JSON.stringify({
-        userMovies: userMovies,
-      })
-    );
-  } catch (error) {
-    console.log(error);
   }
 };
 

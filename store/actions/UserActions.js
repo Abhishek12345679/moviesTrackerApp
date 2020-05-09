@@ -24,7 +24,12 @@ export const loadMovies = () => {
             resData[key].id,
             resData[key].title,
             resData[key].posterUrl,
-            resData[key].year
+            resData[key].year,
+            "",
+            "",
+            "",
+            "",
+            resData[key].location
           )
         );
       }
@@ -39,7 +44,17 @@ export const loadMovies = () => {
   };
 };
 
-export const saveMovies = (id, title, posterUrl, year) => {
+export const saveMovies = (
+  id,
+  title,
+  posterUrl,
+  year,
+  cast,
+  plot,
+  ratings,
+  language,
+  location
+) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
@@ -54,6 +69,11 @@ export const saveMovies = (id, title, posterUrl, year) => {
             title,
             posterUrl,
             year,
+            cast,
+            plot,
+            ratings,
+            language,
+            location,
           }),
         }
       );
@@ -69,6 +89,11 @@ export const saveMovies = (id, title, posterUrl, year) => {
           title,
           posterUrl,
           year,
+          cast,
+          plot,
+          ratings,
+          language,
+          location,
         },
       });
     } catch (err) {

@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 });
 
 export const screenOptions = (navData) => {
-  const headerTitle = navData.route.params.GenreName;
+  const headerTitle = navData.route.params.name;
   return {
     headerTitle: headerTitle,
   };
