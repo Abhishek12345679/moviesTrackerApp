@@ -24,7 +24,12 @@ export const loadMovies = () => {
             resData[key].id,
             resData[key].title,
             resData[key].posterUrl,
-            resData[key].year
+            resData[key].year,
+            "",
+            "",
+            "",
+            "",
+            resData[key].location
           )
         );
       }
@@ -32,6 +37,15 @@ export const loadMovies = () => {
       dispatch({
         type: LOAD_MOVIES,
         userMovies: loadedData,
+        watched: loadedData.filter(
+          (userMovie) => userMovie.location === "WATCHED"
+        ),
+        currently_watching: loadedData.filter(
+          (userMovie) => userMovie.location === "CURRENTLY_WATCHING"
+        ),
+        want_to_watch: loadedData.filter(
+          (userMovie) => userMovie.location === "WANT_TO_WATCH"
+        ),
       });
     } catch (err) {
       throw err;
@@ -39,7 +53,7 @@ export const loadMovies = () => {
   };
 };
 
-export const saveMovies = (id, title, posterUrl, year) => {
+export const saveMovies = (id, title, posterUrl, year, location) => {
   return async (dispatch) => {
     try {
       const response = await fetch(
@@ -54,12 +68,12 @@ export const saveMovies = (id, title, posterUrl, year) => {
             title,
             posterUrl,
             year,
+            location,
           }),
         }
       );
 
       const resData = await response.json();
-
       console.log(resData);
 
       dispatch({
@@ -69,6 +83,7 @@ export const saveMovies = (id, title, posterUrl, year) => {
           title,
           posterUrl,
           year,
+          location,
         },
       });
     } catch (err) {

@@ -1,5 +1,15 @@
 class Movie {
-    constructor(id, title, posterUrl, year, cast, plot, ratings, language) {
+    constructor(
+        id,
+        title,
+        posterUrl,
+        year,
+        cast,
+        plot,
+        ratings,
+        language,
+        location
+    ) {
         (this.id = id),
         (this.title = title),
         (this.posterUrl = posterUrl),
@@ -7,7 +17,8 @@ class Movie {
         (this.cast = cast);
         (this.plot = plot),
         (this.ratings = ratings),
-        (this.language = this.language);
+        (this.language = language),
+        (this.location = location);
     }
 }
 

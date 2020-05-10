@@ -34,7 +34,7 @@ const MoviesWRTGenreDetailScreen = (props) => {
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
-  const [watched, setWatched] = useState(false);
+  const [watched, setWatched] = useState(!!alreadySaved);
 
   return (
     <ScrollView style={styles.screen}>

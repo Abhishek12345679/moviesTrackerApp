@@ -114,32 +114,91 @@ const MovieDetailScreen = (props) => {
         <View style={styles.plotcontainer}>
           <Text style={styles.plotText}>{selectedMovie.plot}</Text>
         </View>
-        <View style={{ width: "100%", height: 65, alignItems: "center" }}>
-          <TouchableOpacity
-            disabled={!!alreadySaved}
-            style={styles.addtomymoviesbtn}
-            onPress={async () => {
-              setLoading(true);
-              await dispatch(
-                UserActions.saveMovies(
-                  selectedMovieId,
-                  selectedMovie.title,
-                  selectedMovie.posterUrl,
-                  selectedMovie.year
-                )
-              );
-              setLoading(false);
-              setWatched(true);
-            }}
-          >
-            {!loading ? (
-              <Text style={styles.text}>
-                {!watched ? "Add to My Movies" : "Watched"}
-              </Text>
-            ) : (
-              <ActivityIndicator size="small" color={Colors.lightblue} />
-            )}
-          </TouchableOpacity>
+        <View>
+          <View style={{ width: "100%", height: 65, alignItems: "center" }}>
+            <TouchableOpacity
+              disabled={!!alreadySaved}
+              style={styles.addtomymoviesbtn}
+              onPress={() => {
+                setLoading(true);
+                dispatch(
+                  UserActions.saveMovies(
+                    selectedMovieId,
+                    selectedMovie.title,
+                    selectedMovie.posterUrl,
+                    selectedMovie.year,
+                    "WATCHED"
+                  )
+                );
+                setLoading(false);
+                setWatched(true);
+              }}
+            >
+              {!loading ? (
+                <Text style={styles.text}>
+                  {!watched ? "Add to Watched" : "Watched"}
+                </Text>
+              ) : (
+                <ActivityIndicator size="small" color={Colors.lightblue} />
+              )}
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: "100%", height: 65, alignItems: "center" }}>
+            <TouchableOpacity
+              disabled={!!alreadySaved}
+              style={styles.addtomymoviesbtn}
+              onPress={() => {
+                setLoading(true);
+                dispatch(
+                  UserActions.saveMovies(
+                    selectedMovieId,
+                    selectedMovie.title,
+                    selectedMovie.posterUrl,
+                    selectedMovie.year,
+                    "CURRENTLY_WATCHING"
+                  )
+                );
+                setLoading(false);
+                setWatched(true);
+              }}
+            >
+              {!loading ? (
+                <Text style={styles.text}>
+                  {!watched ? "Add to Watching" : "Watching"}
+                </Text>
+              ) : (
+                <ActivityIndicator size="small" color={Colors.lightblue} />
+              )}
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: "100%", height: 65, alignItems: "center" }}>
+            <TouchableOpacity
+              disabled={!!alreadySaved}
+              style={styles.addtomymoviesbtn}
+              onPress={() => {
+                setLoading(true);
+                dispatch(
+                  UserActions.saveMovies(
+                    selectedMovieId,
+                    selectedMovie.title,
+                    selectedMovie.posterUrl,
+                    selectedMovie.year,
+                    "WANT_TO_WATCH"
+                  )
+                );
+                setLoading(false);
+                setWatched(true);
+              }}
+            >
+              {!loading ? (
+                <Text style={styles.text}>
+                  {!watched ? "add to later" : "want to watch"}
+                </Text>
+              ) : (
+                <ActivityIndicator size="small" color={Colors.lightblue} />
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.plotcontainer}>
           <Text style={{ ...styles.plotText, color: Colors.grey }}>

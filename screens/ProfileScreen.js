@@ -18,12 +18,24 @@ import Colors from "../constants/Colors";
 import * as UserActions from "../store/actions/UserActions";
 import { useScrollToTop } from "@react-navigation/native";
 import MovieListItem from "../components/MovieListItem";
+import MovieItem from "../components/MovieItem";
 
 const ProfileScreen = (props) => {
   const [clickedDP, setClickedDP] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
   const saved_movies = useSelector((state) => state.UserMovies.userMovies);
+  const watched_movies = useSelector((state) => state.UserMovies.watched);
+
+  console.log("🌈", watched_movies);
+
+  const watching_movies = useSelector(
+    (state) => state.UserMovies.currently_watching
+  );
+  const want_to_watch_movies = useSelector(
+    (state) => state.UserMovies.want_to_watch
+  );
 
   const dispatch = useDispatch();
   const scrollRef = React.useRef(null);
@@ -106,22 +118,90 @@ const ProfileScreen = (props) => {
           <Text style={styles.text}>69</Text>
         </View>
       </View>
-      <View style={{ margin: 10 }}>
-        <Text style={{ ...styles.titleText, fontSize: 20 }}>My Movies</Text>
-      </View>
+      <View>
+        <View>
+          <View style={{ margin: 10 }}>
+            <Text style={{ ...styles.titleText, fontSize: 20 }}>My Movies</Text>
+          </View>
 
-      <FlatList
-        scrollEnabled={true}
-        data={saved_movies}
-        keyExtractor={(item) => item.id}
-        renderItem={(itemData) => (
-          <MovieListItem
-            posterUrl={itemData.item.posterUrl}
-            movieTitle={itemData.item.title}
-            year={itemData.item.year}
+          <FlatList
+            horizontal={true}
+            scrollEnabled={true}
+            data={saved_movies}
+            keyExtractor={(item) => item.id}
+            renderItem={(itemData) => (
+              <MovieItem
+                posterUrl={itemData.item.posterUrl}
+                movieTitle={itemData.item.title}
+                year={itemData.item.year}
+              />
+            )}
           />
-        )}
-      />
+
+          <View>
+            <View style={{ margin: 10 }}>
+              <Text style={{ ...styles.titleText, fontSize: 20 }}>Watched</Text>
+            </View>
+          </View>
+
+          <FlatList
+            horizontal={true}
+            scrollEnabled={true}
+            data={watched_movies}
+            keyExtractor={(item) => item.id}
+            renderItem={(itemData) => (
+              <MovieItem
+                posterUrl={itemData.item.posterUrl}
+                movieTitle={itemData.item.title}
+                year={itemData.item.year}
+              />
+            )}
+          />
+        </View>
+
+        <View>
+          <View style={{ margin: 10 }}>
+            <Text style={{ ...styles.titleText, fontSize: 20 }}>
+              Currently Watching
+            </Text>
+          </View>
+
+          <FlatList
+            horizontal={true}
+            scrollEnabled={true}
+            data={watching_movies}
+            keyExtractor={(item) => item.id}
+            renderItem={(itemData) => (
+              <MovieItem
+                posterUrl={itemData.item.posterUrl}
+                movieTitle={itemData.item.title}
+                year={itemData.item.year}
+              />
+            )}
+          />
+        </View>
+      </View>
+      <View>
+        <View style={{ margin: 10 }}>
+          <Text style={{ ...styles.titleText, fontSize: 20 }}>
+            Want to Watch
+          </Text>
+        </View>
+
+        <FlatList
+          horizontal={true}
+          scrollEnabled={true}
+          data={want_to_watch_movies}
+          keyExtractor={(item) => item.id}
+          renderItem={(itemData) => (
+            <MovieItem
+              posterUrl={itemData.item.posterUrl}
+              movieTitle={itemData.item.title}
+              year={itemData.item.year}
+            />
+          )}
+        />
+      </View>
     </ScrollView>
   );
 };

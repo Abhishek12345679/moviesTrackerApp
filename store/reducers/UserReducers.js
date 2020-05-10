@@ -1,10 +1,11 @@
 import { SAVE_MOVIES, LOAD_MOVIES } from "../actions/UserActions";
 import Movie from "../../models/Movie";
 
-import { AsyncStorage } from "react-native";
-
 const initialState = {
   userMovies: [],
+  watched: [],
+  currently_watching: [],
+  want_to_watch: [],
 };
 
 const UserMoviesReducer = (state = initialState, action) => {
@@ -14,13 +15,14 @@ const UserMoviesReducer = (state = initialState, action) => {
         action.userMovie.id,
         action.userMovie.title,
         action.userMovie.posterUrl,
-        action.userMovie.year
-        // action.userMovie.cast,
-        // action.userMovie.plot
+        action.userMovie.year,
+        "",
+        "",
+        "",
+        "",
+        action.userMovie.location
       );
       console.log("saving...", savedMovie);
-
-      console.log(saveUserData(state.userMovies));
 
       return {
         ...state,
@@ -30,22 +32,12 @@ const UserMoviesReducer = (state = initialState, action) => {
       return {
         ...state,
         userMovies: action.userMovies,
+        watched: action.watched,
+        currently_watching: action.currently_watching,
+        want_to_watch: action.want_to_watch,
       };
     default:
       return state;
-  }
-};
-
-const saveUserData = async (userMovies) => {
-  try {
-    await AsyncStorage.setItem(
-      "UserData",
-      JSON.stringify({
-        userMovies: userMovies,
-      })
-    );
-  } catch (error) {
-    console.log(error);
   }
 };
 

@@ -20,13 +20,8 @@ export const clearGenreScreen = () => {
 };
 
 export const loadStories = () => {
-  const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
   return async (dispatch, getState) => {
     try {
-      //problem with this link
-      // const response = await fetch(
-      //   `https://api.themoviedb.org/3/movie/upcoming?api_key=${config.TMDB_API_KEY}&language=en-US`
-      // );
       const response = await fetch(
         `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=sex`
       );
@@ -131,8 +126,9 @@ export const searchMovies = (MovieTitle) => {
             resData.Search[i].Poster,
             resData.Search[i].Year,
             [],
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem, numquam cupiditate obcaecati commodi dolores veritatis nam ad consequatur laudantium provident nobis dolore maiores dicta voluptas exercitationem soluta dolorem. Ullam, totam."
-            // resData.Search[i].imdbratings
+            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem, numquam cupiditate obcaecati commodi dolores veritatis nam ad consequatur laudantium provident nobis dolore maiores dicta voluptas exercitationem soluta dolorem. Ullam, totam.",
+            "",
+            ""
           )
         );
       }
@@ -163,13 +159,6 @@ export const loadMoviesWithGenres = (genreId) => {
       const resData = await response.json();
       console.log(resData);
 
-      // const responseWithCast = await fetch(
-      //   `https://api.themoviedb.org/3/movie/150540?api_key=${config.TMDB_API_KEY}&append_to_response=credits`
-      // );
-
-      // const resDataWithCast = await responseWithCast.json();
-      // console.log("cast", resDataWithCast);
-
       const loadedMoviesWRTGenre = [];
 
       for (let i = 0; i < 5; i++) {
@@ -179,9 +168,10 @@ export const loadMoviesWithGenres = (genreId) => {
             resData.results[i].title,
             posterBaseUrl + resData.results[i].poster_path,
             resData.results[i].release_date,
-            "",
+            [],
             resData.results[i].overview,
-            resData.results[i].vote_average
+            resData.results[i].vote_average,
+            resData.results[i].original_language
           )
         );
       }
@@ -197,43 +187,3 @@ export const loadMoviesWithGenres = (genreId) => {
     }
   };
 };
-
-// export const loadCast = (movieId) => {
-//   const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
-//   return async (dispatch) => {
-//     try {
-//       const response = await fetch(
-//         `https://api.themoviedb.org/3/movie/${movieId}?api_key=${config.TMDB_API_KEY}&append_to_response=credits`
-//       );
-
-//       if (!response.ok) {
-//         throw new Error("failed response");
-//       }
-
-//       const resData = await response.json();
-//       console.log(resData);
-
-//       const loadedMoviesWRTGenre = [];
-
-//       for (let i = 0; i < 5; i++) {
-//         loadedMoviesWRTGenre.push(
-//           new Movie(
-//             resData.results[i].id.toString(),
-//             resData.results[i].title,
-//             posterBaseUrl + resData.results[i].backdrop_path,
-//             resData.results[i].release_date
-//           )
-//         );
-//       }
-
-//       console.log("moviesWRTGenre", loadedMoviesWRTGenre);
-
-//       dispatch({
-//         type: LOAD_MOVIES_WITH_GENRES,
-//         moviesWRTGenre: loadedMoviesWRTGenre,
-//       });
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-// };
