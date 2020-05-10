@@ -11,6 +11,8 @@ import {
   RefreshControl,
 } from "react-native";
 
+import SkeletonContent from "react-native-skeleton-content";
+
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import Colors from "../constants/Colors";
@@ -73,8 +75,15 @@ const ProfileScreen = (props) => {
 
   if (loading) {
     return (
-      <View style={styles.centered}>
+      <View>
         <ActivityIndicator size="small" color={Colors.lightblue} />
+        {/* <SkeletonContent
+          containerStyle={{ flex: 1, width: 300 }}
+          boneColor="#121212"
+          highlightColor="#333333"
+          animationType="pulse"
+          isLoading={true}
+        /> */}
       </View>
     );
   }

@@ -55,7 +55,11 @@ export const loadStories = () => {
 
 export const loadNewReleases = () => {
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
-  return async (dispatch) => {
+  let hasUserSaved;
+  return async (dispatch, getState) => {
+    // console.log("🌈🌈", getState());
+
+    // if()
     try {
       const response = await fetch(
         `https://api.themoviedb.org/3/trending/all/day?api_key=${config.TMDB_API_KEY}`
@@ -71,6 +75,9 @@ export const loadNewReleases = () => {
       const LoadedNewReleases = [];
 
       for (let i = 0; i < 5; i++) {
+        hasUserSaved = getState().UserMovies.userMovies.find(
+          (userMovie) => userMovie.id === resData.results[i].id.toString()
+        );
         LoadedNewReleases.push(
           new Movie(
             resData.results[i].id.toString(),
@@ -83,7 +90,9 @@ export const loadNewReleases = () => {
               : resData.results[i].first_air_date,
             "",
             resData.results[i].overview,
-            resData.results[i].vote_average
+            resData.results[i].vote_average,
+            "",
+            hasUserSaved ? hasUserSaved.location : ""
           )
         );
       }

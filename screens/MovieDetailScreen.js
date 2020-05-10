@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   Dimensions,
   Picker,
   ActivityIndicator,
+  ActionSheetIOS,
 } from "react-native";
 import MovieItem from "../components/MovieItem";
 import { useSelector, useDispatch } from "react-redux";
@@ -51,12 +52,96 @@ const MovieDetailScreen = (props) => {
     (movie) => movie.id === selectedMovie.id
   );
 
-  const [data, setData] = useState({
-    state: "add to my movies",
-  });
+  console.log("🚀", alreadySaved);
 
-  const [watched, setWatched] = useState(!!alreadySaved);
+  const saved_location =
+    selectedMovie.id === alreadySaved.id
+      ? alreadySaved.location
+      : "Add to My Movies";
+
+  let text;
+
+  const buttonTextGenerator = () => {
+    if (saved_location === "WATCHED") {
+      text = "Watched";
+    } else if (saved_location === "CURRENTLY_WATCHING") {
+      text = "Currently Watching";
+    } else if (saved_location === "WANT_TO_WATCH") {
+      text = "Want to Watch";
+    }
+    return text;
+  };
+
+  // useEffect(() => {
+  //   buttonTextGenerator();
+  // }, [buttonTextGenerator]);
+
+  let [buttonText, setButtonText] = useState(buttonTextGenerator());
   const [loading, setLoading] = useState(false);
+
+  const openActionSheet = () => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: [
+          "Cancel",
+          "Add to Watched",
+          "Currently Watching",
+          "Want to Watch",
+        ],
+        cancelButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 0) {
+          //cancel
+        } else if (buttonIndex === 1) {
+          setLoading(true);
+          setButtonText("Want to Watch");
+          dispatch(
+            UserActions.saveMovies(
+              selectedMovieId,
+              selectedMovie.title,
+              selectedMovie.posterUrl,
+              selectedMovie.year,
+              "WATCHED"
+            )
+          );
+          setTimeout(() => {
+            setLoading(false);
+          }, 3000);
+        } else if (buttonIndex === 2) {
+          setLoading(true);
+          setButtonText("Currently Watching");
+          dispatch(
+            UserActions.saveMovies(
+              selectedMovieId,
+              selectedMovie.title,
+              selectedMovie.posterUrl,
+              selectedMovie.year,
+              "CURRENTLY_WATCHING"
+            )
+          );
+          setTimeout(() => {
+            setLoading(false);
+          }, 3000);
+        } else if (buttonIndex == 3) {
+          setLoading(true);
+          setButtonText("Watched");
+          dispatch(
+            UserActions.saveMovies(
+              selectedMovieId,
+              selectedMovie.title,
+              selectedMovie.posterUrl,
+              selectedMovie.year,
+              "WANT_TO_WATCH"
+            )
+          );
+          setTimeout(() => {
+            setLoading(false);
+          }, 3000);
+        }
+      }
+    );
+  };
 
   return (
     <ScrollView style={styles.screen}>
@@ -120,30 +205,20 @@ const MovieDetailScreen = (props) => {
               disabled={!!alreadySaved}
               style={styles.addtomymoviesbtn}
               onPress={() => {
-                setLoading(true);
-                dispatch(
-                  UserActions.saveMovies(
-                    selectedMovieId,
-                    selectedMovie.title,
-                    selectedMovie.posterUrl,
-                    selectedMovie.year,
-                    "WATCHED"
-                  )
-                );
-                setLoading(false);
-                setWatched(true);
+                openActionSheet();
               }}
             >
               {!loading ? (
                 <Text style={styles.text}>
-                  {!watched ? "Add to Watched" : "Watched"}
+                  {/* {!watched ? "Add to Watched" : "Watched"} */}
+                  {buttonText}
                 </Text>
               ) : (
                 <ActivityIndicator size="small" color={Colors.lightblue} />
               )}
             </TouchableOpacity>
           </View>
-          <View style={{ width: "100%", height: 65, alignItems: "center" }}>
+          {/* <View style={{ width: "100%", height: 65, alignItems: "center" }}>
             <TouchableOpacity
               disabled={!!alreadySaved}
               style={styles.addtomymoviesbtn}
@@ -197,8 +272,8 @@ const MovieDetailScreen = (props) => {
               ) : (
                 <ActivityIndicator size="small" color={Colors.lightblue} />
               )}
-            </TouchableOpacity>
-          </View>
+            </TouchableOpacity> */}
+          {/* </View> */}
         </View>
         <View style={styles.plotcontainer}>
           <Text style={{ ...styles.plotText, color: Colors.grey }}>
