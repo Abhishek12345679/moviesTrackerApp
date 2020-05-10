@@ -1,23 +1,28 @@
 import React from "react";
-import {
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ImageBackground,
-} from "react-native";
+import { Text, StyleSheet, TouchableOpacity, Image, View } from "react-native";
+import Colors from "../constants/Colors";
 
 const CastMember = (props) => {
   return (
-    <TouchableOpacity style={styles.item} onPress={() => {}}>
-      {/* <Text style={styles.text}>{props.castName}</Text> */}
-      <ImageBackground
-        source={{
-          uri:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQAQIrdbmjst8ULAyvfqem53sMDC1WCkUXmhJEu2KwXYtae7ZzY&usqp=CAU",
-        }}
-        style={styles.image}
-      ></ImageBackground>
-    </TouchableOpacity>
+    <View
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        marginHorizontal: 10,
+      }}
+    >
+      <TouchableOpacity style={styles.item} onPress={() => {}}>
+        {/* <Text style={styles.text}>{props.castName}</Text> */}
+        <Image
+          source={{
+            uri: props.posterUrl,
+          }}
+          style={styles.image}
+        ></Image>
+      </TouchableOpacity>
+      <Text style={styles.text}>{props.castName}</Text>
+      <Text style={{ color: Colors.white }}>as {props.character}</Text>
+    </View>
   );
 };
 
@@ -30,8 +35,8 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 6,
-    marginTop: 10,
+    marginHorizontal: 15,
+    marginVertical: 10,
 
     shadowColor: "#000",
     shadowOpacity: 0.6,

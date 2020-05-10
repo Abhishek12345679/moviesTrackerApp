@@ -54,10 +54,15 @@ const MovieDetailScreen = (props) => {
 
   console.log("🚀", alreadySaved);
 
-  const saved_location =
-    selectedMovie.id === alreadySaved.id
-      ? alreadySaved.location
-      : "Add to My Movies";
+  let saved_location;
+  if (!!alreadySaved) {
+    saved_location =
+      selectedMovie.id === alreadySaved.id
+        ? alreadySaved.location
+        : "Add_to_My_Movies";
+  } else {
+    saved_location = "Add_to_My_Movies";
+  }
 
   let text;
 
@@ -68,13 +73,11 @@ const MovieDetailScreen = (props) => {
       text = "Currently Watching";
     } else if (saved_location === "WANT_TO_WATCH") {
       text = "Want to Watch";
+    } else if (saved_location === "Add_to_My_Movies") {
+      text = "Add to My Movies";
     }
     return text;
   };
-
-  // useEffect(() => {
-  //   buttonTextGenerator();
-  // }, [buttonTextGenerator]);
 
   let [buttonText, setButtonText] = useState(buttonTextGenerator());
   const [loading, setLoading] = useState(false);
@@ -218,62 +221,6 @@ const MovieDetailScreen = (props) => {
               )}
             </TouchableOpacity>
           </View>
-          {/* <View style={{ width: "100%", height: 65, alignItems: "center" }}>
-            <TouchableOpacity
-              disabled={!!alreadySaved}
-              style={styles.addtomymoviesbtn}
-              onPress={() => {
-                setLoading(true);
-                dispatch(
-                  UserActions.saveMovies(
-                    selectedMovieId,
-                    selectedMovie.title,
-                    selectedMovie.posterUrl,
-                    selectedMovie.year,
-                    "CURRENTLY_WATCHING"
-                  )
-                );
-                setLoading(false);
-                setWatched(true);
-              }}
-            >
-              {!loading ? (
-                <Text style={styles.text}>
-                  {!watched ? "Add to Watching" : "Watching"}
-                </Text>
-              ) : (
-                <ActivityIndicator size="small" color={Colors.lightblue} />
-              )}
-            </TouchableOpacity>
-          </View>
-          <View style={{ width: "100%", height: 65, alignItems: "center" }}>
-            <TouchableOpacity
-              disabled={!!alreadySaved}
-              style={styles.addtomymoviesbtn}
-              onPress={() => {
-                setLoading(true);
-                dispatch(
-                  UserActions.saveMovies(
-                    selectedMovieId,
-                    selectedMovie.title,
-                    selectedMovie.posterUrl,
-                    selectedMovie.year,
-                    "WANT_TO_WATCH"
-                  )
-                );
-                setLoading(false);
-                setWatched(true);
-              }}
-            >
-              {!loading ? (
-                <Text style={styles.text}>
-                  {!watched ? "add to later" : "want to watch"}
-                </Text>
-              ) : (
-                <ActivityIndicator size="small" color={Colors.lightblue} />
-              )}
-            </TouchableOpacity> */}
-          {/* </View> */}
         </View>
         <View style={styles.plotcontainer}>
           <Text style={{ ...styles.plotText, color: Colors.grey }}>

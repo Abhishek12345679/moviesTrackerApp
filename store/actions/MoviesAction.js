@@ -8,6 +8,7 @@ export const CLEAR_GENRE_SCREEN = "CLEAR_GENRE_SCREEN";
 import Movie from "../../models/Movie";
 
 import config from "../../config";
+import Cast from "../../models/CastMember";
 
 export const clearSearchList = () => {
   return { type: CLEAR_SEARCH_LIST };
@@ -153,8 +154,10 @@ export const searchMovies = (MovieTitle) => {
 
 export const loadMoviesWithGenres = (genreId) => {
   let response;
-  const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
-  return async (dispatch) => {
+  let get_credits;
+  let hasUserSaved;
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+  return async (dispatch, getState) => {
     dispatch(clearGenreScreen());
     try {
       response = await fetch(
@@ -168,19 +171,55 @@ export const loadMoviesWithGenres = (genreId) => {
       const resData = await response.json();
       console.log(resData);
 
+      const getCredits = async (index) => {
+        let response, creditsData;
+        try {
+          response = await fetch(
+            `https://api.themoviedb.org/3/movie/${resData.results[index].id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+          );
+          creditsData = await response.json();
+          // console.log("credits", creditsData);
+        } catch (err) {
+          console.log(err);
+        }
+
+        const castMembers = [];
+
+        for (let i = 0; i < 5; i++) {
+          castMembers.push(
+            new Cast(
+              creditsData.credits.cast[i].id,
+              creditsData.credits.cast[i].character,
+              creditsData.credits.cast[i].name,
+              posterBaseUrl + creditsData.credits.cast[i].profile_path
+            )
+          );
+        }
+
+        console.log(castMembers);
+
+        return castMembers;
+      };
+
+      // console.log("CAST 👨‍👨‍👧‍👦", getCredits());
+
       const loadedMoviesWRTGenre = [];
 
       for (let i = 0; i < 5; i++) {
+        hasUserSaved = getState().UserMovies.userMovies.find(
+          (userMovie) => userMovie.id === resData.results[i].id.toString()
+        );
         loadedMoviesWRTGenre.push(
           new Movie(
             resData.results[i].id.toString(),
             resData.results[i].title,
             posterBaseUrl + resData.results[i].poster_path,
             resData.results[i].release_date,
-            [],
+            getCredits(i),
             resData.results[i].overview,
             resData.results[i].vote_average,
-            resData.results[i].original_language
+            resData.results[i].original_language,
+            hasUserSaved ? hasUserSaved.location : ""
           )
         );
       }
