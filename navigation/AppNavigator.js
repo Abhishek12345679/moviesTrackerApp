@@ -142,7 +142,7 @@ const searchScreenNavigator = () => {
       <SearchScreenStackNavigator.Screen
         name="SearchDetailScreen"
         component={SearchDetailScreen}
-        options={SearchDetailScreenOptions}
+        options={{ ...SearchDetailScreenOptions, headerShown: true }}
       />
       <SearchScreenStackNavigator.Screen
         name="MoviesDetailScreen"

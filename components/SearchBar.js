@@ -17,6 +17,7 @@ const SearchBar = (props) => {
             <Text style={styles.searchInput}>Type Here...</Text>
           ) : (
             <TextInput
+              autoFocus={props.autoFocus}
               placeholder="Type here..."
               placeholderTextColor={Colors.grey}
               style={styles.searchInput}

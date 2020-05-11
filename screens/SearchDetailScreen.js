@@ -5,6 +5,9 @@ import { View, StyleSheet, Image, Text, FlatList } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import * as UserMoviesActions from "../store/actions/UserActions";
 
+// import Search from "../assets/Images/people.svg";
+import { AntDesign } from "@expo/vector-icons";
+
 import SearchBar from "../components/SearchBar";
 
 import MovieListItem from "../components/MovieListItem";
@@ -34,6 +37,7 @@ const SearchDetailScreen = (props) => {
   return (
     <View style={styles.screen}>
       <SearchBar
+        autoFocus={true}
         style={styles.searchbar}
         value={searchValue}
         onChangeText={searchValueChangeHandler}
@@ -67,6 +71,8 @@ const SearchDetailScreen = (props) => {
         />
       ) : (
         <View style={styles.centered}>
+          {/* <Search /> */}
+          <AntDesign name="frowno" size={24} color="white" />
           <Text style={{ ...styles.text, fontSize: 16 }}>
             {searchValue} not found
           </Text>
@@ -94,12 +100,15 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "apple-regular",
     fontSize: 12,
-    color: Colors.lightblue,
+    color: Colors.white,
   },
   searchbar: {
     marginTop: 5,
     width: "100%",
     shadowColor: "#000",
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 export default SearchDetailScreen;

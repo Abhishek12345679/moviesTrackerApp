@@ -152,7 +152,7 @@ const SearchScreen = (props) => {
               props.navigation.navigate({
                 name: "GenreScreen",
                 params: {
-                  GenreName: itemData.item.genreName,
+                  GenreName: itemData.item.name,
                 },
               });
             }}

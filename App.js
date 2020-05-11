@@ -12,6 +12,7 @@ import { AppLoading } from "expo";
 import NavigationContainer from "./navigation/NavigationContainer";
 
 export default function App() {
+  // require("react-native").unstable_enableLogBox();
   const [fontLoaded, setFontLoaded] = useState();
 
   const rootReducer = combineReducers({

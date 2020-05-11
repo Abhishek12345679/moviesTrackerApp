@@ -82,7 +82,7 @@ export const loadNewReleases = () => {
           creditsData = await response.json();
           // console.log("credits", creditsData);
         } catch (err) {
-          console.log(err);
+          throw new Error(err);
         }
 
         const castMembers = [];
@@ -136,9 +136,12 @@ export const loadNewReleases = () => {
 };
 
 export const searchMovies = (MovieTitle) => {
-  return async (dispatch) => {
+  let response;
+  let hasUserSaved;
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+  return async (dispatch, getState) => {
     try {
-      const response = await fetch(
+      response = await fetch(
         `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=${MovieTitle}&plot=full`
       );
 
@@ -149,26 +152,75 @@ export const searchMovies = (MovieTitle) => {
       const resData = await response.json();
       console.log("search results: ", resData);
 
-      // if (!!!resData.Search || resData.Search.length === 0) {
-      //   fallbackText = "Search...";
-      // } else if ((resData.Error = "Movie not found!")) {
-      //   fallbackText = "No Movies with this name";
-      // }
+      const getCredits = async (index) => {
+        let response, creditsData;
+        try {
+          response = await fetch(
+            `https://api.themoviedb.org/3/movie/${resData.Search[index].imdbID}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+          );
+          creditsData = await response.json();
+          console.log("credits", creditsData);
+        } catch (err) {
+          throw new Error(err);
+        }
+
+        const castMembers = [];
+
+        let cast_limit = creditsData.credits.cast.length;
+
+        if (cast_limit < 5) {
+          cast_limit = creditsData.credits.cast.length;
+        } else if (cast_limit === 5) {
+          cast_limit = 5;
+        } else {
+          cast_limit = 5;
+        }
+
+        let j;
+        for (j = 0; j < cast_limit; j++) {
+          castMembers.push(
+            new Cast(
+              creditsData.credits.cast[j].id,
+              creditsData.credits.cast[j].character,
+              creditsData.credits.cast[j].name,
+              posterBaseUrl + creditsData.credits.cast[j].profile_path
+            )
+          );
+        }
+
+        console.log(castMembers);
+
+        return castMembers;
+      };
 
       const searchedMovies = [];
 
       let i;
-      for (i = 0; i < 10; i++) {
+      let limit = resData.Search.length;
+
+      if (limit < 10) {
+        limit = resData.Search.length;
+      } else if (limit === 10) {
+        limit = 10;
+      } else {
+        limit = 10;
+      }
+
+      for (i = 0; i < limit; i++) {
+        hasUserSaved = getState().UserMovies.userMovies.find(
+          (userMovie) => userMovie.id === resData.Search[i].imdbID
+        );
         searchedMovies.push(
           new Movie(
             resData.Search[i].imdbID,
             resData.Search[i].Title,
             resData.Search[i].Poster,
             resData.Search[i].Year,
-            [],
+            getCredits(i),
             "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem, numquam cupiditate obcaecati commodi dolores veritatis nam ad consequatur laudantium provident nobis dolore maiores dicta voluptas exercitationem soluta dolorem. Ullam, totam.",
             "",
-            ""
+            "",
+            hasUserSaved ? hasUserSaved.location : ""
           )
         );
       }
@@ -234,7 +286,7 @@ export const loadMoviesWithGenres = (genreId) => {
 
       const loadedMoviesWRTGenre = [];
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i <= 5; i++) {
         hasUserSaved = getState().UserMovies.userMovies.find(
           (userMovie) => userMovie.id === resData.results[i].id.toString()
         );
