@@ -55,7 +55,7 @@ export const loadStories = () => {
 };
 
 export const loadNewReleases = () => {
-  const posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   let hasUserSaved;
   return async (dispatch, getState) => {
     // console.log("🌈🌈", getState());
@@ -73,9 +73,39 @@ export const loadNewReleases = () => {
       const resData = await response.json();
       console.log(resData);
 
+      const getCredits = async (index) => {
+        let response, creditsData;
+        try {
+          response = await fetch(
+            `https://api.themoviedb.org/3/movie/${resData.results[index].id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+          );
+          creditsData = await response.json();
+          // console.log("credits", creditsData);
+        } catch (err) {
+          console.log(err);
+        }
+
+        const castMembers = [];
+
+        for (let i = 0; i < 5; i++) {
+          castMembers.push(
+            new Cast(
+              creditsData.credits.cast[i].id,
+              creditsData.credits.cast[i].character,
+              creditsData.credits.cast[i].name,
+              posterBaseUrl + creditsData.credits.cast[i].profile_path
+            )
+          );
+        }
+
+        console.log(castMembers);
+
+        return castMembers;
+      };
+
       const LoadedNewReleases = [];
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i <= 5; i++) {
         hasUserSaved = getState().UserMovies.userMovies.find(
           (userMovie) => userMovie.id === resData.results[i].id.toString()
         );
@@ -89,7 +119,7 @@ export const loadNewReleases = () => {
             resData.results[i].media_type === "movie"
               ? resData.results[i].release_date
               : resData.results[i].first_air_date,
-            "",
+            getCredits(i),
             resData.results[i].overview,
             resData.results[i].vote_average,
             "",
@@ -128,7 +158,7 @@ export const searchMovies = (MovieTitle) => {
       const searchedMovies = [];
 
       let i;
-      for (i = 0; i < resData.Search.length; i++) {
+      for (i = 0; i < 10; i++) {
         searchedMovies.push(
           new Movie(
             resData.Search[i].imdbID,
@@ -154,7 +184,6 @@ export const searchMovies = (MovieTitle) => {
 
 export const loadMoviesWithGenres = (genreId) => {
   let response;
-  let get_credits;
   let hasUserSaved;
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   return async (dispatch, getState) => {

@@ -9,17 +9,17 @@ import {
   Picker,
   ActivityIndicator,
   ActionSheetIOS,
+  FlatList,
 } from "react-native";
 import MovieItem from "../components/MovieItem";
 import { useSelector, useDispatch } from "react-redux";
 
 import { AntDesign } from "@expo/vector-icons";
 
-// import CastMember from "../components/CastMember";
+import CastMember from "../components/CastMember";
 
 import * as UserActions from "../store/actions/UserActions";
 
-// import { Picker } from "expo";
 
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../constants/Colors";
@@ -202,6 +202,20 @@ const MovieDetailScreen = (props) => {
         <View style={styles.plotcontainer}>
           <Text style={styles.plotText}>{selectedMovie.plot}</Text>
         </View>
+        <Text style={styles.text}>Cast</Text>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          data={selectedMovie.cast._55}
+          renderItem={(itemData) => (
+            <CastMember
+              castName={itemData.item.name}
+              posterUrl={itemData.item.profileUrl}
+              character={itemData.item.character}
+            />
+          )}
+        />
+
         <View>
           <View style={{ width: "100%", height: 65, alignItems: "center" }}>
             <TouchableOpacity
