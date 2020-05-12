@@ -10,6 +10,7 @@ import {
 const MovieItem = (props) => {
   return (
     <TouchableOpacity
+      {...props}
       style={{ ...styles.movieItem, ...props.style }}
       activeOpacity={0.85}
       onPress={props.onPress}
@@ -56,7 +57,8 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     justifyContent: "flex-end",
     overflow: "hidden",
-    borderRadius:5
+    borderRadius: 5,
+    padding: 0,
   },
   footer: {
     flexDirection: "row",

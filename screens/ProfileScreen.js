@@ -11,15 +11,12 @@ import {
   RefreshControl,
 } from "react-native";
 
-import SkeletonContent from "react-native-skeleton-content";
-
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import Colors from "../constants/Colors";
 
 import * as UserActions from "../store/actions/UserActions";
 import { useScrollToTop } from "@react-navigation/native";
-import MovieListItem from "../components/MovieListItem";
 import MovieItem from "../components/MovieItem";
 
 const ProfileScreen = (props) => {
@@ -77,13 +74,6 @@ const ProfileScreen = (props) => {
     return (
       <View>
         <ActivityIndicator size="small" color={Colors.lightblue} />
-        {/* <SkeletonContent
-          containerStyle={{ flex: 1, width: 300 }}
-          boneColor="#121212"
-          highlightColor="#333333"
-          animationType="pulse"
-          isLoading={true}
-        /> */}
       </View>
     );
   }

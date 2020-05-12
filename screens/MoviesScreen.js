@@ -87,10 +87,9 @@ const MoviesScreen = (props) => {
       <SkeletonContent
         boneColor="#303030"
         highlightColor="#252525"
-        animationType="shiver"
+        animationType="pulse"
         animationDirection="horizontalRight"
         easing={Easing.linear}
-        duration={1000}
         containerStyle={styles.headerCont}
         isLoading={loading || refreshing}
         layout={[
@@ -120,7 +119,6 @@ const MoviesScreen = (props) => {
               animationType="shiver"
               animationDirection="horizontalRight"
               easing={Easing.linear}
-              duration={500}
               containerStyle={{
                 flex: 1,
                 width: 80,

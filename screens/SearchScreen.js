@@ -133,44 +133,46 @@ const SearchScreen = (props) => {
           props.navigation.navigate("SearchDetailScreen");
         }}
       />
-      <FlatList
-        style={{ marginTop: 30 }}
-        scrollEnabled={false}
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "space-around",
-        }}
-        numColumns={2}
-        horizontal={false}
-        data={genres}
-        keyExtractor={(item) => item.id}
-        renderItem={(itemData) => (
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={() => {
-              dispatch(MoviesAction.loadMoviesWithGenres(itemData.item.id));
-              props.navigation.navigate({
-                name: "GenreScreen",
-                params: {
-                  GenreName: itemData.item.name,
-                },
-              });
-            }}
-          >
-            <LinearGradient
-              colors={[Colors.lightblue, itemData.item.genreColor]}
-              style={{
-                ...styles.genreTab,
-                // backgroundColor: itemData.item.genreColor,
+      <View>
+        <FlatList
+          style={{ marginTop: 30 }}
+          scrollEnabled={false}
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "space-around",
+          }}
+          numColumns={2}
+          horizontal={false}
+          data={genres}
+          keyExtractor={(item) => item.id}
+          renderItem={(itemData) => (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => {
+                dispatch(MoviesAction.loadMoviesWithGenres(itemData.item.id));
+                props.navigation.navigate({
+                  name: "GenreScreen",
+                  params: {
+                    GenreName: itemData.item.name,
+                  },
+                });
               }}
             >
-              <Text style={{ ...styles.headerText, fontSize: 17 }}>
-                {itemData.item.name}
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        )}
-      />
+              <LinearGradient
+                colors={[Colors.lightblue, itemData.item.genreColor]}
+                style={{
+                  ...styles.genreTab,
+                  // backgroundColor: itemData.item.genreColor,
+                }}
+              >
+                <Text style={{ ...styles.headerText, fontSize: 17 }}>
+                  {itemData.item.name}
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
     </ScrollView>
   );
 };
