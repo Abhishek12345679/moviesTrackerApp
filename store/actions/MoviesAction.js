@@ -5,6 +5,7 @@ export const CLEAR_SEARCH_LIST = "CLEAR_SEARCH_LIST";
 export const LOAD_MOVIES_WITH_GENRES = "LOAD_MOVIES_WITH_GENRES";
 export const CLEAR_GENRE_SCREEN = "CLEAR_GENRE_SCREEN";
 export const LOAD_NEW_TV_SHOWS = "LOAD_NEW_TV_SHOWS";
+export const LOAD_ANIME = "LOAD_ANIME";
 
 import Movie from "../../models/Movie";
 
@@ -33,7 +34,7 @@ export const loadStories = () => {
       }
 
       const resData = await response.json();
-      console.log("NEW RELEASES", resData);
+      // console.log("NEW RELEASES", resData);
 
       const loadedMovies = [];
 
@@ -70,7 +71,7 @@ export const loadNewReleases = () => {
       }
 
       const resData = await response.json();
-      console.log(resData);
+      // console.log(resData);
 
       // const getCredits = async (index) => {
       //   let response, creditsData;
@@ -153,9 +154,9 @@ export const loadNewTVShows = () => {
       }
 
       const resData = await response.json();
-      console.log(resData);
+      // console.log(resData);
 
-      const loadNewTVShows = [];
+      const loadedNewTVShows = [];
 
       for (let i = 0; i < 10; i++) {
         // let credits;
@@ -164,7 +165,7 @@ export const loadNewTVShows = () => {
         );
         // let cast = getCredits(i).then((cast) => cast);
         // console.log("CAST", cast);
-        loadNewTVShows.push(
+        loadedNewTVShows.push(
           new Movie(
             resData.results[i].id.toString(),
             resData.results[i].name,
@@ -180,7 +181,58 @@ export const loadNewTVShows = () => {
         );
       }
 
-      dispatch({ type: LOAD_NEW_TV_SHOWS, new_tv_shows: loadNewTVShows });
+      dispatch({ type: LOAD_NEW_TV_SHOWS, new_tv_shows: loadedNewTVShows });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const loadAnime = () => {
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+  let hasUserSaved;
+  return async (dispatch, getState) => {
+    // console.log("🌈🌈", getState());
+    try {
+      const response = await fetch(`https://kitsu.io/api/edge/trending/anime`, {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error("failed response");
+      }
+
+      const resData = await response.json();
+      // console.log("ANIME", resData);
+
+      const loadedAnime = [];
+
+      for (let i = 0; i < 10; i++) {
+        // let credits;
+        hasUserSaved = getState().UserMovies.userMovies.find(
+          (userMovie) => userMovie.id === resData.data[i].id.toString()
+        );
+        // let cast = getCredits(i).then((cast) => cast);
+        // console.log("CAST", cast);
+        loadedAnime.push(
+          new Movie(
+            resData.data[i].id,
+            resData.data[i].attributes.canonicalTitle,
+            resData.data[i].attributes.posterImage.medium,
+            resData.data[i].attributes.createdAt.toString().substr(0, 4),
+            // getCredits(i).then((cast) => cast),
+            [],
+            resData.data[i].attributes.synopsis,
+            resData.data[i].attributes.vote_average,
+            "",
+            hasUserSaved ? hasUserSaved.location : ""
+          )
+        );
+      }
+
+      // console.log("ANIME", loadedAnime);
+
+      dispatch({ type: LOAD_ANIME, anime: loadedAnime });
     } catch (err) {
       console.log(err);
     }
@@ -202,7 +254,7 @@ export const searchMovies = (MovieTitle) => {
       }
 
       const resData = await response.json();
-      console.log("search results: ", resData);
+      // console.log("search results: ", resData);
 
       const searchedMovies = [];
 
@@ -251,7 +303,7 @@ export const loadMoviesWithGenres = (genreId) => {
       }
 
       const resData = await response.json();
-      console.log(resData);
+      // console.log(resData);
 
       const loadedMoviesWRTGenre = [];
 

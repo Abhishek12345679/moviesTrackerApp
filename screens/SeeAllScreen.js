@@ -10,11 +10,18 @@ const SeeAllScreen = (props) => {
   let movies;
   let goToMovies = props.route.params.new_releases;
   let goToTV = props.route.params.new_tv_shows;
+  let goToAnime = props.route.params.goToAnime;
+  let movieType;
 
   if (goToMovies) {
     movies = useSelector((state) => state.Movies.new_releases);
+    movieType = "Movies";
   } else if (goToTV) {
     movies = useSelector((state) => state.Movies.new_tv_shows);
+    movieType = "TV";
+  } else if (goToAnime) {
+    movies = useSelector((state) => state.Movies.anime);
+    movieType = "anime";
   }
   return (
     <View style={styles.screen}>
@@ -36,7 +43,7 @@ const SeeAllScreen = (props) => {
                 params: {
                   movieId: itemData.item.id,
                   movieTitle: itemData.item.title,
-                  moviesType: goToTV ? "TV" : "Movies",
+                  moviesType: movieType,
                 },
               });
             }}
@@ -59,7 +66,7 @@ const styles = StyleSheet.create({
 });
 
 export const screenOptions = (navData) => {
-  const headerTitle = "Trending";
+  const headerTitle = navData.route.params.headerTitle;
   return {
     headerTitle: headerTitle,
   };

@@ -27,6 +27,7 @@ const MoviesScreen = (props) => {
   const new_releases = useSelector((state) => state.Movies.new_releases);
   // console.log("ON LAUNCH NEW RELEASES", new_releases);
   const new_tv_shows = useSelector((state) => state.Movies.new_tv_shows);
+  const anime = useSelector((state) => state.Movies.anime);
 
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -46,6 +47,7 @@ const MoviesScreen = (props) => {
       await dispatch(MoviesAction.loadNewReleases());
       await dispatch(UserActions.loadMovies());
       await dispatch(MoviesAction.loadNewTVShows());
+      await dispatch(MoviesAction.loadAnime());
     } catch (err) {
       console.log(err);
     }
@@ -220,6 +222,7 @@ const MoviesScreen = (props) => {
                   name: "SeeAllScreen",
                   params: {
                     new_releases: true,
+                    headerTitle: "Trending Movies",
                   },
                 });
               }}
@@ -237,6 +240,7 @@ const MoviesScreen = (props) => {
           </View>
         </SkeletonContent>
         <FlatList
+          keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={new_releases}
@@ -283,6 +287,8 @@ const MoviesScreen = (props) => {
         />
       </View>
 
+      {/* TV SHOWS */}
+
       <View>
         <SkeletonContent
           boneColor="#303030"
@@ -311,6 +317,7 @@ const MoviesScreen = (props) => {
                   name: "SeeAllScreen",
                   params: {
                     new_tv_shows: true,
+                    headerTitle: "Trending TV Shows",
                   },
                 });
               }}
@@ -328,6 +335,7 @@ const MoviesScreen = (props) => {
           </View>
         </SkeletonContent>
         <FlatList
+          keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={new_tv_shows}
@@ -373,10 +381,106 @@ const MoviesScreen = (props) => {
           )}
         />
       </View>
+
+      {/* Anime */}
+
+      <View>
+        <SkeletonContent
+          boneColor="#303030"
+          containerStyle={styles.headerCont}
+          highlightColor="#252525"
+          animationType="shiver"
+          animationDirection="verticalDown"
+          duration={2000}
+          easing={Easing.linear}
+          containerStyle={styles.headerCont}
+          isLoading={loading || refreshing}
+          layout={[
+            {
+              key: "text",
+              width: 250,
+              height: 30,
+              marginHorizontal: 10,
+              marginVertical: 10,
+            },
+          ]}
+        >
+          <View style={styles.headerCont}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                props.navigation.navigate({
+                  name: "SeeAllScreen",
+                  params: {
+                    moviesType: "anime",
+                    goToAnime: true,
+                    headerTitle: "Trending Anime",
+                  },
+                });
+              }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.headerText}> Anime </Text>
+                <Ionicons
+                  style={{ marginStart: 5 }}
+                  name="ios-arrow-forward"
+                  size={22}
+                  color={Colors.lightblue}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </SkeletonContent>
+        <FlatList
+          keyExtractor={(item) => item.id}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          data={anime}
+          renderItem={(itemData) => (
+            <SkeletonContent
+              boneColor="#303030"
+              highlightColor="#252525"
+              animationType="shiver"
+              animationDirection="horizontalRight"
+              easing={Easing.linear}
+              duration={500}
+              containerStyle={styles.new_releases}
+              isLoading={loading || refreshing}
+              layout={[
+                {
+                  key: "story",
+                  width: 200,
+                  height: 150,
+                  borderRadius: 5,
+                  marginStart: 10,
+                  marginVertical: 5,
+                },
+              ]}
+            >
+              <MovieItem
+                style={styles.new_releases}
+                id={itemData.item.id}
+                movieTitle={itemData.item.title}
+                posterUrl={itemData.item.posterUrl}
+                year={itemData.item.year}
+                onPress={() => {
+                  props.navigation.navigate({
+                    name: "MoviesDetailScreen",
+                    params: {
+                      movieId: itemData.item.id,
+                      movieTitle: itemData.item.title,
+                      moviesType: "anime",
+                      goToAnime: true,
+                    },
+                  });
+                }}
+              />
+            </SkeletonContent>
+          )}
+        />
+      </View>
     </ScrollView>
   );
 };
-
 
 const styles = StyleSheet.create({
   screen: {

@@ -45,6 +45,8 @@ const MovieDetailScreen = (props) => {
     movies = useSelector((state) => state.Movies.searched_movies);
   } else if (moviesType === "Movies") {
     movies = useSelector((state) => state.Movies.new_releases);
+  } else if (moviesType === "anime") {
+    movies = useSelector((state) => state.Movies.anime);
   }
 
   selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
