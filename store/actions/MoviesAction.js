@@ -4,6 +4,7 @@ export const SEARCH_MOVIES = "SEARCH_MOVIES";
 export const CLEAR_SEARCH_LIST = "CLEAR_SEARCH_LIST";
 export const LOAD_MOVIES_WITH_GENRES = "LOAD_MOVIES_WITH_GENRES";
 export const CLEAR_GENRE_SCREEN = "CLEAR_GENRE_SCREEN";
+export const LOAD_NEW_TV_SHOWS = "LOAD_NEW_TV_SHOWS";
 
 import Movie from "../../models/Movie";
 
@@ -24,7 +25,7 @@ export const loadStories = () => {
   return async (dispatch, getState) => {
     try {
       const response = await fetch(
-        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=sex`
+        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=first`
       );
 
       if (!response.ok) {
@@ -131,6 +132,55 @@ export const loadNewReleases = () => {
       }
 
       dispatch({ type: LOAD_NEW_RELEASES, new_releases: LoadedNewReleases });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const loadNewTVShows = () => {
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+  let hasUserSaved;
+  return async (dispatch, getState) => {
+    // console.log("🌈🌈", getState());
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/discover/tv?api_key=${config.TMDB_API_KEY}&language=en-US&sort_by=popularity.desc&first_air_date_year=2020&page=1&with_original_language=en`
+      );
+
+      if (!response.ok) {
+        throw new Error("failed response");
+      }
+
+      const resData = await response.json();
+      console.log(resData);
+
+      const loadNewTVShows = [];
+
+      for (let i = 0; i < 10; i++) {
+        // let credits;
+        hasUserSaved = getState().UserMovies.userMovies.find(
+          (userMovie) => userMovie.id === resData.results[i].id.toString()
+        );
+        // let cast = getCredits(i).then((cast) => cast);
+        // console.log("CAST", cast);
+        loadNewTVShows.push(
+          new Movie(
+            resData.results[i].id.toString(),
+            resData.results[i].name,
+            posterBaseUrl + resData.results[i].poster_path,
+            resData.results[i].first_air_date.toString().substr(0, 5),
+            // getCredits(i).then((cast) => cast),
+            [],
+            resData.results[i].overview,
+            resData.results[i].vote_average,
+            "",
+            hasUserSaved ? hasUserSaved.location : ""
+          )
+        );
+      }
+
+      dispatch({ type: LOAD_NEW_TV_SHOWS, new_tv_shows: loadNewTVShows });
     } catch (err) {
       console.log(err);
     }

@@ -6,6 +6,8 @@ import { combineReducers, applyMiddleware, createStore } from "redux";
 import ReduxThunk from "redux-thunk";
 import { Provider } from "react-redux";
 
+import { YellowBox } from "react-native";
+
 import * as Fonts from "expo-font";
 import { AppLoading } from "expo";
 
@@ -13,6 +15,7 @@ import NavigationContainer from "./navigation/NavigationContainer";
 
 export default function App() {
   // require("react-native").unstable_enableLogBox();
+  // YellowBox.ignoreWarnings = ["Warning: VirtualizedLists"];
   const [fontLoaded, setFontLoaded] = useState();
 
   const rootReducer = combineReducers({
@@ -45,3 +48,5 @@ export default function App() {
     </Provider>
   );
 }
+
+

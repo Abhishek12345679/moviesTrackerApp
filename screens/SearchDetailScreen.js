@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.primaryColor,
     justifyContent: "center",
+    alignItems: "center",
   },
   centered: {
     flex: 1,
@@ -103,10 +104,11 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
   searchbar: {
-    marginTop: 5,
-    width: "100%",
-    shadowColor: "#000",
-    height: 60,
+    marginHorizontal: 10,
+    marginTop: 25,
+    width: "95%",
+    shadowColor: "#fff",
+    height: 50,
     alignItems: "center",
     justifyContent: "center",
   },

@@ -33,7 +33,10 @@ import SeeAllScreen, {
   screenOptions as SeeAllScreenOptions,
 } from "../screens/SeeAllScreen";
 
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Colors from "../constants/Colors";
 
@@ -132,7 +135,10 @@ const SearchScreenStackNavigator = createStackNavigator();
 const searchScreenNavigator = () => {
   return (
     <SearchScreenStackNavigator.Navigator
-      screenOptions={defaultStackNavigationOptions}
+      screenOptions={{
+        ...defaultStackNavigationOptions,
+        ...TransitionPresets.FadeFromBottomAndroid,
+      }}
     >
       <SearchScreenStackNavigator.Screen
         name="SearchScreen"
@@ -142,7 +148,7 @@ const searchScreenNavigator = () => {
       <SearchScreenStackNavigator.Screen
         name="SearchDetailScreen"
         component={SearchDetailScreen}
-        options={{ ...SearchDetailScreenOptions, headerShown: true }}
+        options={{ ...SearchDetailScreenOptions, headerShown: false }}
       />
       <SearchScreenStackNavigator.Screen
         name="MoviesDetailScreen"
@@ -192,7 +198,7 @@ export const AppNavigator = () => {
         component={moviesScreenNavigator}
         tabBarOptions={{ showLabel: false }}
         options={{
-          tabBarIcon: ({ focused, size }) => (
+          tabBarIcon: ({ focused }) => (
             <Text
               style={{
                 fontFamily: "apple-bold",
@@ -211,7 +217,7 @@ export const AppNavigator = () => {
         component={searchScreenNavigator}
         options={{
           tabBarLabel: "sdsd",
-          tabBarIcon: ({ focused, color, size }) => (
+          tabBarIcon: ({ focused, size }) => (
             <AntDesign
               name="search1"
               size={focused ? size + 5 : size}
@@ -225,7 +231,7 @@ export const AppNavigator = () => {
         name="profileScreenNavigator"
         component={ProfileScreenNavigator}
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
+          tabBarIcon: ({ focused, size }) => (
             <MaterialCommunityIcons
               name="human-greeting"
               size={focused ? size + 5 : size}

@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   ActionSheetIOS,
   FlatList,
+  YellowBox,
 } from "react-native";
 import MovieItem from "../components/MovieItem";
 import CastMember from "../components/CastMember";
@@ -23,6 +24,8 @@ import * as UserActions from "../store/actions/UserActions";
 import Colors from "../constants/Colors";
 
 const MoviesWRTGenreDetailScreen = (props) => {
+ 
+
   const selectedMovieId = props.route.params.movieId;
   const moviesWRTGenre = useSelector((state) => state.Movies.moviesWRTGenre);
   const user_movies = useSelector((state) => state.UserMovies.userMovies);
@@ -79,9 +82,9 @@ const MoviesWRTGenreDetailScreen = (props) => {
       (buttonIndex) => {
         if (buttonIndex === 0) {
           //cancel
-        } else if (buttonIndex === 3) {
+        } else if (buttonIndex === 1) {
           setLoading(true);
-          setButtonText("Want to Watch");
+          setButtonText("Dekh Liya");
           dispatch(
             UserActions.saveMovies(
               selectedMovieId,
@@ -109,9 +112,9 @@ const MoviesWRTGenreDetailScreen = (props) => {
           setTimeout(() => {
             setLoading(false);
           }, 3000);
-        } else if (buttonIndex == 1) {
+        } else if (buttonIndex == 3) {
           setLoading(true);
-          setButtonText("Watched");
+          setButtonText("Want to Watch");
           dispatch(
             UserActions.saveMovies(
               selectedMovieId,

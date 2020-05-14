@@ -7,13 +7,21 @@ import MovieItem from "../components/MovieItem";
 import Colors from "../constants/Colors";
 
 const SeeAllScreen = (props) => {
-  const trendingMovies = useSelector((state) => state.Movies.new_releases);
+  let movies;
+  let goToMovies = props.route.params.new_releases;
+  let goToTV = props.route.params.new_tv_shows;
+
+  if (goToMovies) {
+    movies = useSelector((state) => state.Movies.new_releases);
+  } else if (goToTV) {
+    movies = useSelector((state) => state.Movies.new_tv_shows);
+  }
   return (
     <View style={styles.screen}>
       <FlatList
         contentContainerStyle={styles.flatlist}
         numColumns={2}
-        data={trendingMovies}
+        data={movies}
         renderItem={(itemData) => (
           <MovieItem
             style={{ width: 175, height: 175 }}
@@ -28,7 +36,7 @@ const SeeAllScreen = (props) => {
                 params: {
                   movieId: itemData.item.id,
                   movieTitle: itemData.item.title,
-                  new_releases: true,
+                  moviesType: goToTV ? "TV" : "Movies",
                 },
               });
             }}

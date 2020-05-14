@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Picker,
+  Easing,
   ActivityIndicator,
   ActionSheetIOS,
   FlatList,
@@ -22,6 +23,7 @@ import * as UserActions from "../store/actions/UserActions";
 
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../constants/Colors";
+import SkeletonContent from "react-native-skeleton-content";
 
 const MovieDetailScreen = (props) => {
   const dispatch = useDispatch();
@@ -29,21 +31,24 @@ const MovieDetailScreen = (props) => {
 
   selectedMovieId = props.route.params.movieId;
 
-  const new_releases = props.route.params.new_releases;
+  // const new_releases = props.route.params.new_releases;
   const all_movies = props.route.params.all_movies;
   const searched_movies = props.route.params.searched_movies;
+  const moviesType = props.route.params.moviesType;
   const user_movies = useSelector((state) => state.UserMovies.userMovies);
 
-  if (new_releases) {
-    movies = useSelector((state) => state.Movies.new_releases);
+  if (moviesType === "TV") {
+    movies = useSelector((state) => state.Movies.new_tv_shows);
   } else if (all_movies) {
     movies = useSelector((state) => state.Movies.movies);
   } else if (searched_movies) {
     movies = useSelector((state) => state.Movies.searched_movies);
+  } else if (moviesType === "Movies") {
+    movies = useSelector((state) => state.Movies.new_releases);
   }
 
   selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
-  console.log("selctedMovie", selectedMovie);
+  console.log("selectedMovie", selectedMovie);
 
   const selectedMovieTitle = selectedMovie.title;
 
@@ -156,7 +161,13 @@ const MovieDetailScreen = (props) => {
             footerStyle={{
               backgroundColor: null,
             }}
-            style={{ width: 160, height: 160, shadowColor: "#fff" }}
+            style={{
+              width: 160,
+              height: 160,
+              shadowColor: "#fff",
+              marginHorizontal: 10,
+              marginVertical: 7.5,
+            }}
             id={selectedMovieId}
             posterUrl={selectedMovie.posterUrl}
             onPress={() => {}}

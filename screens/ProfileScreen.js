@@ -72,7 +72,7 @@ const ProfileScreen = (props) => {
 
   if (loading) {
     return (
-      <View>
+      <View style={styles.screen}>
         <ActivityIndicator size="small" color={Colors.lightblue} />
       </View>
     );
