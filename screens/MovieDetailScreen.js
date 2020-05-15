@@ -214,7 +214,7 @@ const MovieDetailScreen = (props) => {
         <View style={styles.plotcontainer}>
           <Text style={styles.plotText}>{selectedMovie.plot}</Text>
         </View>
-        {/* <Text style={styles.text}>Cast</Text>
+        <Text style={styles.text}>Cast</Text>
         <FlatList
           showsHorizontalScrollIndicator={false}
           horizontal={true}
@@ -226,7 +226,7 @@ const MovieDetailScreen = (props) => {
               character={itemData.item.character}
             />
           )}
-        /> */}
+        />
 
         <View>
           <View style={{ width: "100%", height: 65, alignItems: "center" }}>

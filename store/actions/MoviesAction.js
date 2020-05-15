@@ -37,8 +37,9 @@ export const loadStories = () => {
       // console.log("NEW RELEASES", resData);
 
       const loadedMovies = [];
+      const length = resData.Search.length;
 
-      for (let i = 0; i < resData.Search.length; i++) {
+      for (let i = 0; i < length; i++) {
         loadedMovies.push(
           new Movie(
             resData.Search[i].imdbID,
@@ -71,41 +72,43 @@ export const loadNewReleases = () => {
       }
 
       const resData = await response.json();
-      // console.log(resData);
+      console.log(resData);
 
-      // const getCredits = async (index) => {
-      //   let response, creditsData;
-      //   try {
-      //     response = await fetch(
-      //       `https://api.themoviedb.org/3/movie/${resData.results[index].id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
-      //     );
-      //     creditsData = await response.json();
-      //     // console.log("credits", creditsData);
-      //   } catch (err) {
-      //     throw new Error(err);
-      //   }
+      const getCredits = async (index) => {
+        let response, creditsData;
+        try {
+          response = await fetch(
+            `https://api.themoviedb.org/3/movie/${resData.results[index].id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+          );
+          creditsData = await response.json();
+          // console.log("credits", creditsData);
+        } catch (err) {
+          throw new Error(err);
+        }
 
-      //   const castMembers = [];
+        const castMembers = [];
+        const length = creditsData.credits.cast.length;
 
-      //   for (let i = 0; i < 5; i++) {
-      //     castMembers.push(
-      //       new Cast(
-      //         creditsData.credits.cast[i].id,
-      //         creditsData.credits.cast[i].character,
-      //         creditsData.credits.cast[i].name,
-      //         posterBaseUrl + creditsData.credits.cast[i].profile_path
-      //       )
-      //     );
-      //   }
+        for (let i = 0; i < length; i++) {
+          castMembers.push(
+            new Cast(
+              creditsData.credits.cast[i].id,
+              creditsData.credits.cast[i].character,
+              creditsData.credits.cast[i].name,
+              posterBaseUrl + creditsData.credits.cast[i].profile_path
+            )
+          );
+        }
 
-      //   console.log(castMembers);
+        console.log(castMembers);
 
-      //   return castMembers;
-      // };
+        return castMembers;
+      };
 
       const LoadedNewReleases = [];
+      const length = resData.results.length;
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < length; i++) {
         // let credits;
         hasUserSaved = getState().UserMovies.userMovies.find(
           (userMovie) => userMovie.id === resData.results[i].id.toString()
@@ -122,8 +125,8 @@ export const loadNewReleases = () => {
             resData.results[i].media_type === "movie"
               ? resData.results[i].release_date
               : resData.results[i].first_air_date,
-            // getCredits(i).then((cast) => cast),
-            [],
+            getCredits(i).then((cast) => cast),
+            // cast,
             resData.results[i].overview,
             resData.results[i].vote_average,
             "",
@@ -157,8 +160,9 @@ export const loadNewTVShows = () => {
       // console.log(resData);
 
       const loadedNewTVShows = [];
+      const length = resData.results.length;
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < length; i++) {
         // let credits;
         hasUserSaved = getState().UserMovies.userMovies.find(
           (userMovie) => userMovie.id === resData.results[i].id.toString()
@@ -189,7 +193,6 @@ export const loadNewTVShows = () => {
 };
 
 export const loadAnime = () => {
-  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   let hasUserSaved;
   return async (dispatch, getState) => {
     // console.log("🌈🌈", getState());
@@ -206,8 +209,9 @@ export const loadAnime = () => {
       // console.log("ANIME", resData);
 
       const loadedAnime = [];
+      const length = resData.data.length;
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < length; i++) {
         // let credits;
         hasUserSaved = getState().UserMovies.userMovies.find(
           (userMovie) => userMovie.id === resData.data[i].id.toString()
@@ -242,7 +246,7 @@ export const loadAnime = () => {
 export const searchMovies = (MovieTitle) => {
   let response;
   let hasUserSaved;
-  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+  // const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   return async (dispatch, getState) => {
     try {
       response = await fetch(
@@ -254,11 +258,12 @@ export const searchMovies = (MovieTitle) => {
       }
 
       const resData = await response.json();
-      // console.log("search results: ", resData);
+      console.log("search results: ", resData);
 
       const searchedMovies = [];
+      const length = resData.Search.length;
 
-      for (i = 0; i < 10; i++) {
+      for (i = 0; i < length; i++) {
         hasUserSaved = getState().UserMovies.userMovies.find(
           (userMovie) => userMovie.id === resData.Search[i].imdbID
         );
@@ -306,8 +311,9 @@ export const loadMoviesWithGenres = (genreId) => {
       // console.log(resData);
 
       const loadedMoviesWRTGenre = [];
+      const length = resData.results.length;
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < length; i++) {
         hasUserSaved = getState().UserMovies.userMovies.find(
           (userMovie) => userMovie.id === resData.results[i].id.toString()
         );

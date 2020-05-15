@@ -1,10 +1,11 @@
-import React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, FlatList, Easing } from "react-native";
 
 import { useSelector } from "react-redux";
 
 import MovieItem from "../components/MovieItem";
 import Colors from "../constants/Colors";
+import SkeletonContent from "react-native-skeleton-content";
 
 const SeeAllScreen = (props) => {
   let movies;
@@ -23,6 +24,9 @@ const SeeAllScreen = (props) => {
     movies = useSelector((state) => state.Movies.anime);
     movieType = "anime";
   }
+
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [isRefreshing, setIsRefreshing] = useState(false);
   return (
     <View style={styles.screen}>
       <FlatList

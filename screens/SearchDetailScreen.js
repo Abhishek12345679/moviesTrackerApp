@@ -28,7 +28,7 @@ const SearchDetailScreen = (props) => {
   const searchValueChangeHandler = (text) => {
     dispatch(MoviesActions.clearSearchList());
     setSearchValue(text);
-    dispatch(MoviesActions.searchMovies(text.trim()));
+    dispatch(MoviesActions.searchMovies(text));
   };
   useEffect(() => {
     dispatch(MoviesActions.clearSearchList());
@@ -90,8 +90,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: Colors.primaryColor,
-    justifyContent: "center",
-    alignItems: "center",
   },
   centered: {
     flex: 1,
