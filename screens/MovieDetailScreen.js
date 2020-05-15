@@ -216,9 +216,10 @@ const MovieDetailScreen = (props) => {
         </View>
         <Text style={styles.text}>Cast</Text>
         <FlatList
+          keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
-          data={selectedMovie.cast}
+          data={selectedMovie.cast._55}
           renderItem={(itemData) => (
             <CastMember
               castName={itemData.item.name}

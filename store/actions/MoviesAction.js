@@ -60,6 +60,7 @@ export const loadStories = () => {
 export const loadNewReleases = () => {
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   let hasUserSaved;
+
   return async (dispatch, getState) => {
     // console.log("🌈🌈", getState());
     try {
@@ -89,7 +90,7 @@ export const loadNewReleases = () => {
         const castMembers = [];
         const length = creditsData.credits.cast.length;
 
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < 10; i++) {
           castMembers.push(
             new Cast(
               creditsData.credits.cast[i].id,
@@ -102,7 +103,7 @@ export const loadNewReleases = () => {
 
         console.log(castMembers);
 
-        return castMembers;
+        return { cast: castMembers };
       };
 
       const LoadedNewReleases = [];
@@ -113,8 +114,12 @@ export const loadNewReleases = () => {
         hasUserSaved = getState().UserMovies.userMovies.find(
           (userMovie) => userMovie.id === resData.results[i].id.toString()
         );
-        // let cast = getCredits(i).then((cast) => cast);
-        // console.log("CAST", cast);
+
+        // let promises = [];
+        // for (let i = 0; i < creditsData.credits.cast.length; i++) {
+        //   promises.push(getCredits(index));
+        // }
+
         LoadedNewReleases.push(
           new Movie(
             resData.results[i].id.toString(),
@@ -125,7 +130,17 @@ export const loadNewReleases = () => {
             resData.results[i].media_type === "movie"
               ? resData.results[i].release_date
               : resData.results[i].first_air_date,
-            getCredits(i).then((cast) => cast),
+            getCredits(i)
+              .then((results) => {
+                console.log("success", results.cast);
+                return results.cast;
+              })
+              .catch((err) => console.log("cast error", err)),
+            // Promise.all(promises).then((results) => {
+            //   for (let i = 0; i < results.length; i++) {
+            //     results[i].cast;
+            //   }
+            // }),
             // cast,
             resData.results[i].overview,
             resData.results[i].vote_average,
