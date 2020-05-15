@@ -181,7 +181,7 @@ export const loadNewTVShows = () => {
         let response, creditsData;
         try {
           response = await fetch(
-            `https://api.themoviedb.org/3/movie/${resData.results[index].id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+            `https://api.themoviedb.org/3/tv/${resData.results[index].id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
           );
           creditsData = await response.json();
           // console.log("credits", creditsData);

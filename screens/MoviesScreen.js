@@ -58,12 +58,12 @@ const MoviesScreen = (props) => {
     loadScreen().then(() => setLoading(false));
   }, [loadScreen, setLoading]);
 
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", loadScreen);
-    return () => {
-      unsubscribe();
-    };
-  }, [loadScreen]);
+  // useEffect(() => {
+  //   const unsubscribe = props.navigation.addListener("focus", loadScreen);
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, [loadScreen]);
 
   // if (loading) {
   //   return (
