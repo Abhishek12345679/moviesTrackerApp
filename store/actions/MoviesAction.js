@@ -88,9 +88,12 @@ export const loadNewReleases = () => {
         }
 
         const castMembers = [];
-        const length = creditsData.credits.cast.length;
+        const length =
+          creditsData.credits.cast.length > 10
+            ? 10
+            : creditsData.credits.cast.length;
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < length; i++) {
           castMembers.push(
             new Cast(
               creditsData.credits.cast[i].id,
@@ -130,7 +133,7 @@ export const loadNewReleases = () => {
             resData.results[i].media_type === "movie"
               ? resData.results[i].release_date
               : resData.results[i].first_air_date,
-            getCredits(i)
+             getCredits(i)
               .then((results) => {
                 console.log("success", results.cast);
                 return results.cast;
@@ -174,6 +177,40 @@ export const loadNewTVShows = () => {
       const resData = await response.json();
       // console.log(resData);
 
+      const getCredits = async (index) => {
+        let response, creditsData;
+        try {
+          response = await fetch(
+            `https://api.themoviedb.org/3/movie/${resData.results[index].id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+          );
+          creditsData = await response.json();
+          // console.log("credits", creditsData);
+        } catch (err) {
+          throw new Error(err);
+        }
+
+        const castMembers = [];
+        const length =
+          creditsData.credits.cast.length > 10
+            ? 10
+            : creditsData.credits.cast.length;
+
+        for (let i = 0; i < length; i++) {
+          castMembers.push(
+            new Cast(
+              creditsData.credits.cast[i].id,
+              creditsData.credits.cast[i].character,
+              creditsData.credits.cast[i].name,
+              posterBaseUrl + creditsData.credits.cast[i].profile_path
+            )
+          );
+        }
+
+        console.log(castMembers);
+
+        return { cast: castMembers };
+      };
+
       const loadedNewTVShows = [];
       const length = resData.results.length;
 
@@ -191,7 +228,12 @@ export const loadNewTVShows = () => {
             posterBaseUrl + resData.results[i].poster_path,
             resData.results[i].first_air_date.toString().substr(0, 5),
             // getCredits(i).then((cast) => cast),
-            [],
+            getCredits(i)
+              .then((results) => {
+                console.log("success", results.cast);
+                return results.cast;
+              })
+              .catch((err) => console.log("cast error", err)),
             resData.results[i].overview,
             resData.results[i].vote_average,
             "",

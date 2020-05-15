@@ -8,7 +8,7 @@ const CastMember = (props) => {
       style={{
         justifyContent: "center",
         alignItems: "center",
-        marginHorizontal: 10,
+        height: 150,
       }}
     >
       <TouchableOpacity style={styles.item} onPress={() => {}}>
@@ -20,42 +20,45 @@ const CastMember = (props) => {
           style={styles.image}
         ></Image>
       </TouchableOpacity>
-      <Text style={styles.text}>{props.castName}</Text>
-      <Text style={{ color: Colors.white }}>as {props.character}</Text>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          marginVertical: 10,
+        }}
+      >
+        <Text style={styles.text}>
+          {props.castName.toString().substr(0, 10)}...
+        </Text>
+        <Text style={{ color: Colors.white, fontSize: 10 }}>
+          as {props.character}
+        </Text>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   item: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: 75,
+    height: 75,
+    borderRadius: 75 / 2,
+    marginHorizontal: 10,
     backgroundColor: "#000",
-    padding: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 15,
-    marginVertical: 10,
-
-    shadowColor: "#000",
-    shadowOpacity: 0.6,
-    shadowOffset: {
-      width: 2,
-      height: 3,
-    },
-    shadowRadius: 2,
   },
   text: {
+    fontSize: 12,
     fontFamily: "apple-bold",
     color: "#fff",
     textAlign: "center",
     textAlignVertical: "center",
   },
   image: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: 75,
+    height: 75,
+    borderRadius: 75 / 2,
     overflow: "hidden",
   },
 });

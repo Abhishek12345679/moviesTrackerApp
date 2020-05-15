@@ -167,8 +167,8 @@ const MovieDetailScreen = (props) => {
               width: 160,
               height: 160,
               shadowColor: "#fff",
-              marginHorizontal: 10,
-              marginVertical: 7.5,
+              marginTop: 10,
+              marginStart: 15,
             }}
             id={selectedMovieId}
             posterUrl={selectedMovie.posterUrl}
@@ -216,7 +216,7 @@ const MovieDetailScreen = (props) => {
         </View>
         <Text style={styles.text}>Cast</Text>
         <FlatList
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={selectedMovie.cast._55}
@@ -285,6 +285,7 @@ const styles = StyleSheet.create({
     fontFamily: "apple-bold",
     color: "#FFF",
     fontSize: 20,
+    padding: 3,
   },
   headerText: {
     fontFamily: "apple-bold",
