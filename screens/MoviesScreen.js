@@ -76,12 +76,12 @@ const MoviesScreen = (props) => {
     } catch (err) {
       console.log(err);
     }
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
     loadScreen().then(() => setLoading(false));
-  }, [loadScreen, setLoading]);
+  }, [setLoading]);
 
   const renderTrendingMoviesItem = ({ item }) => (
     <SkeletonContent
@@ -275,7 +275,7 @@ const MoviesScreen = (props) => {
               }}
             >
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.headerText}> Trending </Text>
+                <Text style={styles.headerText}> Movies </Text>
                 <Ionicons
                   style={{ marginStart: 5 }}
                   name="ios-arrow-forward"

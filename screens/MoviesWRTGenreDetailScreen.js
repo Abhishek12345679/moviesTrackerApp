@@ -21,21 +21,34 @@ import { AntDesign } from "@expo/vector-icons";
 import * as UserActions from "../store/actions/UserActions";
 
 import Colors from "../constants/Colors";
+import { createSelector } from "reselect";
+
+const GenreMovies = createSelector(
+  (state) => state.Movies.moviesWRTGenre,
+  (moviesWRTGenre) => moviesWRTGenre
+);
+
+const userMovies = createSelector(
+  (state) => state.UserMovies.userMovies,
+  (userMovies) => userMovies
+);
 
 const MoviesWRTGenreDetailScreen = (props) => {
- 
-
   const selectedMovieId = props.route.params.movieId;
-  const moviesWRTGenre = useSelector((state) => state.Movies.moviesWRTGenre);
-  const user_movies = useSelector((state) => state.UserMovies.userMovies);
+  const selectedMovieTitle = selectedMovie.title;
+
+  const moviesWRTGenre = useSelector(GenreMovies);
+  const user_movies = useSelector(userMovies);
+
   const selectedMovie = moviesWRTGenre.find(
     (movie) => movie.id === selectedMovieId
   );
-  const selectedMovieTitle = selectedMovie.title;
+  console.log("selctedMovie", selectedMovie);
+
   const alreadySaved = user_movies.find(
     (userMovie) => userMovie.id === selectedMovieId
   );
-  console.log("selctedMovie", selectedMovie);
+
   // console.log("cast 🔥", selectedMovie.cast);
   const dispatch = useDispatch();
 
@@ -142,10 +155,9 @@ const MoviesWRTGenreDetailScreen = (props) => {
             footerStyle={{
               backgroundColor: null,
             }}
-            style={{ width: 160, height: 160, shadowColor: "#fff" }}
+            style={styles.movieItem}
             id={selectedMovieId}
             posterUrl={selectedMovie.posterUrl}
-            onPress={() => {}}
             ratings={selectedMovie.ratings}
           />
           {!selectedMovieTitle >= 15 ? (
@@ -157,10 +169,8 @@ const MoviesWRTGenreDetailScreen = (props) => {
               <Text style={styles.yearText}>
                 {selectedMovie.year.substr(0, 4)}
               </Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={{ ...styles.text, color: "gold" }}>
-                  {selectedMovie.ratings}
-                </Text>
+              <View style={styles.ratingsContainer}>
+                <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
                 <AntDesign name="star" color="gold" size={23} />
               </View>
             </View>
@@ -175,10 +185,8 @@ const MoviesWRTGenreDetailScreen = (props) => {
               <Text style={styles.yearText}>
                 {selectedMovie.year.substr(0, 4)}
               </Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={{ ...styles.text, color: "gold" }}>
-                  {selectedMovie.ratings}
-                </Text>
+              <View style={styles.ratingsContainer}>
+                <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
                 <AntDesign name="star" color="gold" size={23} />
               </View>
             </View>
@@ -207,15 +215,10 @@ const MoviesWRTGenreDetailScreen = (props) => {
           <TouchableOpacity
             disabled={!!alreadySaved}
             style={styles.addtomymoviesbtn}
-            onPress={() => {
-              openActionSheet();
-            }}
+            onPress={openActionSheet}
           >
             {!loading ? (
-              <Text style={styles.text}>
-                {/* {!watched ? "Add to Watched" : "Watched"} */}
-                {buttonText}
-              </Text>
+              <Text style={styles.text}>{buttonText}</Text>
             ) : (
               <ActivityIndicator size="small" color={Colors.lightblue} />
             )}
@@ -223,7 +226,7 @@ const MoviesWRTGenreDetailScreen = (props) => {
         </View>
         <View style={styles.plotcontainer}>
           <Text style={{ ...styles.plotText, color: Colors.grey }}>
-            This is the intellectual properrty of Moviéy (2020-)
+            This is the intellectual property of Moviéy (2020-)
           </Text>
         </View>
       </LinearGradient>
@@ -250,8 +253,30 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     padding: 10,
   },
+  movieItem: {
+    width: 185,
+    height: 185,
+    shadowColor: "#fff",
+    shadowOpacity: 0.2,
+    marginTop: 10,
+    marginStart: 15,
+    shadowOffset: {
+      width: 1,
+      height: 2,
+    },
+    shadowRadius: 10,
+  },
   basicdetails: {
     flexDirection: "column",
+  },
+  ratingsContainer: {
+    flexDirection: "row",
+  },
+  ratingsText: {
+    fontFamily: "apple-bold",
+    color: "gold",
+    fontSize: 20,
+    padding: 3,
   },
   text: {
     fontFamily: "apple-bold",

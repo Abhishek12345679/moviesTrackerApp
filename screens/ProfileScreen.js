@@ -18,13 +18,20 @@ import Colors from "../constants/Colors";
 import * as UserActions from "../store/actions/UserActions";
 import { useScrollToTop } from "@react-navigation/native";
 import MovieItem from "../components/MovieItem";
+import { createSelector } from "reselect";
+
+const savedMovies = createSelector(
+  (state) => state.UserMovies.userMovies,
+  (userMovies) => userMovies
+);
 
 const ProfileScreen = (props) => {
   const [clickedDP, setClickedDP] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const saved_movies = useSelector((state) => state.UserMovies.userMovies);
+  //combine the actions and then filter and stuff
+  const saved_movies = useSelector(savedMovies);
   const watched_movies = useSelector((state) => state.UserMovies.watched);
 
   console.log("🌈", watched_movies);
@@ -61,14 +68,7 @@ const ProfileScreen = (props) => {
     fetchMovies().then(() => {
       setLoading(false);
     });
-  }, [fetchMovies, setLoading]);
-
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", fetchMovies);
-    return () => {
-      unsubscribe();
-    };
-  }, [fetchMovies]);
+  }, [setLoading]);
 
   if (loading) {
     return (
@@ -77,6 +77,14 @@ const ProfileScreen = (props) => {
       </View>
     );
   }
+
+  const renderMovieItem = ({ item }) => (
+    <MovieItem
+      posterUrl={item.posterUrl}
+      movieTitle={item.title}
+      year={item.year}
+    />
+  );
 
   return (
     <ScrollView
@@ -126,15 +134,9 @@ const ProfileScreen = (props) => {
           <FlatList
             horizontal={true}
             scrollEnabled={true}
-            data={saved_movies}
+            data={saved_movies.reverse()}
             keyExtractor={(item) => item.id}
-            renderItem={(itemData) => (
-              <MovieItem
-                posterUrl={itemData.item.posterUrl}
-                movieTitle={itemData.item.title}
-                year={itemData.item.year}
-              />
-            )}
+            renderItem={renderMovieItem}
           />
 
           <View>
@@ -146,15 +148,9 @@ const ProfileScreen = (props) => {
           <FlatList
             horizontal={true}
             scrollEnabled={true}
-            data={watched_movies}
+            data={watched_movies.reverse()}
             keyExtractor={(item) => item.id}
-            renderItem={(itemData) => (
-              <MovieItem
-                posterUrl={itemData.item.posterUrl}
-                movieTitle={itemData.item.title}
-                year={itemData.item.year}
-              />
-            )}
+            renderItem={renderMovieItem}
           />
         </View>
 
@@ -168,15 +164,9 @@ const ProfileScreen = (props) => {
           <FlatList
             horizontal={true}
             scrollEnabled={true}
-            data={watching_movies}
+            data={watching_movies.reverse()}
             keyExtractor={(item) => item.id}
-            renderItem={(itemData) => (
-              <MovieItem
-                posterUrl={itemData.item.posterUrl}
-                movieTitle={itemData.item.title}
-                year={itemData.item.year}
-              />
-            )}
+            renderItem={renderMovieItem}
           />
         </View>
       </View>
@@ -190,15 +180,9 @@ const ProfileScreen = (props) => {
         <FlatList
           horizontal={true}
           scrollEnabled={true}
-          data={want_to_watch_movies}
+          data={want_to_watch_movies.reverse()}
           keyExtractor={(item) => item.id}
-          renderItem={(itemData) => (
-            <MovieItem
-              posterUrl={itemData.item.posterUrl}
-              movieTitle={itemData.item.title}
-              year={itemData.item.year}
-            />
-          )}
+          renderItem={renderMovieItem}
         />
       </View>
     </ScrollView>

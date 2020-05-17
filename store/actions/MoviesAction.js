@@ -133,7 +133,7 @@ export const loadNewReleases = () => {
             resData.results[i].media_type === "movie"
               ? resData.results[i].release_date
               : resData.results[i].first_air_date,
-             getCredits(i)
+            getCredits(i)
               .then((results) => {
                 console.log("success", results.cast);
                 return results.cast;
@@ -303,11 +303,11 @@ export const loadAnime = () => {
 export const searchMovies = (MovieTitle) => {
   let response;
   let hasUserSaved;
-  // const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   return async (dispatch, getState) => {
     try {
       response = await fetch(
-        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=${MovieTitle}&plot=full`
+        `https://api.themoviedb.org/3/search/movie?api_key=${config.TMDB_API_KEY}&query=${MovieTitle}&page=1`
       );
 
       if (!response.ok) {
@@ -318,22 +318,22 @@ export const searchMovies = (MovieTitle) => {
       console.log("search results: ", resData);
 
       const searchedMovies = [];
-      const length = resData.Search.length;
+      const length = resData.results.length;
 
       for (i = 0; i < length; i++) {
         hasUserSaved = getState().UserMovies.userMovies.find(
-          (userMovie) => userMovie.id === resData.Search[i].imdbID
+          (userMovie) => userMovie.id === resData.results[i].id
         );
         searchedMovies.push(
           new Movie(
-            resData.Search[i].imdbID,
-            resData.Search[i].Title,
-            resData.Search[i].Poster,
-            resData.Search[i].Year,
+            resData.results[i].id.toString(),
+            resData.results[i].title,
+            posterBaseUrl + resData.results[i].poster_path,
+            resData.results[i].release_date,
             // getCredits(i).then((cast) => cast),
             [],
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem, numquam cupiditate obcaecati commodi dolores veritatis nam ad consequatur laudantium provident nobis dolore maiores dicta voluptas exercitationem soluta dolorem. Ullam, totam.",
-            "",
+            resData.results[i].overview,
+            resData.results[i].vote_average,
             "",
             hasUserSaved ? hasUserSaved.location : ""
           )

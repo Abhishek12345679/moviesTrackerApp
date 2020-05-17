@@ -114,12 +114,45 @@ const SearchScreen = (props) => {
 
   const dispatch = useDispatch();
   const scrollRef = React.useRef(null);
+
   useScrollToTop(scrollRef);
+
+  const renderGenreTabItem = ({ item }) => (
+    <TouchableOpacity
+      activeOpacity={0.85}
+      onPress={() => {
+        dispatch(MoviesAction.loadMoviesWithGenres(item.id));
+        props.navigation.navigate({
+          name: "GenreScreen",
+          params: {
+            GenreName: item.name,
+          },
+        });
+      }}
+    >
+      <LinearGradient
+        colors={[Colors.lightblue, itemData.item.genreColor]}
+        style={{
+          ...styles.genreTab,
+          // backgroundColor: itemData.item.genreColor,
+        }}
+      >
+        <Text style={{ ...styles.headerText, fontSize: 17 }}>
+          {itemData.item.name}
+        </Text>
+      </LinearGradient>
+    </TouchableOpacity>
+  );
+
+  const goToSearch = () => {
+    props.navigation.navigate("SearchDetailScreen");
+  };
+
   return (
     <ScrollView
       ref={scrollRef}
       style={styles.screen}
-      contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}
+      contentContainerStyle={styles.screenContainer}
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.imageContainer}>
@@ -128,11 +161,7 @@ const SearchScreen = (props) => {
           source={require("../assets/Images/searchScreenHeader.jpeg")}
         />
       </View>
-      <SearchBar
-        onPress={() => {
-          props.navigation.navigate("SearchDetailScreen");
-        }}
-      />
+      <SearchBar onPress={goToSearch} />
       <FlatList
         style={{ marginTop: 30 }}
         scrollEnabled={false}
@@ -144,32 +173,7 @@ const SearchScreen = (props) => {
         horizontal={false}
         data={genres}
         keyExtractor={(item) => item.id}
-        renderItem={(itemData) => (
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={() => {
-              dispatch(MoviesAction.loadMoviesWithGenres(itemData.item.id));
-              props.navigation.navigate({
-                name: "GenreScreen",
-                params: {
-                  GenreName: itemData.item.name,
-                },
-              });
-            }}
-          >
-            <LinearGradient
-              colors={[Colors.lightblue, itemData.item.genreColor]}
-              style={{
-                ...styles.genreTab,
-                // backgroundColor: itemData.item.genreColor,
-              }}
-            >
-              <Text style={{ ...styles.headerText, fontSize: 17 }}>
-                {itemData.item.name}
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        )}
+        renderItem={renderGenreTabItem}
       />
     </ScrollView>
   );
@@ -183,6 +187,10 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: Colors.primaryColor,
+  },
+  screenContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   imageContainer: {
     width: "100%",

@@ -1,38 +1,58 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Image, Text, FlatList } from "react-native";
+import { View, StyleSheet, Text, FlatList } from "react-native";
 
-// import { SearchBar } from "react-native-elements";
 import { useSelector, useDispatch } from "react-redux";
-import * as UserMoviesActions from "../store/actions/UserActions";
 
-// import Search from "../assets/Images/people.svg";
 import { AntDesign } from "@expo/vector-icons";
 
 import SearchBar from "../components/SearchBar";
 
 import MovieListItem from "../components/MovieListItem";
-// import SwipeableListItem from "../components/SwipeableListItem";
 
 import * as MoviesActions from "../store/actions/MoviesAction";
 import Colors from "../constants/Colors";
+import { createSelector } from "reselect";
+
+const searchlist = createSelector(
+  (state) => state.Movies.searched_movies,
+  (searched_movies) => searched_movies
+);
 
 const SearchDetailScreen = (props) => {
   const [searchValue, setSearchValue] = useState("");
   const [scrollEnabled, setScrollEnabled] = useState(true);
-  const SearchList = useSelector((state) => state.Movies.searched_movies);
+  const SearchList = useSelector(searchlist);
 
   const dispatch = useDispatch();
-
-  const userMovies = useSelector((state) => state.UserMovies.userMovies);
 
   const searchValueChangeHandler = (text) => {
     dispatch(MoviesActions.clearSearchList());
     setSearchValue(text);
-    dispatch(MoviesActions.searchMovies(text));
+    dispatch(MoviesActions.searchMovies(text.trim()));
   };
+
   useEffect(() => {
     dispatch(MoviesActions.clearSearchList());
   }, [dispatch]);
+
+  const renderListItem = ({ item }) => (
+    <MovieListItem
+      setScrollEnabled={(enabled) => setScrollEnabled(enabled)}
+      movieTitle={item.title}
+      posterUrl={item.posterUrl}
+      year={item.year}
+      onPress={() => {
+        props.navigation.navigate({
+          name: "MoviesDetailScreen",
+          params: {
+            movieId: item.id,
+            movieTitle: item.title,
+            searched_movies: true,
+          },
+        });
+      }}
+    />
+  );
 
   return (
     <View style={styles.screen}>
@@ -49,29 +69,10 @@ const SearchDetailScreen = (props) => {
           scrollEnabled={scrollEnabled}
           keyExtractor={(item) => item.id}
           data={SearchList}
-          renderItem={(itemData) => (
-            <MovieListItem
-              setScrollEnabled={(enabled) => setScrollEnabled(enabled)}
-              movieTitle={itemData.item.title}
-              posterUrl={itemData.item.posterUrl}
-              year={itemData.item.year}
-              onPress={() => {
-                console.log("userMovies", userMovies);
-                props.navigation.navigate({
-                  name: "MoviesDetailScreen",
-                  params: {
-                    movieId: itemData.item.id,
-                    movieTitle: itemData.item.title,
-                    searched_movies: true,
-                  },
-                });
-              }}
-            />
-          )}
+          renderItem={renderListItem}
         />
       ) : (
         <View style={styles.centered}>
-          {/* <Search /> */}
           <AntDesign name="frowno" size={24} color="white" />
           <Text style={{ ...styles.text, fontSize: 16 }}>
             {searchValue} not found

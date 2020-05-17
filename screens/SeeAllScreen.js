@@ -1,11 +1,27 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, Easing } from "react-native";
+import React from "react";
+import { View, StyleSheet, FlatList } from "react-native";
 
 import { useSelector } from "react-redux";
 
 import MovieItem from "../components/MovieItem";
 import Colors from "../constants/Colors";
-import SkeletonContent from "react-native-skeleton-content";
+import { createSelector } from "reselect";
+// import SkeletonContent from "react-native-skeleton-content";
+
+const allmovies = createSelector(
+  (state) => state.Movies.new_releases,
+  (new_releases) => new_releases
+);
+
+const tv = createSelector(
+  (state) => state.Movies.new_tv_shows,
+  (new_tv_shows) => new_tv_shows
+);
+
+const anime = createSelector(
+  (state) => state.Movies.anime,
+  (anime) => anime
+);
 
 const SeeAllScreen = (props) => {
   let movies;
@@ -15,15 +31,36 @@ const SeeAllScreen = (props) => {
   let movieType;
 
   if (goToMovies) {
-    movies = useSelector((state) => state.Movies.new_releases);
+    movies = useSelector(allmovies);
     movieType = "Movies";
   } else if (goToTV) {
-    movies = useSelector((state) => state.Movies.new_tv_shows);
+    movies = useSelector(tv);
     movieType = "TV";
   } else if (goToAnime) {
-    movies = useSelector((state) => state.Movies.anime);
+    movies = useSelector(anime);
     movieType = "anime";
   }
+
+  const renderItem = ({ item }) => (
+    <MovieItem
+      style={{ width: 175, height: 175 }}
+      id={item.id}
+      movieTitle={item.title}
+      posterUrl={item.posterUrl}
+      year={item.year}
+      ratings={item.ratings}
+      onPress={() => {
+        props.navigation.navigate({
+          name: "MoviesDetailScreen",
+          params: {
+            movieId: item.id,
+            movieTitle: item.title,
+            moviesType: movieType,
+          },
+        });
+      }}
+    />
+  );
 
   // const [isLoading, setIsLoading] = useState(false);
   // const [isRefreshing, setIsRefreshing] = useState(false);
@@ -33,26 +70,7 @@ const SeeAllScreen = (props) => {
         contentContainerStyle={styles.flatlist}
         numColumns={2}
         data={movies}
-        renderItem={(itemData) => (
-          <MovieItem
-            style={{ width: 175, height: 175 }}
-            id={itemData.item.id}
-            movieTitle={itemData.item.title}
-            posterUrl={itemData.item.posterUrl}
-            year={itemData.item.year}
-            ratings={itemData.item.ratings}
-            onPress={() => {
-              props.navigation.navigate({
-                name: "MoviesDetailScreen",
-                params: {
-                  movieId: itemData.item.id,
-                  movieTitle: itemData.item.title,
-                  moviesType: movieType,
-                },
-              });
-            }}
-          />
-        )}
+        renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
     </View>

@@ -12,7 +12,7 @@ const MovieItem = (props) => {
     <TouchableOpacity
       {...props}
       style={{ ...styles.movieItem, ...props.style }}
-      activeOpacity={0.85}
+      activeOpacity={0.5}
       onPress={props.onPress}
     >
       <ImageBackground
