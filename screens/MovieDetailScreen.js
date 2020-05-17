@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,24 +6,22 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  Picker,
-  Easing,
   ActivityIndicator,
   ActionSheetIOS,
   FlatList,
 } from "react-native";
-import MovieItem from "../components/MovieItem";
 import { useSelector, useDispatch } from "react-redux";
 
 import { AntDesign } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import Colors from "../constants/Colors";
 
+import MovieItem from "../components/MovieItem";
 import CastMember from "../components/CastMember";
 
 import * as UserActions from "../store/actions/UserActions";
 
-import { LinearGradient } from "expo-linear-gradient";
-import Colors from "../constants/Colors";
-import SkeletonContent from "react-native-skeleton-content";
+// import SkeletonContent from "react-native-skeleton-content";
 
 const MovieDetailScreen = (props) => {
   const dispatch = useDispatch();
@@ -35,8 +33,10 @@ const MovieDetailScreen = (props) => {
   const all_movies = props.route.params.all_movies;
   const searched_movies = props.route.params.searched_movies;
   const moviesType = props.route.params.moviesType;
+
   const user_movies = useSelector((state) => state.UserMovies.userMovies);
 
+  // is it neccesary to optimize here ? if yes, then how to do it ?
   if (moviesType === "TV") {
     movies = useSelector((state) => state.Movies.new_tv_shows);
   } else if (all_movies) {
@@ -104,7 +104,7 @@ const MovieDetailScreen = (props) => {
           //cancel
         } else if (buttonIndex === 1) {
           setLoading(true);
-          setButtonText("Want to Watch");
+          setButtonText("Watched");
           dispatch(
             UserActions.saveMovies(
               selectedMovieId,
@@ -134,7 +134,7 @@ const MovieDetailScreen = (props) => {
           }, 3000);
         } else if (buttonIndex == 3) {
           setLoading(true);
-          setButtonText("Watched");
+          setButtonText("Want to Watch");
           dispatch(
             UserActions.saveMovies(
               selectedMovieId,
@@ -152,6 +152,14 @@ const MovieDetailScreen = (props) => {
     );
   };
 
+  const renderCastItem = ({ item }) => (
+    <CastMember
+      castName={item.name}
+      posterUrl={item.profileUrl}
+      character={item.character}
+    />
+  );
+
   return (
     <ScrollView style={styles.screen}>
       <LinearGradient
@@ -160,19 +168,10 @@ const MovieDetailScreen = (props) => {
       >
         <View style={styles.row}>
           <MovieItem
-            footerStyle={{
-              backgroundColor: null,
-            }}
-            style={{
-              width: 160,
-              height: 160,
-              shadowColor: "#fff",
-              marginTop: 10,
-              marginStart: 15,
-            }}
+            footerStyle={styles.hideFooter}
+            style={styles.movieItem}
             id={selectedMovieId}
             posterUrl={selectedMovie.posterUrl}
-            onPress={() => {}}
             ratings={selectedMovie.ratings}
           />
           {!selectedMovieTitle > 15 ? (
@@ -184,10 +183,8 @@ const MovieDetailScreen = (props) => {
               <Text style={styles.yearText}>
                 {selectedMovie.year.substr(0, 4)}
               </Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={{ ...styles.text, color: "gold" }}>
-                  {selectedMovie.ratings}
-                </Text>
+              <View style={styles.ratingsContainer}>
+                <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
                 <AntDesign name="star" color="gold" size={23} />
               </View>
             </View>
@@ -202,10 +199,8 @@ const MovieDetailScreen = (props) => {
               <Text style={styles.yearText}>
                 {selectedMovie.year.substr(0, 4)}
               </Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={{ ...styles.text, color: "gold" }}>
-                  {selectedMovie.ratings}
-                </Text>
+              <View style={styles.ratingsContainer}>
+                <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
                 <AntDesign name="star" color="gold" size={23} />
               </View>
             </View>
@@ -220,27 +215,18 @@ const MovieDetailScreen = (props) => {
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={selectedMovie.cast._55}
-          renderItem={(itemData) => (
-            <CastMember
-              castName={itemData.item.name}
-              posterUrl={itemData.item.profileUrl}
-              character={itemData.item.character}
-            />
-          )}
+          renderItem={renderCastItem}
         />
 
         <View>
-          <View style={{ width: "100%", height: 65, alignItems: "center" }}>
+          <View style={styles.savebtnContainer}>
             <TouchableOpacity
               disabled={!!alreadySaved}
               style={styles.addtomymoviesbtn}
-              onPress={() => {
-                openActionSheet();
-              }}
+              onPress={openActionSheet}
             >
               {!loading ? (
                 <Text style={styles.text}>
-                  {/* {!watched ? "Add to Watched" : "Watched"} */}
                   {buttonText}
                 </Text>
               ) : (
@@ -278,6 +264,22 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     padding: 10,
   },
+  movieItem: {
+    width: 185,
+    height: 185,
+    shadowColor: "#fff",
+    shadowOpacity: 0.2,
+    marginTop: 10,
+    marginStart: 15,
+    shadowOffset: {
+      width: 1,
+      height: 2,
+    },
+    shadowRadius: 10,
+  },
+  hideFooter: {
+    backgroundColor: null,
+  },
   basicdetails: {
     flexDirection: "column",
   },
@@ -292,8 +294,14 @@ const styles = StyleSheet.create({
     color: "#000",
     fontSize: 30,
   },
-  castReel: {
-    marginTop: 10,
+  ratingsContainer: {
+    flexDirection: "row",
+  },
+  ratingsText: {
+    fontFamily: "apple-bold",
+    color: "gold",
+    fontSize: 20,
+    padding: 3,
   },
   yearText: {
     fontSize: 12,
@@ -314,6 +322,11 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 20,
     justifyContent: "center",
+    alignItems: "center",
+  },
+  savebtnContainer: {
+    width: "100%",
+    height: 65,
     alignItems: "center",
   },
   plotcontainer: {

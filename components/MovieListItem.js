@@ -6,23 +6,15 @@ import Colors from "../constants/Colors";
 const MovieListItem = (props) => {
   return (
     <TouchableOpacity
-      style={styles.listItem}
       {...props}
+      style={styles.listItem}
       onPress={props.onPress}
     >
       <View style={styles.row}>
         <Image style={styles.image} source={{ uri: props.posterUrl }} />
         <View style={styles.column}>
           <Text style={styles.text}>{props.movieTitle}</Text>
-          <Text
-            style={{
-              ...styles.text,
-              color: Colors.grey,
-              fontFamily: "apple-bold",
-            }}
-          >
-            {props.year}
-          </Text>
+          <Text style={styles.yearText}>{props.year}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -39,6 +31,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     flexDirection: "column",
     paddingHorizontal: 10,
+  },
+  yearText: {
+    color: Colors.grey,
+    fontFamily: "apple-bold",
+    fontSize: 15,
+    marginStart: 20,
+    marginBottom: 5,
   },
   text: {
     fontFamily: "apple-regular",

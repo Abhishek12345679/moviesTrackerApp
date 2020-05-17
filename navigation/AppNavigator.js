@@ -40,8 +40,6 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Colors from "../constants/Colors";
 
-// import { isIphoneX } from "../Helpers/iPhoneModel";
-
 const defaultStackNavigationOptions = {
   headerStyle: {
     backgroundColor: Colors.secondaryColor,
@@ -135,10 +133,7 @@ const SearchScreenStackNavigator = createStackNavigator();
 const searchScreenNavigator = () => {
   return (
     <SearchScreenStackNavigator.Navigator
-      screenOptions={{
-        ...defaultStackNavigationOptions,
-        ...TransitionPresets.FadeFromBottomAndroid,
-      }}
+      screenOptions={defaultStackNavigationOptions}
     >
       <SearchScreenStackNavigator.Screen
         name="SearchScreen"
@@ -148,7 +143,11 @@ const searchScreenNavigator = () => {
       <SearchScreenStackNavigator.Screen
         name="SearchDetailScreen"
         component={SearchDetailScreen}
-        options={{ ...SearchDetailScreenOptions, headerShown: false }}
+        options={{
+          ...SearchDetailScreenOptions,
+          headerShown: false,
+          ...TransitionPresets.FadeFromBottomAndroid,
+        }}
       />
       <SearchScreenStackNavigator.Screen
         name="MoviesDetailScreen"

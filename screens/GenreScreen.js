@@ -1,51 +1,50 @@
-import React, { useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { View, StyleSheet, FlatList } from "react-native";
+import { useSelector } from "react-redux";
+import { createSelector } from "reselect";
 
 import MovieItem from "../components/MovieItem";
 import Colors from "../constants/Colors";
 
-import * as MovieAction from "../store/actions/MoviesAction";
-
-import { useIsFocused } from "@react-navigation/native";
-
-// This hook returns `true` if the screen is focused, `false` otherwise
+const selectNumOfDoneTodos = createSelector(
+  (state) => state.Movies.moviesWRTGenre,
+  (moviesWRTGenre) => moviesWRTGenre
+);
 
 const GenreScreen = (props) => {
-  const isFocused = useIsFocused();
-  const dispatch = useDispatch();
+  const moviesWRTGenre = useSelector(selectNumOfDoneTodos);
 
-  // if (!isFocused) {
-  //   dispatch(MovieAction.clearGenreScreen());
-  // }
-  const moviesWRTGenre = useSelector((state) => state.Movies.moviesWRTGenre);
+  const renderItem = ({ item }) => (
+    <MovieItem
+      style={{ width: 175, height: 175 }}
+      id={item.id}
+      movieTitle={item.title}
+      posterUrl={item.posterUrl}
+      year={item.year}
+      ratings={item.ratings}
+      onPress={() => {
+        props.navigation.navigate({
+          name: "MoviesWRTGenreDetailScreen",
+          params: {
+            movieTitle: item.title,
+            posterUrl: item.posterUrl,
+            movieId: item.id,
+          },
+        });
+      }}
+    />
+  );
+
   return (
     <View style={styles.screen}>
       <FlatList
+        // initialNumToRender={1}
+        // maxToRenderPerBatch={6}
         contentContainerStyle={styles.flatlist}
         numColumns={2}
         data={moviesWRTGenre}
-        renderItem={(itemData) => (
-          <MovieItem
-            style={{ width: 175, height: 175 }}
-            id={itemData.item.id}
-            movieTitle={itemData.item.title}
-            posterUrl={itemData.item.posterUrl}
-            year={itemData.item.year}
-            ratings={itemData.item.ratings}
-            onPress={() => {
-              props.navigation.navigate({
-                name: "MoviesWRTGenreDetailScreen",
-                params: {
-                  movieTitle: itemData.item.title,
-                  posterUrl: itemData.item.posterUrl,
-                  movieId: itemData.item.id,
-                },
-              });
-            }}
-          />
-        )}
         keyExtractor={(item) => item.id}
+        renderItem={renderItem}
       />
     </View>
   );

@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   ActionSheetIOS,
   FlatList,
-  YellowBox,
 } from "react-native";
 import MovieItem from "../components/MovieItem";
 import CastMember from "../components/CastMember";
