@@ -41,10 +41,11 @@ const Anime = createSelector(
   (state) => state.Movies.anime,
   (anime) => anime
 );
+
 const MoviesScreen = (props) => {
   const Stories = useSelector(stories);
   const new_releases = useSelector(newReleases);
-  console.log(" movie screen rendered", new_releases);
+  // console.log(" movie screen rendered", new_releases);
   const new_tv_shows = useSelector(newTVShows);
   const anime = useSelector(Anime);
 

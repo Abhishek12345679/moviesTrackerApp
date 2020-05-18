@@ -131,12 +131,11 @@ export const loadAll = () => {
       //trending movies array
 
       // console.log("loadedTrendingMovies", loadedTrendingMovies);
-      let loadedTrendingMovies=[];
 
       const loadedTrendingMoviesLength = trendingMovies.results.length;
 
       // loadedTrendingMovies =
-      Promise.all(
+      const loadedTrendingMovies = await Promise.all(
         trendingMovies.results
           .slice(0, 5) // use slice instead of a loop
           .map((
@@ -148,38 +147,31 @@ export const loadAll = () => {
               // resolve to [language,movie]
             ).then((language) => [language, trendingMovie])
           ) // sorry, forgot to return here
-      )
-        .then((
-          results // results is [[language,movie],[language,movie]]
-        ) =>
-          results.map(([language, trendingMovie]) => {
-            const hasUserSaved = getState().UserMovies.userMovies.find(
-              (userMovie) => userMovie.id === trendingMovie.id.toString()
-              // snippet does not have conditional chaining
-            );
-            return new Movie( // create new Movie
-              trendingMovie.id.toString(),
-              trendingMovie.media_type === "movie"
-                ? trendingMovie.title
-                : trendingMovie.name,
-              posterBaseUrl + trendingMovie.poster_path,
-              trendingMovie.media_type === "movie"
-                ? trendingMovie.release_date
-                : trendingMovie.first_air_date,
-              [],
-              trendingMovie.overview,
-              trendingMovie.vote_average,
-              language,
-              hasUserSaved ? hasUserSaved.location : ""
-            );
-          })
-        )
-        .then((movies) => {
-          // loadedTrendingMovies.push(movies);
-          loadedTrendingMovies = [...loadedTrendingMovies, ...movies];
-          console.log("loadedTrendingMovies", loadedTrendingMovies);
+      ).then((
+        results // results is [[language,movie],[language,movie]]
+      ) =>
+        results.map(([language, trendingMovie]) => {
+          const hasUserSaved = getState().UserMovies.userMovies.find(
+            (userMovie) => userMovie.id === trendingMovie.id.toString()
+            // snippet does not have conditional chaining
+          );
+          return new Movie( // create new Movie
+            trendingMovie.id.toString(),
+            trendingMovie.media_type === "movie"
+              ? trendingMovie.title
+              : trendingMovie.name,
+            posterBaseUrl + trendingMovie.poster_path,
+            trendingMovie.media_type === "movie"
+              ? trendingMovie.release_date
+              : trendingMovie.first_air_date,
+            [],
+            trendingMovie.overview,
+            trendingMovie.vote_average,
+            language,
+            hasUserSaved ? hasUserSaved.location : ""
+          );
         })
-        .catch((err) => console.log(err));
+      );
 
       // trending TV Shows
       const loadedNewTVShows = [];
