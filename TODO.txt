@@ -2,4 +2,5 @@ Performance Improvements
 
 1. Move all the inline styles to either to stylesheet object or to another component.
 2. Moving the renderItem from the Flatlist outside return()
+3. merging actions
 

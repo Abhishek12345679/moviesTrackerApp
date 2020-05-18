@@ -37,15 +37,15 @@ export const loadMovies = () => {
       dispatch({
         type: LOAD_MOVIES,
         userMovies: loadedData,
-        watched: loadedData.filter(
-          (userMovie) => userMovie.location === "WATCHED"
-        ),
-        currently_watching: loadedData.filter(
-          (userMovie) => userMovie.location === "CURRENTLY_WATCHING"
-        ),
-        want_to_watch: loadedData.filter(
-          (userMovie) => userMovie.location === "WANT_TO_WATCH"
-        ),
+        // watched: loadedData.filter(
+        //   (userMovie) => userMovie.location === "WATCHED"
+        // ),
+        // currently_watching: loadedData.filter(
+        //   (userMovie) => userMovie.location === "CURRENTLY_WATCHING"
+        // ),
+        // want_to_watch: loadedData.filter(
+        //   (userMovie) => userMovie.location === "WANT_TO_WATCH"
+        // ),
       });
     } catch (err) {
       throw err;

@@ -6,13 +6,13 @@ import { createSelector } from "reselect";
 import MovieItem from "../components/MovieItem";
 import Colors from "../constants/Colors";
 
-const selectNumOfDoneTodos = createSelector(
+const genreMovies = createSelector(
   (state) => state.Movies.moviesWRTGenre,
   (moviesWRTGenre) => moviesWRTGenre
 );
 
 const GenreScreen = (props) => {
-  const moviesWRTGenre = useSelector(selectNumOfDoneTodos);
+  const moviesWRTGenre = useSelector(genreMovies);
 
   const renderItem = ({ item }) => (
     <MovieItem
@@ -21,14 +21,12 @@ const GenreScreen = (props) => {
       movieTitle={item.title}
       posterUrl={item.posterUrl}
       year={item.year}
-      ratings={item.ratings}
       onPress={() => {
         props.navigation.navigate({
           name: "MoviesWRTGenreDetailScreen",
           params: {
-            movieTitle: item.title,
-            posterUrl: item.posterUrl,
             movieId: item.id,
+            movieTitle: item.title,
           },
         });
       }}

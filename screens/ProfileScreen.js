@@ -24,24 +24,34 @@ const savedMovies = createSelector(
   (state) => state.UserMovies.userMovies,
   (userMovies) => userMovies
 );
+const watchedMovies = createSelector(
+  (state) => state.UserMovies.userMovies,
+  (userMovies) => userMovies.filter((movie) => movie.location === "WATCHED")
+);
+
+const watchingMovies = createSelector(
+  (state) => state.UserMovies.userMovies,
+  (userMovies) =>
+    userMovies.filter((movie) => movie.location === "CURRENTLY_WATCHING")
+);
+const wantToWatchMovies = createSelector(
+  (state) => state.UserMovies.userMovies,
+  (userMovies) =>
+    userMovies.filter((movie) => movie.location === "WANT_TO_WATCH")
+);
 
 const ProfileScreen = (props) => {
   const [clickedDP, setClickedDP] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  //combine the actions and then filter and stuff
   const saved_movies = useSelector(savedMovies);
-  const watched_movies = useSelector((state) => state.UserMovies.watched);
+  const watched_movies = useSelector(watchedMovies);
 
-  console.log("🌈", watched_movies);
+  // console.log("🌈", watched_movies);
 
-  const watching_movies = useSelector(
-    (state) => state.UserMovies.currently_watching
-  );
-  const want_to_watch_movies = useSelector(
-    (state) => state.UserMovies.want_to_watch
-  );
+  const watching_movies = useSelector(watchingMovies);
+  const want_to_watch_movies = useSelector(wantToWatchMovies);
 
   const dispatch = useDispatch();
   const scrollRef = React.useRef(null);

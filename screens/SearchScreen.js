@@ -131,14 +131,14 @@ const SearchScreen = (props) => {
       }}
     >
       <LinearGradient
-        colors={[Colors.lightblue, itemData.item.genreColor]}
+        colors={[Colors.lightblue, item.genreColor]}
         style={{
           ...styles.genreTab,
           // backgroundColor: itemData.item.genreColor,
         }}
       >
         <Text style={{ ...styles.headerText, fontSize: 17 }}>
-          {itemData.item.name}
+          {item.name}
         </Text>
       </LinearGradient>
     </TouchableOpacity>

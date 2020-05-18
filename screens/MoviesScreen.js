@@ -68,11 +68,12 @@ const MoviesScreen = (props) => {
 
   loadScreen = useCallback(async () => {
     try {
-      await dispatch(MoviesAction.loadStories());
-      await dispatch(MoviesAction.loadNewReleases());
-      await dispatch(UserActions.loadMovies());
-      await dispatch(MoviesAction.loadNewTVShows());
-      await dispatch(MoviesAction.loadAnime());
+      // await dispatch(MoviesAction.loadStories());
+      // await dispatch(MoviesAction.loadNewReleases());
+      // await dispatch(UserActions.loadMovies());
+      // await dispatch(MoviesAction.loadNewTVShows());
+      // await dispatch(MoviesAction.loadAnime());
+      await dispatch(MoviesAction.loadAll());
     } catch (err) {
       console.log(err);
     }

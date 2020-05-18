@@ -34,16 +34,18 @@ const userMovies = createSelector(
 );
 
 const MoviesWRTGenreDetailScreen = (props) => {
-  const selectedMovieId = props.route.params.movieId;
-  const selectedMovieTitle = selectedMovie.title;
+  const [loading, setLoading] = useState(false);
+  let selectedMovieId, selectedMovie;
 
   const moviesWRTGenre = useSelector(GenreMovies);
   const user_movies = useSelector(userMovies);
 
-  const selectedMovie = moviesWRTGenre.find(
-    (movie) => movie.id === selectedMovieId
-  );
-  console.log("selctedMovie", selectedMovie);
+  selectedMovieId = props.route.params.movieId;
+
+  selectedMovie = moviesWRTGenre.find((movie) => movie.id === selectedMovieId);
+  console.log("selectedMovie", selectedMovie);
+
+  const selectedMovieTitle = selectedMovie.title;
 
   const alreadySaved = user_movies.find(
     (userMovie) => userMovie.id === selectedMovieId
@@ -78,7 +80,6 @@ const MoviesWRTGenreDetailScreen = (props) => {
   };
 
   let [buttonText, setButtonText] = useState(buttonTextGenerator());
-  const [loading, setLoading] = useState(false);
 
   const openActionSheet = () => {
     ActionSheetIOS.showActionSheetWithOptions(
@@ -143,6 +144,14 @@ const MoviesWRTGenreDetailScreen = (props) => {
       }
     );
   };
+
+  // if (loading) {
+  //   return (
+  //     <View style={styles.centered}>
+  //       <ActivityIndicator size="large" color={Colors.lightblue} />
+  //     </View>
+  //   );
+  // }
 
   return (
     <ScrollView style={styles.screen}>
@@ -239,7 +248,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-
+  centered: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
   header: {
     flex: 1,
     height: Dimensions.get("window").height,
