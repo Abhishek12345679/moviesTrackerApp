@@ -25,7 +25,7 @@ import { useScrollToTop } from "@react-navigation/native";
 import SkeletonContent from "react-native-skeleton-content";
 import { createSelector } from "reselect";
 
-const trendingMovies = createSelector(
+const stories = createSelector(
   (state) => state.Movies.movies,
   (movies) => movies
 );
@@ -41,10 +41,10 @@ const Anime = createSelector(
   (state) => state.Movies.anime,
   (anime) => anime
 );
-
 const MoviesScreen = (props) => {
-  const trending_movies = useSelector(trendingMovies);
+  const Stories = useSelector(stories);
   const new_releases = useSelector(newReleases);
+  console.log(" movie screen rendered", new_releases);
   const new_tv_shows = useSelector(newTVShows);
   const anime = useSelector(Anime);
 
@@ -59,21 +59,11 @@ const MoviesScreen = (props) => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     loadScreen().then(() => setRefreshing(false));
-  }, [refreshing]);
+  }, [setRefreshing, loadScreen]);
 
-  /**
-   * Combine all of these actions
-   *
-   */
-
-  loadScreen = useCallback(async () => {
+  const loadScreen = useCallback(async () => {
     try {
-      // await dispatch(MoviesAction.loadStories());
-      // await dispatch(MoviesAction.loadNewReleases());
-      // await dispatch(UserActions.loadMovies());
-      // await dispatch(MoviesAction.loadNewTVShows());
-      // await dispatch(MoviesAction.loadAnime());
-      await dispatch(MoviesAction.loadAll());
+      dispatch(MoviesAction.loadAll());
     } catch (err) {
       console.log(err);
     }
@@ -82,7 +72,7 @@ const MoviesScreen = (props) => {
   useEffect(() => {
     setLoading(true);
     loadScreen().then(() => setLoading(false));
-  }, [setLoading]);
+  }, []);
 
   const renderTrendingMoviesItem = ({ item }) => (
     <SkeletonContent
@@ -241,7 +231,7 @@ const MoviesScreen = (props) => {
           keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
-          data={trending_movies}
+          data={Stories}
           renderItem={renderStoriesItem}
         />
       </View>

@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 export const SEARCH_MOVIES = "SEARCH_MOVIES";
 export const LOAD_MOVIES_WITH_GENRES = "LOAD_MOVIES_WITH_GENRES";
 export const CLEAR_SEARCH_LIST = "CLEAR_SEARCH_LIST";
@@ -72,11 +74,12 @@ export const clearGenreScreen = () => {
 export const loadAll = () => {
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   let hasUserSaved;
+  const loadedStories = [];
   return async (dispatch, getState) => {
     try {
       //stories response
       const moviesResponse = await fetch(
-        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=naruto`
+        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=tokyo`
       );
       // trending movies
       const TrendingMoviesResponse = await fetch(
@@ -111,7 +114,7 @@ export const loadAll = () => {
       // console.log("NEW RELEASES", resData);
 
       //stories array
-      const loadedStories = [];
+
       const loadedMoviesLength = movies.Search.length;
 
       for (let i = 0; i < 6; i++) {
@@ -126,45 +129,57 @@ export const loadAll = () => {
       }
 
       //trending movies array
-      const loadedTrendingMovies = [];
+
+      // console.log("loadedTrendingMovies", loadedTrendingMovies);
+      let loadedTrendingMovies=[];
+
       const loadedTrendingMoviesLength = trendingMovies.results.length;
 
-      for (let i = 0; i < 6; i++) {
-        // let credits;
-        hasUserSaved = getState().UserMovies.userMovies.find(
-          (userMovie) =>
-            userMovie.id === trendingMovies.results[i].id.toString()
-        );
-
-        loadedTrendingMovies.push(
-          new Movie(
-            trendingMovies.results[i].id.toString(),
-            trendingMovies.results[i].media_type === "movie"
-              ? trendingMovies.results[i].title
-              : trendingMovies.results[i].name,
-            posterBaseUrl + trendingMovies.results[i].poster_path,
-            trendingMovies.results[i].media_type === "movie"
-              ? trendingMovies.results[i].release_date
-              : trendingMovies.results[i].first_air_date,
-            // getCredits(i)
-            //   .then((results) => {
-            //     console.log("success", results.cast);
-            //     return results.cast;
-            //   })
-            [],
-            trendingMovies.results[i].overview,
-            trendingMovies.results[i].vote_average,
-            // getLanguageNamefromCode(trendingMovies.results[i].original_language),
-              // .then((lang) => {
-              //   console.log(lang);
-              //   return lang;
-              // })
-              // .then((data) => data)
-              // .catch((err) => console.log(err)),
-            hasUserSaved ? hasUserSaved.location : ""
-          )
-        );
-      }
+      // loadedTrendingMovies =
+      Promise.all(
+        trendingMovies.results
+          .slice(0, 5) // use slice instead of a loop
+          .map((
+            trendingMovie // map movie to [language,movie]
+          ) =>
+            getLanguageNamefromCode(
+              // get async language
+              trendingMovie.original_language
+              // resolve to [language,movie]
+            ).then((language) => [language, trendingMovie])
+          ) // sorry, forgot to return here
+      )
+        .then((
+          results // results is [[language,movie],[language,movie]]
+        ) =>
+          results.map(([language, trendingMovie]) => {
+            const hasUserSaved = getState().UserMovies.userMovies.find(
+              (userMovie) => userMovie.id === trendingMovie.id.toString()
+              // snippet does not have conditional chaining
+            );
+            return new Movie( // create new Movie
+              trendingMovie.id.toString(),
+              trendingMovie.media_type === "movie"
+                ? trendingMovie.title
+                : trendingMovie.name,
+              posterBaseUrl + trendingMovie.poster_path,
+              trendingMovie.media_type === "movie"
+                ? trendingMovie.release_date
+                : trendingMovie.first_air_date,
+              [],
+              trendingMovie.overview,
+              trendingMovie.vote_average,
+              language,
+              hasUserSaved ? hasUserSaved.location : ""
+            );
+          })
+        )
+        .then((movies) => {
+          // loadedTrendingMovies.push(movies);
+          loadedTrendingMovies = [...loadedTrendingMovies, ...movies];
+          console.log("loadedTrendingMovies", loadedTrendingMovies);
+        })
+        .catch((err) => console.log(err));
 
       // trending TV Shows
       const loadedNewTVShows = [];
