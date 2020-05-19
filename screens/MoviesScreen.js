@@ -45,7 +45,7 @@ const Anime = createSelector(
 const MoviesScreen = (props) => {
   const Stories = useSelector(stories);
   const new_releases = useSelector(newReleases);
-  // console.log(" movie screen rendered", new_releases);
+  console.log("movie screen rendered");
   const new_tv_shows = useSelector(newTVShows);
   const anime = useSelector(Anime);
 
@@ -57,23 +57,28 @@ const MoviesScreen = (props) => {
 
   useScrollToTop(scrollRef);
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    loadScreen().then(() => setRefreshing(false));
-  }, [setRefreshing, loadScreen]);
-
-  const loadScreen = useCallback(async () => {
     try {
-      dispatch(MoviesAction.loadAll());
+      await loadScreen();
     } catch (err) {
       console.log(err);
     }
-  }, []);
+    setRefreshing(false);
+  }, [setRefreshing]);
+
+  const loadScreen = useCallback(async () => {
+    try {
+      await dispatch(MoviesAction.loadAll());
+    } catch (err) {
+      console.log(err);
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     setLoading(true);
     loadScreen().then(() => setLoading(false));
-  }, []);
+  }, [setLoading, loadScreen]);
 
   const renderTrendingMoviesItem = ({ item }) => (
     <SkeletonContent

@@ -53,7 +53,7 @@ const getLanguageNamefromCode = async (lng_code) => {
     // console.log(langData[0].languages[0]);
     if (langData[0].languages[0].iso639_1 === lng_code) {
       lang = langData[0].languages[0].name;
-      console.log(lang);
+      // console.log(lang);
     }
     return lang;
   } catch (err) {
@@ -174,37 +174,40 @@ export const loadAll = () => {
       );
 
       // trending TV Shows
-      const loadedNewTVShows = [];
       const TVShowsLength = trendingTV.results.length;
-
-      for (let i = 0; i < 6; i++) {
-        // let credits;
-        hasUserSaved = getState().UserMovies.userMovies.find(
-          (userMovie) => userMovie.id === trendingTV.results[i].id.toString()
-        );
-        // let cast = getCredits(i).then((cast) => cast);
-        // console.log("CAST", cast);
-        loadedNewTVShows.push(
-          new Movie(
-            trendingTV.results[i].id.toString(),
-            trendingTV.results[i].name,
-            posterBaseUrl + trendingTV.results[i].poster_path,
-            trendingTV.results[i].first_air_date.toString().substr(0, 5),
-            // getCredits(i).then((cast) => cast),
-            // getCredits(i)
-            //   .then((results) => {
-            //     console.log("success", results.cast);
-            //     return results.cast;
-            //   })
-            //   .catch((err) => console.log("cast error", err)),
+      const loadedNewTVShows = await Promise.all(
+        trendingTV.results
+          .slice(0, 5) // use slice instead of a loop
+          .map((
+            trendingTVShow // map movie to [language,movie]
+          ) =>
+            getLanguageNamefromCode(
+              // get async language
+              trendingTVShow.original_language
+              // resolve to [language,movie]
+            ).then((language) => [language, trendingTVShow])
+          ) // sorry, forgot to return here
+      ).then((
+        results // results is [[language,movie],[language,movie]]
+      ) =>
+        results.map(([language, trendingTVShow]) => {
+          const hasUserSaved = getState().UserMovies.userMovies.find(
+            (userMovie) => userMovie.id === trendingTVShow.id.toString()
+            // snippet does not have conditional chaining
+          );
+          return new Movie( // create new Movie
+            trendingTVShow.id.toString(),
+            trendingTVShow.name,
+            posterBaseUrl + trendingTVShow.poster_path,
+            trendingTVShow.first_air_date,
             [],
-            trendingTV.results[i].overview,
-            trendingTV.results[i].vote_average,
-            // getLanguageNamefromCode(trendingTV.results[i].original_language),
+            trendingTVShow.overview,
+            trendingTVShow.vote_average,
+            language,
             hasUserSaved ? hasUserSaved.location : ""
-          )
-        );
-      }
+          );
+        })
+      );
 
       const loadedAnime = [];
       const AnimeLength = trendingAnime.data.length;
@@ -262,28 +265,44 @@ export const searchMovies = (MovieTitle) => {
       const resData = await response.json();
       console.log("search results: ", resData);
 
-      const searchedMovies = [];
       const length = resData.results.length;
-
-      for (i = 0; i < length; i++) {
-        hasUserSaved = getState().UserMovies.userMovies.find(
-          (userMovie) => userMovie.id === resData.results[i].id
-        );
-        searchedMovies.push(
-          new Movie(
-            resData.results[i].id.toString(),
-            resData.results[i].title,
-            posterBaseUrl + resData.results[i].poster_path,
-            resData.results[i].release_date,
-            // getCredits(i).then((cast) => cast),
+      const searchedMovies = await Promise.all(
+        resData.results
+          .slice(0, length) // use slice instead of a loop
+          .map((
+            searchedMovie // map movie to [language,movie]
+          ) =>
+            getLanguageNamefromCode(
+              // get async language
+              searchedMovie.original_language
+              // resolve to [language,movie]
+            ).then((language) => [language, searchedMovie])
+          ) // sorry, forgot to return here
+      ).then((
+        results // results is [[language,movie],[language,movie]]
+      ) =>
+        results.map(([language, searchedMovie]) => {
+          const hasUserSaved = getState().UserMovies.userMovies.find(
+            (userMovie) => userMovie.id === searchedMovie.id.toString()
+            // snippet does not have conditional chaining
+          );
+          return new Movie( // create new Movie
+            searchedMovie.id.toString(),
+            searchedMovie.media_type === "movie"
+              ? searchedMovie.title
+              : searchedMovie.name,
+            posterBaseUrl + searchedMovie.poster_path,
+            searchedMovie.media_type === "movie"
+              ? searchedMovie.release_date
+              : searchedMovie.first_air_date,
             [],
-            resData.results[i].overview,
-            resData.results[i].vote_average,
-            // getLanguageNamefromCode(resData.results[i].original_language),
+            searchedMovie.overview,
+            searchedMovie.vote_average,
+            language,
             hasUserSaved ? hasUserSaved.location : ""
-          )
-        );
-      }
+          );
+        })
+      );
       dispatch({
         type: SEARCH_MOVIES,
         searched_movies: searchedMovies,
@@ -294,7 +313,7 @@ export const searchMovies = (MovieTitle) => {
   };
 };
 
-export const loadMoviesWithGenres = (genreId) => {
+export const loadMoviesWithGenres = (genreId, page_no) => {
   let response;
   let hasUserSaved;
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
@@ -302,7 +321,7 @@ export const loadMoviesWithGenres = (genreId) => {
     await dispatch(clearGenreScreen());
     try {
       response = await fetch(
-        `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&api_key=${config.TMDB_API_KEY}`
+        `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&api_key=${config.TMDB_API_KEY}&page=${page_no}`
       );
 
       if (!response.ok) {
@@ -312,34 +331,40 @@ export const loadMoviesWithGenres = (genreId) => {
       const resData = await response.json();
       // console.log(resData);
 
-      const loadedMoviesWRTGenre = [];
       const length = resData.results.length;
-
-      for (let i = 0; i < length; i++) {
-        hasUserSaved = getState().UserMovies.userMovies.find(
-          (userMovie) => userMovie.id === resData.results[i].id.toString()
-        );
-        // let cast = getCredits(i).then((cast) => cast)
-        // console.log("CAST", cast);
-        loadedMoviesWRTGenre.push(
-          new Movie(
-            resData.results[i].id.toString(),
-            resData.results[i].title,
-            posterBaseUrl + resData.results[i].poster_path,
-            resData.results[i].release_date,
-            // cast,
-            // getCredits(i),
+      const loadedMoviesWRTGenre = await Promise.all(
+        resData.results
+          .slice(0, length) // use slice instead of a loop
+          .map((
+            movieWRTGenre // map movie to [language,movie]
+          ) =>
+            getLanguageNamefromCode(
+              // get async language
+              movieWRTGenre.original_language
+              // resolve to [language,movie]
+            ).then((language) => [language, movieWRTGenre])
+          ) // sorry, forgot to return here
+      ).then((
+        results // results is [[language,movie],[language,movie]]
+      ) =>
+        results.map(([language, movieWRTGenre]) => {
+          const hasUserSaved = getState().UserMovies.userMovies.find(
+            (userMovie) => userMovie.id === movieWRTGenre.id.toString()
+            // snippet does not have conditional chaining
+          );
+          return new Movie( // create new Movie
+            movieWRTGenre.id.toString(),
+            movieWRTGenre.title,
+            posterBaseUrl + movieWRTGenre.poster_path,
+            movieWRTGenre.release_date,
             [],
-            resData.results[i].overview,
-            resData.results[i].vote_average,
-            // getLanguageNamefromCode(resData.results[i].original_language),
+            movieWRTGenre.overview,
+            movieWRTGenre.vote_average,
+            language,
             hasUserSaved ? hasUserSaved.location : ""
-          )
-        );
-      }
-
-      console.log("moviesWRTGenre", loadedMoviesWRTGenre);
-
+          );
+        })
+      );
       dispatch({
         type: LOAD_MOVIES_WITH_GENRES,
         moviesWRTGenre: loadedMoviesWRTGenre,

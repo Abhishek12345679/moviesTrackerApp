@@ -43,7 +43,7 @@ const MoviesWRTGenreDetailScreen = (props) => {
   selectedMovieId = props.route.params.movieId;
 
   selectedMovie = moviesWRTGenre.find((movie) => movie.id === selectedMovieId);
-  console.log("selectedMovie", selectedMovie);
+  // console.log("selectedMovie", selectedMovie);
 
   const selectedMovieTitle = selectedMovie.title;
 
@@ -145,14 +145,6 @@ const MoviesWRTGenreDetailScreen = (props) => {
     );
   };
 
-  // if (loading) {
-  //   return (
-  //     <View style={styles.centered}>
-  //       <ActivityIndicator size="large" color={Colors.lightblue} />
-  //     </View>
-  //   );
-  // }
-
   return (
     <ScrollView style={styles.screen}>
       <LinearGradient
@@ -174,13 +166,15 @@ const MoviesWRTGenreDetailScreen = (props) => {
               <View>
                 <Text style={styles.text}>{selectedMovieTitle}</Text>
               </View>
-
-              <Text style={styles.yearText}>
-                {selectedMovie.year.substr(0, 4)}
-              </Text>
               <View style={styles.ratingsContainer}>
                 <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
                 <AntDesign name="star" color="gold" size={23} />
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.yearText}>{selectedMovie.language} | </Text>
+                <Text style={styles.yearText}>
+                  {selectedMovie.year.substr(0, 4)}
+                </Text>
               </View>
             </View>
           ) : (
@@ -191,12 +185,15 @@ const MoviesWRTGenreDetailScreen = (props) => {
                 </Text>
               </View>
 
-              <Text style={styles.yearText}>
-                {selectedMovie.year.substr(0, 4)}
-              </Text>
               <View style={styles.ratingsContainer}>
                 <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
                 <AntDesign name="star" color="gold" size={23} />
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.yearText}>{selectedMovie.language} | </Text>
+                <Text style={styles.yearText}>
+                  {selectedMovie.year.substr(0, 4)}
+                </Text>
               </View>
             </View>
           )}
@@ -310,10 +307,9 @@ const styles = StyleSheet.create({
     color: "#c2c2c2",
   },
   row: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-around",
-    paddingHorizontal: 15,
   },
   addtomymoviesbtn: {
     marginBottom: 5,

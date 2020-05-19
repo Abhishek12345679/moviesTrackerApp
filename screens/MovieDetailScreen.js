@@ -50,7 +50,7 @@ const MovieDetailScreen = (props) => {
   }
 
   selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
-  console.log("selectedMovie", selectedMovie);
+  // console.log("selectedMovie", selectedMovie);
 
   const selectedMovieTitle = selectedMovie.title;
 
@@ -179,13 +179,15 @@ const MovieDetailScreen = (props) => {
               <View>
                 <Text style={styles.text}>{selectedMovieTitle}</Text>
               </View>
-
-              <Text style={styles.yearText}>
-                {selectedMovie.year.substr(0, 4)}
-              </Text>
               <View style={styles.ratingsContainer}>
                 <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
                 <AntDesign name="star" color="gold" size={23} />
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.yearText}>{selectedMovie.language} | </Text>
+                <Text style={styles.yearText}>
+                  {selectedMovie.year.substr(0, 4)}
+                </Text>
               </View>
             </View>
           ) : (
@@ -196,25 +198,30 @@ const MovieDetailScreen = (props) => {
                 </Text>
               </View>
 
-              <Text style={styles.yearText}>
-                {selectedMovie.year.substr(0, 4)}
-              </Text>
               <View style={styles.ratingsContainer}>
                 <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
                 <AntDesign name="star" color="gold" size={23} />
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.yearText}>{selectedMovie.language} | </Text>
+                <Text style={styles.yearText}>
+                  {selectedMovie.year.substr(0, 4)}
+                </Text>
               </View>
             </View>
           )}
         </View>
         <View style={styles.plotcontainer}>
-          <Text style={styles.plotText}>{selectedMovie.plot}</Text>
+          <Text style={styles.plotText}>
+            {selectedMovie.plot.toString().substr(0, 500)}...
+          </Text>
         </View>
         <Text style={styles.text}>Cast</Text>
         <FlatList
           keyExtractor={(item) => item.id.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
-          data={selectedMovie.cast._55}
+          data={selectedMovie.cast}
           renderItem={renderCastItem}
         />
 
@@ -226,9 +233,7 @@ const MovieDetailScreen = (props) => {
               onPress={openActionSheet}
             >
               {!loading ? (
-                <Text style={styles.text}>
-                  {buttonText}
-                </Text>
+                <Text style={styles.text}>{buttonText}</Text>
               ) : (
                 <ActivityIndicator size="small" color={Colors.lightblue} />
               )}
@@ -309,9 +314,9 @@ const styles = StyleSheet.create({
     color: "#c2c2c2",
   },
   row: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     paddingHorizontal: 15,
   },
   addtomymoviesbtn: {

@@ -121,11 +121,12 @@ const SearchScreen = (props) => {
     <TouchableOpacity
       activeOpacity={0.85}
       onPress={() => {
-        dispatch(MoviesAction.loadMoviesWithGenres(item.id));
+        // dispatch(MoviesAction.loadMoviesWithGenres(item.id, 1));
         props.navigation.navigate({
           name: "GenreScreen",
           params: {
             GenreName: item.name,
+            genreId: item.id,
           },
         });
       }}
@@ -137,9 +138,7 @@ const SearchScreen = (props) => {
           // backgroundColor: itemData.item.genreColor,
         }}
       >
-        <Text style={{ ...styles.headerText, fontSize: 17 }}>
-          {item.name}
-        </Text>
+        <Text style={{ ...styles.headerText, fontSize: 17 }}>{item.name}</Text>
       </LinearGradient>
     </TouchableOpacity>
   );
