@@ -44,7 +44,7 @@ const MoviesReducer = (state = initialState, action) => {
     case LOAD_MOVIES_WITH_GENRES:
       return {
         ...state,
-        moviesWRTGenre: action.moviesWRTGenre,
+        moviesWRTGenre: state.moviesWRTGenre.concat(action.moviesWRTGenre),
       };
     default:
       return state;

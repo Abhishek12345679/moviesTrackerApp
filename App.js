@@ -6,8 +6,6 @@ import { combineReducers, applyMiddleware, createStore } from "redux";
 import ReduxThunk from "redux-thunk";
 import { Provider } from "react-redux";
 
-import { YellowBox } from "react-native";
-
 import * as Fonts from "expo-font";
 import { AppLoading } from "expo";
 
@@ -29,6 +27,7 @@ export default function App() {
     return Fonts.loadAsync({
       "apple-bold": require("./assets/Fonts/SF-Pro-Display-Bold.ttf"),
       "apple-regular": require("./assets/Fonts/SF-Pro-Text-Regular.ttf"),
+      "fancy-font": require("./assets/Fonts/BungeeShade-Regular.ttf"),
     });
   };
 
@@ -48,5 +47,3 @@ export default function App() {
     </Provider>
   );
 }
-
-

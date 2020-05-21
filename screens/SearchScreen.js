@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -117,6 +117,16 @@ const SearchScreen = (props) => {
 
   useScrollToTop(scrollRef);
 
+  const { navigation } = props;
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      dispatch(MoviesAction.clearGenreScreen());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   const renderGenreTabItem = ({ item }) => (
     <TouchableOpacity
       activeOpacity={0.85}
@@ -144,7 +154,7 @@ const SearchScreen = (props) => {
   );
 
   const goToSearch = () => {
-    props.navigation.navigate("SearchDetailScreen");
+    navigation.navigate("SearchDetailScreen");
   };
 
   return (

@@ -65,7 +65,7 @@ const MoviesScreen = (props) => {
       console.log(err);
     }
     setRefreshing(false);
-  }, [setRefreshing]);
+  }, []);
 
   const loadScreen = useCallback(async () => {
     try {
@@ -78,7 +78,7 @@ const MoviesScreen = (props) => {
   useEffect(() => {
     setLoading(true);
     loadScreen().then(() => setLoading(false));
-  }, [setLoading, loadScreen]);
+  }, [loadScreen]);
 
   const renderTrendingMoviesItem = ({ item }) => (
     <SkeletonContent

@@ -16,34 +16,78 @@ const genreMovies = createSelector(
 
 const GenreScreen = (props) => {
   const selectedGenre = props.route.params.genreId;
-
-  const [topLoading, setTopLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  let [page, setPage] = useState(1);
   const [bottomLoading, setBottomLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const { navigation } = props;
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener("focus", () => {
-  //     dispatch(MovieAction.clearGenreScreen());
-  //   });
 
-  //   return unsubscribe;
-  // }, [navigation]);
+  const renderFooter = () => {
+    //it will show indicator at the bottom of the list when data is loading otherwise it returns null
+    if (bottomLoading) {
+      return <ActivityIndicator style={{ color: "#000" }} />;
+    } else {
+      return null;
+    }
+  };
+
+  const handleLoadMore = async () => {
+    setBottomLoading(true);
+    try {
+      await dispatch(MovieAction.loadMoviesWithGenres(selectedGenre, page + 1));
+      setPage(page + 1);
+    } catch (err) {
+      console.log(err);
+    }
+
+    setBottomLoading(false);
+  };
 
   const loadScreen = useCallback(async () => {
     try {
-      await dispatch(MovieAction.loadMoviesWithGenres(selectedGenre));
+      await dispatch(MovieAction.loadMoviesWithGenres(selectedGenre, page));
     } catch (err) {
       console.log(err);
       return;
     }
   }, [dispatch]);
 
+  const clearScreen = useCallback(async () => {
+    try {
+      await dispatch(MovieAction.clearGenreScreen());
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   loadScreen().then(() => setLoading(false));
+  // }, []);
+
   useEffect(() => {
-    setTopLoading(true);
-    loadScreen().then(() => setTopLoading(false));
-  }, [loadScreen]);
+    const unsubscribe = navigation.addListener("focus", () => {
+      setLoading(true);
+      loadScreen().then(() => setLoading(false));
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+
+  //how to trigger goback ...
+
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("blur", () => {
+  //     setLoading(true);
+  //     clearScreen().then(() => setLoading(false));
+  //   });
+
+  //   return unsubscribe;
+  // }, [navigation]);
 
   const moviesWRTGenre = useSelector(genreMovies);
   // let [tmpLongList,setTmpLongList] =
@@ -67,9 +111,9 @@ const GenreScreen = (props) => {
     />
   );
 
-  if (topLoading) {
+  if (loading) {
     return (
-      <View>
+      <View style={styles.screen}>
         <ActivityIndicator size="large" color={Colors.lightblue} />
       </View>
     );
@@ -85,6 +129,9 @@ const GenreScreen = (props) => {
         data={moviesWRTGenre}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
+        ListFooterComponent={renderFooter}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={1}
       />
     </View>
   );
