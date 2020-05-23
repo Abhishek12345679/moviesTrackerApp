@@ -47,34 +47,36 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
     <View
       style={{
         position: "absolute",
-        // left: Dimensions.get("window").width / 100,
-        // right: Dimensions.get("window").width / 100,
-        bottom: Dimensions.get("window").width / 10,
+        bottom: Dimensions.get("window").width / 20,
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        height: 60,
-        backgroundColor: "rgb(255,255,255)",
-        borderColor: "rgb(255,255,255)",
-        borderWidth: 1,
-        borderRadius: 25,
-        width: "90%",
-        marginLeft: 20,
-        marginRight: 20,
-        alignItems: "center",
+        height: 65,
+        backgroundColor: "#262626",
+        borderRadius: 30,
+        width: "80%",
+        marginLeft: 40,
+        marginRight: 40,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 1,
+          height: 1,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 10,
       }}
     >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
+
+        const icon =
+          options.tabBarIcon !== undefined
+            ? options.tabBarIcon
+            : options.tabBarLabel !== undefined
             ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
             : route.name;
 
         const isFocused = state.index === index;
-
         const onPress = () => {
           const event = navigation.emit({
             type: "tabPress",
@@ -87,12 +89,12 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
           }
         };
 
-        const onLongPress = () => {
-          navigation.emit({
-            type: "tabLongPress",
-            target: route.key,
-          });
-        };
+        // const onLongPress = () => {
+        //   navigation.emit({
+        //     type: "tabLongPress",
+        //     target: route.key,
+        //   });
+        // };
 
         return (
           <TouchableOpacity
@@ -101,14 +103,29 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
             accessibilityLabel={options.tabBarAccessibilityLabel}
             testID={options.tabBarTestID}
             onPress={onPress}
-            onLongPress={onLongPress}
-            style={{ flex: 1 }}
+            // onLongPress={onLongPress}
+            style={{
+              width: (Dimensions.get("window").width * 13) / 25 / 2,
+              height: 40,
+              alignItems: "center",
+              justifyContent: "center",
+              flex: 1,
+              flexDirection: "row",
+              fontSize: 15,
+            }}
           >
-            <AntDesign
+            {/* <AntDesign
               name="search1"
-              // size={isFocused ? size + 5 : size}
+              size={isFocused ? 15 + 5 : 15}
               color={isFocused ? Colors.lightblue : Colors.grey}
-            />
+            /> */}
+            {/* 
+            {renderIcon({
+              route,
+              focused: index === idx,
+              tintColor: index === idx ? activeTintColor : inactiveTintColor,
+            })} */}
+            {icon}
           </TouchableOpacity>
         );
       })}
@@ -131,21 +148,6 @@ const defaultStackNavigationOptions = {
   },
   headerTintColor: Colors.lightblue,
   headerBackTitle: "Back",
-};
-
-const defaultBottomTabNavigationOptions = {
-  activeTintColor: Colors.white,
-  style: {
-    backgroundColor: Colors.secondaryColor,
-    height: Dimensions.get("window").height >= 800 ? 75 : 50,
-    shadowOpacity: 0,
-    shadowOffset: {
-      height: 0,
-      width: 0,
-    },
-    borderTopWidth: 0,
-  },
-  showLabel: false,
 };
 
 const MoviesScreenStackNavigator = createStackNavigator();
@@ -265,10 +267,7 @@ const BottomNavigationBar = createBottomTabNavigator();
 
 export const AppNavigator = () => {
   return (
-    <BottomNavigationBar.Navigator
-      tabBarOptions={defaultBottomTabNavigationOptions}
-      tabBar={(props) => <MyTabBar {...props} />}
-    >
+    <BottomNavigationBar.Navigator tabBar={(props) => <MyTabBar {...props} />}>
       <BottomNavigationBar.Screen
         name="MoviesScreenNavigator"
         component={moviesScreenNavigator}
@@ -279,7 +278,7 @@ export const AppNavigator = () => {
               style={{
                 fontFamily: "apple-bold",
                 fontSize: focused ? 20 : 15,
-                color: focused ? Colors.lightblue : Colors.grey,
+                color: focused ? Colors.white : Colors.white,
               }}
             >
               M
