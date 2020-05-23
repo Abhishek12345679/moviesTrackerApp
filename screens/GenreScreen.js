@@ -63,20 +63,19 @@ const GenreScreen = (props) => {
     }
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   loadScreen().then(() => setLoading(false));
-  // }, []);
-
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      setLoading(true);
-      loadScreen().then(() => setLoading(false));
-    });
+    setLoading(true);
+    loadScreen().then(() => setLoading(false));
+  }, []);
 
-    return unsubscribe;
-  }, [navigation]);
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("focus", () => {
+  //     setLoading(true);
+  //     loadScreen().then(() => setLoading(false));
+  //   });
 
+  //   return unsubscribe;
+  // }, [navigation]);
 
   //how to trigger goback ...
 
@@ -90,7 +89,6 @@ const GenreScreen = (props) => {
   // }, [navigation]);
 
   const moviesWRTGenre = useSelector(genreMovies);
-  // let [tmpLongList,setTmpLongList] =
 
   const renderItem = ({ item }) => (
     <MovieItem
