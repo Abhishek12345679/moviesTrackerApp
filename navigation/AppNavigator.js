@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Dimensions } from "react-native";
+import { View, TouchableOpacity, Text, Dimensions } from "react-native";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import MoviesScreen, {
@@ -39,6 +39,82 @@ import {
 } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Colors from "../constants/Colors";
+
+// const deviceWidth = Dimensions.get("window").width;
+
+const MyTabBar = ({ state, descriptors, navigation }) => {
+  return (
+    <View
+      style={{
+        position: "absolute",
+        // left: Dimensions.get("window").width / 100,
+        // right: Dimensions.get("window").width / 100,
+        bottom: Dimensions.get("window").width / 10,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        height: 60,
+        backgroundColor: "rgb(255,255,255)",
+        borderColor: "rgb(255,255,255)",
+        borderWidth: 1,
+        borderRadius: 25,
+        width: "90%",
+        marginLeft: 20,
+        marginRight: 20,
+        alignItems: "center",
+      }}
+    >
+      {state.routes.map((route, index) => {
+        const { options } = descriptors[route.key];
+        const label =
+          options.tabBarLabel !== undefined
+            ? options.tabBarLabel
+            : options.title !== undefined
+            ? options.title
+            : route.name;
+
+        const isFocused = state.index === index;
+
+        const onPress = () => {
+          const event = navigation.emit({
+            type: "tabPress",
+            target: route.key,
+            canPreventDefault: true,
+          });
+
+          if (!isFocused && !event.defaultPrevented) {
+            navigation.navigate(route.name);
+          }
+        };
+
+        const onLongPress = () => {
+          navigation.emit({
+            type: "tabLongPress",
+            target: route.key,
+          });
+        };
+
+        return (
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityStates={isFocused ? ["selected"] : []}
+            accessibilityLabel={options.tabBarAccessibilityLabel}
+            testID={options.tabBarTestID}
+            onPress={onPress}
+            onLongPress={onLongPress}
+            style={{ flex: 1 }}
+          >
+            <AntDesign
+              name="search1"
+              // size={isFocused ? size + 5 : size}
+              color={isFocused ? Colors.lightblue : Colors.grey}
+            />
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+};
 
 const defaultStackNavigationOptions = {
   headerStyle: {
@@ -191,6 +267,7 @@ export const AppNavigator = () => {
   return (
     <BottomNavigationBar.Navigator
       tabBarOptions={defaultBottomTabNavigationOptions}
+      tabBar={(props) => <MyTabBar {...props} />}
     >
       <BottomNavigationBar.Screen
         name="MoviesScreenNavigator"
