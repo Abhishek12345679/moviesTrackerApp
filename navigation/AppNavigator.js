@@ -1,6 +1,10 @@
 import React from "react";
 import { View, TouchableOpacity, Text, Dimensions } from "react-native";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  AntDesign,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
 import MoviesScreen, {
   screenOptions as MovieScreenOptions,
@@ -69,12 +73,7 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
 
-        const icon =
-          options.tabBarIcon !== undefined
-            ? options.tabBarIcon
-            : options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : route.name;
+        const IconNames = ["medium-monogram", "search1", "man"];
 
         const isFocused = state.index === index;
         const onPress = () => {
@@ -89,15 +88,16 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
           }
         };
 
-        // const onLongPress = () => {
-        //   navigation.emit({
-        //     type: "tabLongPress",
-        //     target: route.key,
-        //   });
-        // };
+        const onLongPress = () => {
+          navigation.emit({
+            type: "tabLongPress",
+            target: route.key,
+          });
+        };
 
         return (
           <TouchableOpacity
+            activeOpacity={1}
             accessibilityRole="button"
             accessibilityStates={isFocused ? ["selected"] : []}
             accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -114,18 +114,11 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
               fontSize: 15,
             }}
           >
-            {/* <AntDesign
-              name="search1"
-              size={isFocused ? 15 + 5 : 15}
+            <AntDesign
+              name={IconNames[index]}
+              size={25}
               color={isFocused ? Colors.lightblue : Colors.grey}
-            /> */}
-            {/* 
-            {renderIcon({
-              route,
-              focused: index === idx,
-              tintColor: index === idx ? activeTintColor : inactiveTintColor,
-            })} */}
-            {icon}
+            />
           </TouchableOpacity>
         );
       })}
@@ -273,6 +266,7 @@ export const AppNavigator = () => {
         component={moviesScreenNavigator}
         tabBarOptions={{ showLabel: false }}
         options={{
+          tabBarLabel: "movies",
           tabBarIcon: ({ focused }) => (
             <Text
               style={{
@@ -291,10 +285,10 @@ export const AppNavigator = () => {
         name="SearchScreenNavigator"
         component={searchScreenNavigator}
         options={{
-          tabBarLabel: "sdsd",
-          tabBarIcon: ({ focused, size }) => (
-            <AntDesign
-              name="search1"
+          tabBarLabel: "search",
+          tabBarLabel: ({ focused, tintColor: color }) => (
+            <MaterialCommunityIcons
+              name="human-greeting"
               size={focused ? size + 5 : size}
               color={focused ? Colors.lightblue : Colors.grey}
             />
@@ -306,6 +300,7 @@ export const AppNavigator = () => {
         name="profileScreenNavigator"
         component={ProfileScreenNavigator}
         options={{
+          tabBarLabel: "Profile",
           tabBarIcon: ({ focused, size }) => (
             <MaterialCommunityIcons
               name="human-greeting"
