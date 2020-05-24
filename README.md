@@ -2,8 +2,8 @@
 
 ### Project Under Development (Under Copyright moviéy)
 
-- [ ] Optimise the redux store --> actions and reducers
-- [ ] optimise the response
+- [X] Optimise the redux store --> actions and reducers
+- [X] optimise the response
 
 <!-- <table>
   <tr>
