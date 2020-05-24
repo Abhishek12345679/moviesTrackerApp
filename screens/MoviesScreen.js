@@ -45,7 +45,9 @@ const Anime = createSelector(
 const MoviesScreen = (props) => {
   const Stories = useSelector(stories);
   const new_releases = useSelector(newReleases);
+
   console.log("movie screen rendered");
+
   const new_tv_shows = useSelector(newTVShows);
   const anime = useSelector(Anime);
 
@@ -78,7 +80,7 @@ const MoviesScreen = (props) => {
   useEffect(() => {
     setLoading(true);
     loadScreen().then(() => setLoading(false));
-  }, [loadScreen]);
+  }, []);
 
   const renderTrendingMoviesItem = ({ item }) => (
     <SkeletonContent
@@ -86,7 +88,7 @@ const MoviesScreen = (props) => {
       highlightColor="#252525"
       containerStyle={styles.new_releases}
       isLoading={loading || refreshing}
-      layout={[styles.cinemaSkeleton]}
+      layout={{ width: 100, height: 100, key: "abc" }}
     >
       <MovieItem
         style={styles.new_releases}
@@ -423,7 +425,7 @@ const styles = StyleSheet.create({
     borderRadius: 65 / 2,
   },
   new_releases: {
-    flex: 1,
+    // flex: 1,
     width: 200,
     height: 125,
     marginHorizontal: 7.5,

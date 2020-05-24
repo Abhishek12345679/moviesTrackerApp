@@ -316,9 +316,9 @@ export const searchMovies = (MovieTitle) => {
 export const loadMoviesWithGenres = (genreId, page_no) => {
   let response;
   let hasUserSaved;
-  const posterBaseUrl = "http://image.tmdb.org/t/p/w300";
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   return async (dispatch, getState) => {
-    await dispatch(clearGenreScreen());
+    // await dispatch(clearGenreScreen());
     try {
       response = await fetch(
         `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&api_key=${config.TMDB_API_KEY}&page=${page_no}`

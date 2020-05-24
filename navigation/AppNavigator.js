@@ -97,13 +97,14 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
 
         return (
           <TouchableOpacity
+            key={index}
             activeOpacity={1}
             accessibilityRole="button"
             accessibilityStates={isFocused ? ["selected"] : []}
             accessibilityLabel={options.tabBarAccessibilityLabel}
             testID={options.tabBarTestID}
             onPress={onPress}
-            // onLongPress={onLongPress}
+            onLongPress={onLongPress}
             style={{
               width: (Dimensions.get("window").width * 13) / 25 / 2,
               height: 40,
