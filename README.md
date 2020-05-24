@@ -5,7 +5,7 @@
 - [ ] Optimise the redux store --> actions and reducers
 - [ ] optimise the response
 
-<table>
+/*<table>
   <tr>
     <td>Home Screen</td>
      <td>Search Screen</td>
@@ -29,4 +29,4 @@
     <td><img src="screenshots/5.png" width=300/></td>
     <td><img src="screenshots/6.png" width=300></td>
   </tr>
- </table>
+ </table>**/
