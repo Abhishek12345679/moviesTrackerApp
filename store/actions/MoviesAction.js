@@ -54,6 +54,8 @@ const getLanguageNamefromCode = async (lng_code) => {
     if (langData[0].languages[0].iso639_1 === lng_code) {
       lang = langData[0].languages[0].name;
       // console.log(lang);
+    }else if(langData[0].languages[0].iso639_1 === lng_code || !langData){
+      lang='no language'
     }
     return lang;
   } catch (err) {
@@ -134,8 +136,8 @@ export const loadAll = () => {
 
       const loadedTrendingMoviesLength = trendingMovies.results.length;
 
-      // loadedTrendingMovies =
-      const loadedTrendingMovies = await Promise.all(
+      // loadedTrendingMovies =F
+      let loadedTrendingMovies = await Promise.all(
         trendingMovies.results
           .slice(0, 5) // use slice instead of a loop
           .map((
@@ -175,7 +177,7 @@ export const loadAll = () => {
 
       // trending TV Shows
       const TVShowsLength = trendingTV.results.length;
-      const loadedNewTVShows = await Promise.all(
+      let loadedNewTVShows = await Promise.all(
         trendingTV.results
           .slice(0, 5) // use slice instead of a loop
           .map((
@@ -266,9 +268,9 @@ export const searchMovies = (MovieTitle) => {
       console.log("search results: ", resData);
 
       const length = resData.results.length;
-      const searchedMovies = await Promise.all(
+      let searchedMovies = await Promise.all(
         resData.results
-          .slice(0, length) // use slice instead of a loop
+          // .slice(0, length) // use slice instead of a loop
           .map((
             searchedMovie // map movie to [language,movie]
           ) =>
@@ -288,13 +290,9 @@ export const searchMovies = (MovieTitle) => {
           );
           return new Movie( // create new Movie
             searchedMovie.id.toString(),
-            searchedMovie.media_type === "movie"
-              ? searchedMovie.title
-              : searchedMovie.name,
+            searchedMovie.title,
             posterBaseUrl + searchedMovie.poster_path,
-            searchedMovie.media_type === "movie"
-              ? searchedMovie.release_date
-              : searchedMovie.first_air_date,
+            searchedMovie.release_date,
             [],
             searchedMovie.overview,
             searchedMovie.vote_average,
