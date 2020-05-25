@@ -274,7 +274,7 @@ const MoviesScreen = (props) => {
               }}
             >
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.headerText}> Movies </Text>
+                <Text style={styles.headerText}>Trending Movies</Text>
                 <Ionicons
                   style={{ marginStart: 5 }}
                   name="ios-arrow-forward"
@@ -318,7 +318,7 @@ const MoviesScreen = (props) => {
               }}
             >
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.headerText}> TV Shows </Text>
+                <Text style={styles.headerText}>Trending TV</Text>
                 <Ionicons
                   style={{ marginStart: 5 }}
                   name="ios-arrow-forward"

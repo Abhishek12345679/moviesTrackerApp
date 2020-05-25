@@ -54,8 +54,8 @@ const getLanguageNamefromCode = async (lng_code) => {
     if (langData[0].languages[0].iso639_1 === lng_code) {
       lang = langData[0].languages[0].name;
       // console.log(lang);
-    }else if(langData[0].languages[0].iso639_1 === lng_code || !langData){
-      lang='no language'
+    } else if (langData[0].languages[0].iso639_1 === lng_code || !langData) {
+      lang = "no language";
     }
     return lang;
   } catch (err) {
@@ -73,47 +73,97 @@ export const clearGenreScreen = () => {
   };
 };
 
-export const loadAll = () => {
+export const loadAll = (isType, pg_no) => {
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   let hasUserSaved;
+  let movies;
+  const trendingMovies,trendingTV,trendingAnime;
+  const moviesResponse,TrendingMoviesResponse,trendingTVResponse,trendingAnimeResponse;
   const loadedStories = [];
   return async (dispatch, getState) => {
     try {
       //stories response
-      const moviesResponse = await fetch(
-        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=tokyo`
-      );
-      // trending movies
-      const TrendingMoviesResponse = await fetch(
-        `https://api.themoviedb.org/3/trending/all/day?api_key=${config.TMDB_API_KEY}`
-      );
-      // trending TV
-      const trendingTVResponse = await fetch(
-        `https://api.themoviedb.org/3/discover/tv?api_key=${config.TMDB_API_KEY}&language=en-US&sort_by=popularity.desc&first_air_date_year=2020&page=1&with_original_language=en`
-      );
-      // trending Anime
-      const trendingAnimeResponse = await fetch(
-        `https://kitsu.io/api/edge/trending/anime`,
-        {
-          method: "GET",
-        }
-      );
-
-      if (
-        !moviesResponse.ok ||
-        !TrendingMoviesResponse.ok ||
-        !trendingTVResponse.ok ||
-        !trendingAnimeResponse.ok
-      ) {
-        throw new Error("failed response");
+      if (isType === "ALL") {
+        moviesResponse = await fetch(
+          `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=tokyo`
+        );
+        // trending movies
+        TrendingMoviesResponse = await fetch(
+          `https://api.themoviedb.org/3/trending/all/day?api_key=${config.TMDB_API_KEY}`
+        );
+        // trending TV
+        trendingTVResponse = await fetch(
+          `https://api.themoviedb.org/3/discover/tv?api_key=${config.TMDB_API_KEY}&language=en-US&sort_by=popularity.desc&first_air_date_year=2020&page=1&with_original_language=en`
+        );
+        // trending Anime
+        trendingAnimeResponse = await fetch(
+          `https://kitsu.io/api/edge/trending/anime`,
+          {
+            method: "GET",
+          }
+        );
+      } else if (isType === "TRENDING_MOVIES") {
+        TrendingMoviesResponse = await fetch(
+          `https://api.themoviedb.org/3/discover/movie?api_key=${config.TMDB_API_KEY}&sort_by=popularity.desc&first_air_date_year=2020&page=1&`
+        );
+      } else if (isType === "TRENDING_TV") {
+        trendingTVResponse = await fetch(
+          `https://api.themoviedb.org/3/discover/tv?api_key=${config.TMDB_API_KEY}&sort_by=popularity.desc&first_air_date_year=2020&page=${pg_no}`
+        );
+      } else if (isType === "ANIME") {
+        trendingAnimeResponse = await fetch(
+          `https://kitsu.io/api/edge/trending/anime`,
+          {
+            method: "GET",
+          }
+        );
       }
 
-      const movies = await moviesResponse.json();
-      const trendingMovies = await TrendingMoviesResponse.json();
-      const trendingTV = await trendingTVResponse.json();
-      const trendingAnime = await trendingAnimeResponse.json();
-      // console.log('Trending Movies',resData);
-      // console.log("NEW RELEASES", resData);
+
+      if (isType === "ALL") {
+        if (
+          !moviesResponse.ok ||
+          !TrendingMoviesResponse.ok ||
+          !trendingTVResponse.ok ||
+          !trendingAnimeResponse.ok
+        ) {
+          throw new Error("failed response");
+        }
+      } else if (isType === "TRENDING_MOVIES") {
+        if (!TrendingMoviesResponse.ok) {
+          throw new Error("failed response");
+        }
+      } else if (isType === "TRENDING_TV") {
+        if (!trendingTVResponse.ok) {
+          throw new Error("failed response");
+        }
+      }else if(isType === 'ANIME'){
+        if(!trendingAnimeResponse.ok){
+          throw new Error("failed response");
+        }
+      }else{
+        return;
+      }
+
+      if (isType === "ALL") {
+         movies = await moviesResponse.json();
+         trendingMovies = await TrendingMoviesResponse.json();
+         trendingTV = await trendingTVResponse.json();
+         trendingAnime = await trendingAnimeResponse.json();
+      } else if (isType === "TRENDING_MOVIES") {
+         trendingMovies = await TrendingMoviesResponse.json();
+      } else if (isType === "TRENDING_TV") {
+         trendingTV = await trendingTVResponse.json();
+      }else if(isType === 'ANIME'){
+         trendingAnime = await trendingAnimeResponse.json();
+      }else{
+        return;
+      }
+
+    //   if(isType === 'ALL'){
+
+        
+    // }
 
       //stories array
 
@@ -136,10 +186,10 @@ export const loadAll = () => {
 
       const loadedTrendingMoviesLength = trendingMovies.results.length;
 
-      // loadedTrendingMovies =F
+      // loadedTrendingMovies =
       let loadedTrendingMovies = await Promise.all(
         trendingMovies.results
-          .slice(0, 5) // use slice instead of a loop
+          .slice(0, 6) // use slice instead of a loop
           .map((
             trendingMovie // map movie to [language,movie]
           ) =>
@@ -179,7 +229,7 @@ export const loadAll = () => {
       const TVShowsLength = trendingTV.results.length;
       let loadedNewTVShows = await Promise.all(
         trendingTV.results
-          .slice(0, 5) // use slice instead of a loop
+          .slice(0, 6) // use slice instead of a loop
           .map((
             trendingTVShow // map movie to [language,movie]
           ) =>
