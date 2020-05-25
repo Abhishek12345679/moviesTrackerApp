@@ -76,7 +76,7 @@ export const clearGenreScreen = () => {
 export const loadAll = (isType, pg_no) => {
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   let hasUserSaved;
-  let movies;
+  const movies;
   const trendingMovies,trendingTV,trendingAnime;
   const moviesResponse,TrendingMoviesResponse,trendingTVResponse,trendingAnimeResponse;
   const loadedStories = [];
@@ -160,26 +160,25 @@ export const loadAll = (isType, pg_no) => {
         return;
       }
 
-    //   if(isType === 'ALL'){
+      if(isType === 'ALL'){
+     //stories array
 
-        
-    // }
+     const loadedMoviesLength = movies.Search.length;
 
-      //stories array
-
-      const loadedMoviesLength = movies.Search.length;
-
-      for (let i = 0; i < 6; i++) {
-        loadedStories.push(
-          new Movie(
-            movies.Search[i].imdbID,
-            movies.Search[i].Title,
-            movies.Search[i].Poster,
-            movies.Search[i].Year
-          )
-        );
+     for (let i = 0; i < 6; i++) {
+       loadedStories.push(
+         new Movie(
+           movies.Search[i].imdbID,
+           movies.Search[i].Title,
+           movies.Search[i].Poster,
+           movies.Search[i].Year
+         )
+       );
+     }    
       }
+      
 
+ 
       //trending movies array
 
       // console.log("loadedTrendingMovies", loadedTrendingMovies);
