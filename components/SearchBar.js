@@ -1,7 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+} from "react-native";
 
-import { EvilIcons } from "@expo/vector-icons";
+import { EvilIcons, Entypo } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { TextInput } from "react-native";
 
@@ -25,9 +31,19 @@ const SearchBar = (props) => {
               onChangeText={props.onChangeText}
             />
           )}
-          <View>
-            <EvilIcons name="search" size={30} color="#7d7d7d" />
-          </View>
+          {props.cancelEnabled && (
+            <TouchableOpacity
+              onPress={props.clearSearchInput}
+              style={{
+                height: 50,
+                width: 50,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Entypo name={props.icon} size={20} color="#7d7d7d" />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </TouchableWithoutFeedback>

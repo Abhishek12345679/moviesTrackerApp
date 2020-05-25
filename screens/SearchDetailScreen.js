@@ -62,6 +62,9 @@ const SearchDetailScreen = (props) => {
         value={searchValue}
         onChangeText={searchValueChangeHandler}
         searchfunction={true}
+        icon="circle-with-cross"
+        cancelEnabled={!!searchValue.length > 0}
+        clearSearchInput={() => setSearchValue("")}
         // onCancel={}
       />
       {!!searchValue && !!SearchList && searchValue.length > 2 ? (
