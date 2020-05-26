@@ -7,7 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   ActivityIndicator,
-  ActionSheetIOS,
+  // ActionSheetIOS,
   FlatList,
 } from "react-native";
 import MovieItem from "../components/MovieItem";
@@ -34,6 +34,7 @@ const userMovies = createSelector(
 );
 
 const MoviesWRTGenreDetailScreen = (props) => {
+  const { showActionSheetWithOptions } = props;
   const [loading, setLoading] = useState(false);
   let selectedMovieId, selectedMovie;
 
@@ -82,7 +83,7 @@ const MoviesWRTGenreDetailScreen = (props) => {
   let [buttonText, setButtonText] = useState(buttonTextGenerator());
 
   const openActionSheet = () => {
-    ActionSheetIOS.showActionSheetWithOptions(
+    showActionSheetWithOptions(
       {
         options: [
           "Cancel",

@@ -7,10 +7,12 @@ import {
   TouchableOpacity,
   Dimensions,
   ActivityIndicator,
-  ActionSheetIOS,
+  // ActionSheetIOS,
   FlatList,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+
+import { connectActionSheet } from "@expo/react-native-action-sheet";
 
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,6 +26,7 @@ import * as UserActions from "../store/actions/UserActions";
 // import SkeletonContent from "react-native-skeleton-content";
 
 const MovieDetailScreen = (props) => {
+  const { showActionSheetWithOptions } = this.props;
   const dispatch = useDispatch();
   let selectedMovieId, movies, selectedMovie;
 
@@ -89,7 +92,7 @@ const MovieDetailScreen = (props) => {
   const [loading, setLoading] = useState(false);
 
   const openActionSheet = () => {
-    ActionSheetIOS.showActionSheetWithOptions(
+    showActionSheetWithOptions(
       {
         options: [
           "Cancel",
@@ -250,6 +253,8 @@ const MovieDetailScreen = (props) => {
   );
 };
 
+const ConnectedApp = connectActionSheet(MoviesWRTGenreDetailScreen);
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -358,4 +363,4 @@ export const screenOptions = (navData) => {
   };
 };
 
-export default MovieDetailScreen;
+export default ConnectedApp;
