@@ -11,6 +11,8 @@ import { AppLoading } from "expo";
 
 import NavigationContainer from "./navigation/NavigationContainer";
 
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+
 export default function App() {
   // require("react-native").unstable_enableLogBox();
   // YellowBox.ignoreWarnings = ["Warning: VirtualizedLists"];
@@ -42,8 +44,10 @@ export default function App() {
   }
 
   return (
-    <Provider store={store}>
-      <NavigationContainer />
-    </Provider>
+    <ActionSheetProvider>
+      <Provider store={store}>
+        <NavigationContainer />
+      </Provider>
+    </ActionSheetProvider>
   );
 }

@@ -109,10 +109,6 @@ const ProfileScreen = (props) => {
       }
     >
       <View style={styles.header}>
-        <View style={styles.followers}>
-          <Text style={styles.titleText}>Followers</Text>
-          <Text style={styles.text}>420</Text>
-        </View>
         <TouchableOpacity
           activeOpacity={0.86}
           style={styles.profilepicture}
@@ -130,10 +126,6 @@ const ProfileScreen = (props) => {
             <AntDesign name="caretright" size={60} color="#FFF" />
           )}
         </TouchableOpacity>
-        <View style={styles.followers}>
-          <Text style={styles.titleText}>Following</Text>
-          <Text style={styles.text}>69</Text>
-        </View>
       </View>
       <View>
         <View>
@@ -208,7 +200,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
     paddingHorizontal: 15,
     marginTop: 10,
   },

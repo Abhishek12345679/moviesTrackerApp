@@ -15,7 +15,7 @@ import CastMember from "../components/CastMember";
 import { useSelector, useDispatch } from "react-redux";
 
 import { LinearGradient } from "expo-linear-gradient";
-
+import { connectActionSheet } from "@expo/react-native-action-sheet";
 import { AntDesign } from "@expo/vector-icons";
 
 import * as UserActions from "../store/actions/UserActions";
@@ -240,6 +240,8 @@ const MoviesWRTGenreDetailScreen = (props) => {
   );
 };
 
+const ConnectedApp = connectActionSheet(MoviesWRTGenreDetailScreen);
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -344,4 +346,4 @@ export const screenOptions = (navData) => {
   };
 };
 
-export default MoviesWRTGenreDetailScreen;
+export default ConnectedApp;
