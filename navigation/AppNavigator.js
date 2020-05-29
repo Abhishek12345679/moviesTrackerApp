@@ -188,6 +188,11 @@ const newReleasesNavigator = () => {
       screenOptions={defaultStackNavigationOptions}
       initialRouteName="MovieScreen"
       mode="modal"
+      screenOptions={({ route, navigation }) => ({
+        gestureEnabled: true,
+        cardOverlayEnabled: true,
+        ...TransitionPresets.ModalPresentationIOS,
+      })}
     >
       <NewReleasesStackNavigator.Screen
         name="MovieScreen"
