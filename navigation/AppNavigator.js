@@ -18,6 +18,8 @@ import MoviesDetailScreen, {
   screenOptions as MoviesDetailScreenOptions,
 } from "../screens/MovieDetailScreen";
 
+import AddStoryModal from "../screens/addStoryModal";
+
 import SearchScreen, {
   screenOptions as SearchScreenOptions,
 } from "../screens/SearchScreen";
@@ -43,6 +45,7 @@ import {
 } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Colors from "../constants/Colors";
+import addStoryModal from "../screens/addStoryModal";
 
 // const deviceWidth = Dimensions.get("window").width;
 
@@ -192,8 +195,8 @@ const newReleasesNavigator = () => {
         options={{ ...MovieScreenOptions, headerShown: false }}
       />
       <NewReleasesStackNavigator.Screen
-        name="NewReleasesModalScreen"
-        component={NewReleasesModalScreen}
+        name="addstoryModal"
+        component={addStoryModal}
         options={{ headerShown: false }}
       />
     </NewReleasesStackNavigator.Navigator>

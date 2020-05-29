@@ -37,6 +37,7 @@ const SearchDetailScreen = (props) => {
 
   const renderListItem = ({ item }) => (
     <MovieListItem
+      searchValue={searchValue.trim()}
       setScrollEnabled={(enabled) => setScrollEnabled(enabled)}
       movieTitle={item.title}
       posterUrl={item.posterUrl}

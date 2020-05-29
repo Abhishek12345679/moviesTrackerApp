@@ -1,7 +1,3 @@
-/**
- * Move the onPress outside
- */
-
 import React, { useEffect, useCallback, useState, useRef } from "react";
 import {
   View,
@@ -11,10 +7,15 @@ import {
   ScrollView,
   StatusBar,
   TouchableWithoutFeedback,
+  TouchableOpacity,
+  Image,
   RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+
 import MovieItem from "../components/MovieItem";
+import StoryItem from "../components/StoryItem";
+
 import { useSelector, useDispatch } from "react-redux";
 import * as MoviesAction from "../store/actions/MoviesAction";
 import * as UserActions from "../store/actions/UserActions";
@@ -131,22 +132,21 @@ const MoviesScreen = (props) => {
         },
       ]}
     >
-      <MovieItem
+      <StoryItem
         style={styles.storyItem}
-        footerStyle={{ opacity: 0 }}
         imageStyle={styles.storyImage}
         id={item.id}
         posterUrl={item.posterUrl}
-        onPress={() => {
-          props.navigation.navigate({
-            name: "NewReleasesModalScreen",
-            params: {
-              movieTitle: item.title,
-              posterUrl: item.posterUrl,
-              movieId: item.id,
-            },
-          });
-        }}
+        // onPress={() => {
+        //   props.navigation.navigate({
+        //     name: "NewReleasesModalScreen",
+        //     params: {
+        //       movieTitle: item.title,
+        //       posterUrl: item.posterUrl,
+        //       movieId: item.id,
+        //     },
+        //   });
+        // }}
       />
     </SkeletonContent>
   );
@@ -236,10 +236,27 @@ const MoviesScreen = (props) => {
       </SkeletonContent>
       <View>
         <FlatList
+          ListHeaderComponent={
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate("addstoryModal")}
+              style={{
+                width: 90,
+                height: 90,
+                borderRadius: 45,
+                alignItems: "center",
+                justifyContent: "center",
+                borderColor: Colors.lightblue,
+                borderWidth: 1,
+                marginHorizontal: 10,
+              }}
+            >
+              <Ionicons name="ios-add" size={30} color="#fff" />
+            </TouchableOpacity>
+          }
           keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
-          data={Stories}
+          data={[{}, {}]}
           renderItem={renderStoriesItem}
         />
       </View>
@@ -426,8 +443,8 @@ const styles = StyleSheet.create({
   },
   new_releases: {
     // flex: 1,
-    width: 200,
-    height: 125,
+    width: 150,
+    height: 200,
     marginHorizontal: 7.5,
   },
   centered: {

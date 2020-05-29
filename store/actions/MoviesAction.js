@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Text } from "react-native";
 
 export const SEARCH_MOVIES = "SEARCH_MOVIES";
 export const LOAD_MOVIES_WITH_GENRES = "LOAD_MOVIES_WITH_GENRES";
@@ -54,8 +55,8 @@ const getLanguageNamefromCode = async (lng_code) => {
     if (langData[0].languages[0].iso639_1 === lng_code) {
       lang = langData[0].languages[0].name;
       // console.log(lang);
-    }else if(langData[0].languages[0].iso639_1 === lng_code || !langData){
-      lang='no language'
+    } else if (langData[0].languages[0].iso639_1 === lng_code || !langData) {
+      lang = "no language";
     }
     return lang;
   } catch (err) {
@@ -291,6 +292,11 @@ export const searchMovies = (MovieTitle) => {
           return new Movie( // create new Movie
             searchedMovie.id.toString(),
             searchedMovie.title,
+              // .toLowerCase()
+              // .replace(
+              //   MovieTitle,
+              //   <Text style={{ fontFamily: "apple-bold" }}>{MovieTitle}</Text>
+              // ),
             posterBaseUrl + searchedMovie.poster_path,
             searchedMovie.release_date,
             [],
@@ -372,3 +378,4 @@ export const loadMoviesWithGenres = (genreId, page_no) => {
     }
   };
 };
+
