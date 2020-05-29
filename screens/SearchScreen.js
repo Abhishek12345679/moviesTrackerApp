@@ -158,33 +158,26 @@ const SearchScreen = (props) => {
   };
 
   return (
-    <ScrollView
+    <FlatList
       ref={scrollRef}
-      style={styles.screen}
-      contentContainerStyle={styles.screenContainer}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.imageContainer}>
-        <Image
-          style={styles.image}
-          source={require("../assets/Images/searchScreenHeader.jpeg")}
-        />
-      </View>
-      <SearchBar onPress={goToSearch} />
-      <FlatList
-        style={{ marginTop: 30 }}
-        scrollEnabled={false}
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "space-around",
-        }}
-        numColumns={2}
-        horizontal={false}
-        data={genres}
-        keyExtractor={(item) => item.id}
-        renderItem={renderGenreTabItem}
-      />
-    </ScrollView>
+      ListHeaderComponent={
+        <View>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              source={require("../assets/Images/searchScreenHeader.jpeg")}
+            />
+            <SearchBar onPress={goToSearch} />
+          </View>
+        </View>
+      }
+      style={{ backgroundColor: Colors.primaryColor }}
+      numColumns={2}
+      horizontal={false}
+      data={genres}
+      keyExtractor={(item) => item.id}
+      renderItem={renderGenreTabItem}
+    />
   );
 };
 
@@ -204,6 +197,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: "100%",
     height: 300,
+    alignItems: "center",
   },
   image: {
     width: "100%",

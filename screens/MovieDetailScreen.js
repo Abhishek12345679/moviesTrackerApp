@@ -26,7 +26,7 @@ import * as UserActions from "../store/actions/UserActions";
 // import SkeletonContent from "react-native-skeleton-content";
 
 const MovieDetailScreen = (props) => {
-  const { showActionSheetWithOptions } = this.props;
+  const { showActionSheetWithOptions } = props;
   const dispatch = useDispatch();
   let selectedMovieId, movies, selectedMovie;
 
@@ -253,7 +253,7 @@ const MovieDetailScreen = (props) => {
   );
 };
 
-const ConnectedApp = connectActionSheet(MoviesWRTGenreDetailScreen);
+const ConnectedApp = connectActionSheet(MovieDetailScreen);
 
 const styles = StyleSheet.create({
   screen: {
