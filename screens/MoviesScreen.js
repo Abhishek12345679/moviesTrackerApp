@@ -44,7 +44,7 @@ const Anime = createSelector(
 );
 
 const MoviesScreen = (props) => {
-  const Stories = useSelector(stories);
+  // const Stories = useSelector(stories);
   const new_releases = useSelector(newReleases);
 
   console.log("movie screen rendered");

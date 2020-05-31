@@ -163,7 +163,7 @@ const moviesScreenNavigator = () => {
       <MoviesScreenStackNavigator.Screen
         name="NewReleasesNavigator"
         component={newReleasesNavigator}
-        options={{ headerTitle: "Moviéy" }}
+        options={{ headerTitle: "Moviéy", headerShown: false }}
       />
 
       <MoviesScreenStackNavigator.Screen
@@ -185,19 +185,20 @@ const NewReleasesStackNavigator = createStackNavigator();
 const newReleasesNavigator = () => {
   return (
     <NewReleasesStackNavigator.Navigator
-      screenOptions={defaultStackNavigationOptions}
       initialRouteName="MovieScreen"
       mode="modal"
-      screenOptions={({ route, navigation }) => ({
+      screenOptions={{
+        ...defaultStackNavigationOptions,
+        headerTitle: "Movii",
         gestureEnabled: true,
         cardOverlayEnabled: true,
         ...TransitionPresets.ModalPresentationIOS,
-      })}
+      }}
     >
       <NewReleasesStackNavigator.Screen
         name="MovieScreen"
         component={MoviesScreen}
-        options={{ ...MovieScreenOptions, headerShown: false }}
+        options={{ ...MovieScreenOptions, headerShown: true }}
       />
       <NewReleasesStackNavigator.Screen
         name="addstoryModal"
