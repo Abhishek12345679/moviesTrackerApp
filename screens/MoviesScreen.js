@@ -27,8 +27,8 @@ import SkeletonContent from "react-native-skeleton-content";
 import { createSelector } from "reselect";
 
 const stories = createSelector(
-  (state) => state.Movies.movies,
-  (movies) => movies
+  (state) => state.UserMovies.stories,
+  (stories) => stories
 );
 const newReleases = createSelector(
   (state) => state.Movies.new_releases,
@@ -42,12 +42,12 @@ const Anime = createSelector(
   (state) => state.Movies.anime,
   (anime) => anime
 );
-
 const MoviesScreen = (props) => {
-  // const Stories = useSelector(stories);
+  const Stories = useSelector(stories);
   const new_releases = useSelector(newReleases);
 
   console.log("movie screen rendered");
+  console.log("stories", Stories);
 
   const new_tv_shows = useSelector(newTVShows);
   const anime = useSelector(Anime);
@@ -73,6 +73,7 @@ const MoviesScreen = (props) => {
   const loadScreen = useCallback(async () => {
     try {
       await dispatch(MoviesAction.loadAll());
+      await dispatch(UserActions.loadStory());
     } catch (err) {
       console.log(err);
     }
@@ -256,7 +257,7 @@ const MoviesScreen = (props) => {
           keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
-          data={[{}, {}]}
+          data={Stories}
           renderItem={renderStoriesItem}
         />
       </View>
