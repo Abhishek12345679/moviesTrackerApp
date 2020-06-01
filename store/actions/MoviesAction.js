@@ -12,6 +12,49 @@ import Movie from "../../models/Movie";
 import config from "../../config";
 import Cast from "../../models/CastMember";
 
+const getExtraData = async (id, lng_code) => {
+  let langResponse, creditsResponse, langData, creditsData, lang;
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+
+  try {
+    creditsResponse = await fetch(
+      `https://api.themoviedb.org/3/tv/${id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+    );
+    creditsData = await creditsResponse.json();
+    langResponse = await fetch(
+      `https://restcountries.eu/rest/v2/lang/${lng_code}?fields=languages`
+    );
+    langData = await langResponse.json();
+    if (langData[0].languages[0].iso639_1 === lng_code) {
+      lang = langData[0].languages[0].name;
+      // console.log(lang);
+    } else if (langData[0].languages[0].iso639_1 === lng_code || !langData) {
+      lang = "no language";
+    }
+  } catch (err) {
+    throw err;
+  }
+
+  const castMembers = [];
+  const length = creditsData.credits.cast.length;
+
+  for (let i = 0; i < length; i++) {
+    if (creditsData.credits.cast !== undefined) {
+      castMembers.push(
+        new Cast(
+          creditsData.credits.cast[i].id,
+          creditsData.credits.cast[i].character,
+          creditsData.credits.cast[i].name,
+          posterBaseUrl + creditsData.credits.cast[i].profile_path
+        )
+      );
+    } else {
+      return;
+    }
+  }
+  return { lang: lang, cast: castMembers };
+};
+
 const getCredits = async (index) => {
   let response, creditsData;
   try {
@@ -144,16 +187,17 @@ export const loadAll = () => {
           .map((
             trendingMovie // map movie to [language,movie]
           ) =>
-            getLanguageNamefromCode(
+            getExtraData(
               // get async language
+              trendingMovie.id,
               trendingMovie.original_language
               // resolve to [language,movie]
-            ).then((language) => [language, trendingMovie])
+            ).then((extraData) => [extraData, trendingMovie])
           ) // sorry, forgot to return here
       ).then((
         results // results is [[language,movie],[language,movie]]
       ) =>
-        results.map(([language, trendingMovie]) => {
+        results.map(([extraData, trendingMovie]) => {
           const hasUserSaved = getState().UserMovies.userMovies.find(
             (userMovie) => userMovie.id === trendingMovie.id.toString()
             // snippet does not have conditional chaining
@@ -167,10 +211,11 @@ export const loadAll = () => {
             trendingMovie.media_type === "movie"
               ? trendingMovie.release_date
               : trendingMovie.first_air_date,
-            [],
+            // [],
+            extraData.cast,
             trendingMovie.overview,
             trendingMovie.vote_average,
-            language,
+            extraData.lang,
             hasUserSaved ? hasUserSaved.location : ""
           );
         })
@@ -292,11 +337,11 @@ export const searchMovies = (MovieTitle) => {
           return new Movie( // create new Movie
             searchedMovie.id.toString(),
             searchedMovie.title,
-              // .toLowerCase()
-              // .replace(
-              //   MovieTitle,
-              //   <Text style={{ fontFamily: "apple-bold" }}>{MovieTitle}</Text>
-              // ),
+            // .toLowerCase()
+            // .replace(
+            //   MovieTitle,
+            //   <Text style={{ fontFamily: "apple-bold" }}>{MovieTitle}</Text>
+            // ),
             posterBaseUrl + searchedMovie.poster_path,
             searchedMovie.release_date,
             [],
@@ -378,4 +423,3 @@ export const loadMoviesWithGenres = (genreId, page_no) => {
     }
   };
 };
-
