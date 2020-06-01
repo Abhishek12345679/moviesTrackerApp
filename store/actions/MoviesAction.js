@@ -12,14 +12,21 @@ import Movie from "../../models/Movie";
 import config from "../../config";
 import Cast from "../../models/CastMember";
 
-const getExtraData = async (id, lng_code) => {
+const getExtraData = async (type, id, lng_code) => {
   let langResponse, creditsResponse, langData, creditsData, lang;
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
 
   try {
-    creditsResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
-    );
+    if (type === "movies") {
+      creditsResponse = await fetch(
+        `https://api.themoviedb.org/3/movie/${id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+      );
+    } else if (type === "tv") {
+      creditsResponse = await fetch(
+        `https://api.themoviedb.org/3/tv/${id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+      );
+    }
+
     creditsData = await creditsResponse.json();
     langResponse = await fetch(
       `https://restcountries.eu/rest/v2/lang/${lng_code}?fields=languages`
@@ -189,6 +196,7 @@ export const loadAll = () => {
           ) =>
             getExtraData(
               // get async language
+              "movies",
               trendingMovie.id,
               trendingMovie.original_language
               // resolve to [language,movie]
@@ -229,16 +237,18 @@ export const loadAll = () => {
           .map((
             trendingTVShow // map movie to [language,movie]
           ) =>
-            getLanguageNamefromCode(
+            getExtraData(
               // get async language
+              "tv",
+              trendingTVShow.id,
               trendingTVShow.original_language
               // resolve to [language,movie]
-            ).then((language) => [language, trendingTVShow])
+            ).then((extraData) => [extraData, trendingTVShow])
           ) // sorry, forgot to return here
       ).then((
         results // results is [[language,movie],[language,movie]]
       ) =>
-        results.map(([language, trendingTVShow]) => {
+        results.map(([extraData, trendingTVShow]) => {
           const hasUserSaved = getState().UserMovies.userMovies.find(
             (userMovie) => userMovie.id === trendingTVShow.id.toString()
             // snippet does not have conditional chaining
@@ -248,10 +258,10 @@ export const loadAll = () => {
             trendingTVShow.name,
             posterBaseUrl + trendingTVShow.poster_path,
             trendingTVShow.first_air_date,
-            [],
+            extraData.cast,
             trendingTVShow.overview,
             trendingTVShow.vote_average,
-            language,
+            extraData.lang,
             hasUserSaved ? hasUserSaved.location : ""
           );
         })
