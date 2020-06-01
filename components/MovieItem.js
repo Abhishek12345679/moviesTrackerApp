@@ -3,36 +3,12 @@ import {
   View,
   Text,
   Image,
-  ImageBackground,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
 
 const MovieItem = (props) => {
   return (
-    // <TouchableOpacity
-    //   {...props}
-    //   style={{ ...styles.movieItem, ...props.style }}
-    //   activeOpacity={0.5}
-    //   onPress={props.onPress}
-    // >
-    //   <ImageBackground
-    //     source={{
-    //       uri: props.posterUrl,
-    //     }}
-    //     style={{ ...styles.image, ...props.imageStyle }}
-    //   >
-    //     <View style={{ ...styles.footer, ...props.footerStyle }}>
-    //       <View style={styles.description}>
-    //         <Text style={styles.text}>{props.movieTitle}</Text>
-    //         <Text style={styles.text}>{props.year}</Text>
-    //       </View>
-    //       <View style={styles.ratings}>
-    //         <Text style={styles.text}>{props.ratings}</Text>
-    //       </View>
-    //     </View>
-    //   </ImageBackground>
-    // </TouchableOpacity>
     <TouchableOpacity
       {...props}
       activeOpacity={0.5}
@@ -57,23 +33,23 @@ const MovieItem = (props) => {
 const styles = StyleSheet.create({
   movieItem: {
     width: 150,
-    height: 200,
+    height: 100,
     shadowColor: "#000",
     shadowOpacity: 0.7,
     shadowOffset: {
       width: 2,
       height: 3,
     },
-    backgroundColor: "#000",
     marginHorizontal: 25,
     // marginVertical: 7.5,
     flexDirection: "column",
-    borderRadius: 5,
-    justifyContent:'center'
+    borderRadius: 10,
+    justifyContent:'center',
+    // alignItems:'center'
   },
   image: {
     width: "100%",
-    height: "80%",
+    height: "85%",
     borderRadius: 5,
     justifyContent: "flex-end",
     overflow: "hidden",
@@ -90,7 +66,7 @@ const styles = StyleSheet.create({
   },
   description: {
     flexDirection: "column",
-    marginBottom: 5,
+    marginVertical: 5,
   },
   text: {
     color: "#FFF",

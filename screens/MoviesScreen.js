@@ -84,6 +84,10 @@ const MoviesScreen = (props) => {
     loadScreen().then(() => setLoading(false));
   }, []);
 
+  const randomColor = "#000000".replace(/0/g, function () {
+    return (~~(Math.random() * 16)).toString(16);
+  });
+
   const renderTrendingMoviesItem = ({ item }) => (
     <SkeletonContent
       boneColor="#303030"
@@ -134,20 +138,18 @@ const MoviesScreen = (props) => {
       ]}
     >
       <StoryItem
-        style={styles.storyItem}
-        imageStyle={styles.storyImage}
+        style={{ ...styles.storyItem, backgroundColor: randomColor }}
+        // imageStyle={{ ...styles.storyImage, backgroundColor: randomColor }}
         id={item.id}
         posterUrl={item.posterUrl}
-        // onPress={() => {
-        //   props.navigation.navigate({
-        //     name: "NewReleasesModalScreen",
-        //     params: {
-        //       movieTitle: item.title,
-        //       posterUrl: item.posterUrl,
-        //       movieId: item.id,
-        //     },
-        //   });
-        // }}
+        onPress={() => {
+          props.navigation.navigate({
+            name: "viewStoryModal",
+            params: {
+              id: item.id,
+            },
+          });
+        }}
       />
     </SkeletonContent>
   );
@@ -262,14 +264,6 @@ const MoviesScreen = (props) => {
         />
       </View>
 
-      {/* new releases stories */}
-      {/*...
-
-      TOP MOVIE THAT WEEK 
-      
-      ...
-      */}
-
       <View>
         <SkeletonContent
           boneColor="#303030"
@@ -304,6 +298,10 @@ const MoviesScreen = (props) => {
           </View>
         </SkeletonContent>
         <FlatList
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "center",
+          }}
           keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
@@ -445,7 +443,7 @@ const styles = StyleSheet.create({
   new_releases: {
     // flex: 1,
     width: 150,
-    height: 200,
+    height: 250,
     marginHorizontal: 7.5,
   },
   centered: {
@@ -459,7 +457,8 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 5,
     marginStart: 10,
-    marginVertical: 5,
+    // marginVertical: 5,
+    alignItems: "center",
   },
   headerTextSkeleton: {
     width: 250,

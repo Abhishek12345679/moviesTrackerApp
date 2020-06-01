@@ -154,16 +154,10 @@ const moviesScreenNavigator = () => {
     <MoviesScreenStackNavigator.Navigator
       screenOptions={defaultStackNavigationOptions}
     >
-      {/* <MoviesScreenStackNavigator.Screen
-        name="MovieScreen"
-        component={MoviesScreen}
-        options={MovieScreenOptions}
-      /> */}
-
       <MoviesScreenStackNavigator.Screen
         name="NewReleasesNavigator"
         component={newReleasesNavigator}
-        options={{ headerTitle: "Moviéy", headerShown: false }}
+        options={{ headerShown: false }}
       />
 
       <MoviesScreenStackNavigator.Screen
@@ -203,6 +197,11 @@ const newReleasesNavigator = () => {
       <NewReleasesStackNavigator.Screen
         name="addstoryModal"
         component={addStoryModal}
+        options={{ headerShown: false }}
+      />
+      <NewReleasesStackNavigator.Screen
+        name="viewStoryModal"
+        component={NewReleasesModalScreen}
         options={{ headerShown: false }}
       />
     </NewReleasesStackNavigator.Navigator>
