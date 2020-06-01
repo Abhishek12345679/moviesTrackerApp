@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "reselect";
 
@@ -7,7 +7,6 @@ import MovieItem from "../components/MovieItem";
 import Colors from "../constants/Colors";
 
 import * as MovieAction from "../store/actions/MoviesAction";
-import { ActivityIndicator } from "react-native-paper";
 
 const genreMovies = createSelector(
   (state) => state.Movies.moviesWRTGenre,
@@ -27,7 +26,7 @@ const GenreScreen = (props) => {
   const renderFooter = () => {
     //it will show indicator at the bottom of the list when data is loading otherwise it returns null
     if (bottomLoading) {
-      return <ActivityIndicator style={{ color: "#000" }} />;
+      return <ActivityIndicator size="small" color={Colors.lightblue} />;
     } else {
       return null;
     }
@@ -112,7 +111,7 @@ const GenreScreen = (props) => {
   if (loading) {
     return (
       <View style={styles.screen}>
-        <ActivityIndicator size="large" color={Colors.lightblue} />
+        <ActivityIndicator size="small" color={Colors.lightblue} />
       </View>
     );
   }

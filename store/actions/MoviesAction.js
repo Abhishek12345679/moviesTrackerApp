@@ -24,9 +24,7 @@ const getExtraData = async (type, id, lng_code) => {
       );
     }
 
-    creditsData = !!creditsResponse ? await creditsResponse.json() : "";
-    console.log(creditsData);
-
+    creditsData = await creditsResponse.json();
     langResponse = await fetch(
       `https://restcountries.eu/rest/v2/lang/${lng_code}?fields=languages`
     );
@@ -44,7 +42,7 @@ const getExtraData = async (type, id, lng_code) => {
   const castMembers = [];
   const length = creditsData.credits.cast.length;
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < length; i++) {
     if (creditsData.credits.cast !== undefined) {
       castMembers.push(
         new Cast(
@@ -325,40 +323,38 @@ export const searchMovies = (MovieTitle) => {
       const length = resData.results.length;
       let searchedMovies = await Promise.all(
         resData.results
-          // .slice(0, 1) // use slice instead of a loop
+          .slice(0, 1) // use slice instead of a loop
           .map((
             searchedMovie // map movie to [language,movie]
           ) =>
-            getExtraData(
+            getLanguageNamefromCode(
               // get async language
-              "movie",
-              searchedMovie.id,
               searchedMovie.original_language
               // resolve to [language,movie]
-            ).then((extraData) => [extraData, searchedMovie])
+            ).then((language) => [language, searchedMovie])
           ) // sorry, forgot to return here
       ).then((
         results // results is [[language,movie],[language,movie]]
       ) =>
-        results.map(([extraData, searchedMovie]) => {
+        results.map(([language, searchedMovie]) => {
           const hasUserSaved = getState().UserMovies.userMovies.find(
             (userMovie) => userMovie.id === searchedMovie.id.toString()
             // snippet does not have conditional chaining
           );
           return new Movie( // create new Movie
             searchedMovie.id.toString(),
-            searchedMovie.media_type === "movie"
-              ? searchedMovie.title
-              : searchedMovie.name,
+            searchedMovie.title,
+            // .toLowerCase()
+            // .replace(
+            //   MovieTitle,
+            //   <Text style={{ fontFamily: "apple-bold" }}>{MovieTitle}</Text>
+            // ),
             posterBaseUrl + searchedMovie.poster_path,
-            searchedMovie.media_type === "movie"
-              ? searchedMovie.release_date
-              : searchedMovie.first_air_date,
-            // [],
-            extraData.cast,
+            searchedMovie.release_date,
+            [],
             searchedMovie.overview,
             searchedMovie.vote_average,
-            extraData.lang,
+            language,
             hasUserSaved ? hasUserSaved.location : ""
           );
         })
@@ -398,16 +394,18 @@ export const loadMoviesWithGenres = (genreId, page_no) => {
           .map((
             movieWRTGenre // map movie to [language,movie]
           ) =>
-            getLanguageNamefromCode(
+            getExtraData(
               // get async language
+              "movies",
+              movieWRTGenre.id,
               movieWRTGenre.original_language
               // resolve to [language,movie]
-            ).then((language) => [language, movieWRTGenre])
+            ).then((extraData) => [extraData, movieWRTGenre])
           ) // sorry, forgot to return here
       ).then((
         results // results is [[language,movie],[language,movie]]
       ) =>
-        results.map(([language, movieWRTGenre]) => {
+        results.map(([extraData, movieWRTGenre]) => {
           const hasUserSaved = getState().UserMovies.userMovies.find(
             (userMovie) => userMovie.id === movieWRTGenre.id.toString()
             // snippet does not have conditional chaining
@@ -417,10 +415,10 @@ export const loadMoviesWithGenres = (genreId, page_no) => {
             movieWRTGenre.title,
             posterBaseUrl + movieWRTGenre.poster_path,
             movieWRTGenre.release_date,
-            [],
+            extraData.cast,
             movieWRTGenre.overview,
             movieWRTGenre.vote_average,
-            language,
+            extraData.lang,
             hasUserSaved ? hasUserSaved.location : ""
           );
         })
