@@ -1,6 +1,3 @@
-import React, { useState } from "react";
-import { Text } from "react-native";
-
 export const SEARCH_MOVIES = "SEARCH_MOVIES";
 export const LOAD_MOVIES_WITH_GENRES = "LOAD_MOVIES_WITH_GENRES";
 export const CLEAR_SEARCH_LIST = "CLEAR_SEARCH_LIST";
@@ -19,15 +16,17 @@ const getExtraData = async (type, id, lng_code) => {
   try {
     if (type === "movies") {
       creditsResponse = await fetch(
-        `https://api.themoviedb.org/3/movie/${id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+        `https://api.themoviedb.org/3/movie/${id}?api_key=${config.TMDB_API_KEY}&append_to_response=credits`
       );
     } else if (type === "tv") {
       creditsResponse = await fetch(
-        `https://api.themoviedb.org/3/tv/${id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+        `https://api.themoviedb.org/3/tv/${id}?api_key=${config.TMDB_API_KEY}&append_to_response=credits`
       );
     }
 
-    creditsData = await creditsResponse.json();
+    creditsData = !!creditsResponse ? await creditsResponse.json() : "";
+    console.log(creditsData);
+
     langResponse = await fetch(
       `https://restcountries.eu/rest/v2/lang/${lng_code}?fields=languages`
     );
@@ -45,7 +44,7 @@ const getExtraData = async (type, id, lng_code) => {
   const castMembers = [];
   const length = creditsData.credits.cast.length;
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < 5; i++) {
     if (creditsData.credits.cast !== undefined) {
       castMembers.push(
         new Cast(
@@ -62,37 +61,37 @@ const getExtraData = async (type, id, lng_code) => {
   return { lang: lang, cast: castMembers };
 };
 
-const getCredits = async (index) => {
-  let response, creditsData;
-  try {
-    response = await fetch(
-      `https://api.themoviedb.org/3/tv/${resData.results[index].id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
-    );
-    creditsData = await response.json();
-    // console.log("credits", creditsData);
-  } catch (err) {
-    throw new Error(err);
-  }
+// const getCredits = async (index) => {
+//   let response, creditsData;
+//   try {
+//     response = await fetch(
+//       `https://api.themoviedb.org/3/tv/${resData.results[index].id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+//     );
+//     creditsData = await response.json();
+//     // console.log("credits", creditsData);
+//   } catch (err) {
+//     throw new Error(err);
+//   }
 
-  const castMembers = [];
-  const length =
-    creditsData.credits.cast.length > 10 ? 10 : creditsData.credits.cast.length;
+//   const castMembers = [];
+//   const length =
+//     creditsData.credits.cast.length > 10 ? 10 : creditsData.credits.cast.length;
 
-  for (let i = 0; i < 6; i++) {
-    castMembers.push(
-      new Cast(
-        creditsData.credits.cast[i].id,
-        creditsData.credits.cast[i].character,
-        creditsData.credits.cast[i].name,
-        posterBaseUrl + creditsData.credits.cast[i].profile_path
-      )
-    );
-  }
+//   for (let i = 0; i < 6; i++) {
+//     castMembers.push(
+//       new Cast(
+//         creditsData.credits.cast[i].id,
+//         creditsData.credits.cast[i].character,
+//         creditsData.credits.cast[i].name,
+//         posterBaseUrl + creditsData.credits.cast[i].profile_path
+//       )
+//     );
+//   }
 
-  console.log(castMembers);
+//   console.log(castMembers);
 
-  return { cast: castMembers };
-};
+//   return { cast: castMembers };
+// };
 
 const getLanguageNamefromCode = async (lng_code) => {
   let response, langData, lang;
@@ -326,38 +325,40 @@ export const searchMovies = (MovieTitle) => {
       const length = resData.results.length;
       let searchedMovies = await Promise.all(
         resData.results
-          // .slice(0, length) // use slice instead of a loop
+          // .slice(0, 1) // use slice instead of a loop
           .map((
             searchedMovie // map movie to [language,movie]
           ) =>
-            getLanguageNamefromCode(
+            getExtraData(
               // get async language
+              "movie",
+              searchedMovie.id,
               searchedMovie.original_language
               // resolve to [language,movie]
-            ).then((language) => [language, searchedMovie])
+            ).then((extraData) => [extraData, searchedMovie])
           ) // sorry, forgot to return here
       ).then((
         results // results is [[language,movie],[language,movie]]
       ) =>
-        results.map(([language, searchedMovie]) => {
+        results.map(([extraData, searchedMovie]) => {
           const hasUserSaved = getState().UserMovies.userMovies.find(
             (userMovie) => userMovie.id === searchedMovie.id.toString()
             // snippet does not have conditional chaining
           );
           return new Movie( // create new Movie
             searchedMovie.id.toString(),
-            searchedMovie.title,
-            // .toLowerCase()
-            // .replace(
-            //   MovieTitle,
-            //   <Text style={{ fontFamily: "apple-bold" }}>{MovieTitle}</Text>
-            // ),
+            searchedMovie.media_type === "movie"
+              ? searchedMovie.title
+              : searchedMovie.name,
             posterBaseUrl + searchedMovie.poster_path,
-            searchedMovie.release_date,
-            [],
+            searchedMovie.media_type === "movie"
+              ? searchedMovie.release_date
+              : searchedMovie.first_air_date,
+            // [],
+            extraData.cast,
             searchedMovie.overview,
             searchedMovie.vote_average,
-            language,
+            extraData.lang,
             hasUserSaved ? hasUserSaved.location : ""
           );
         })
