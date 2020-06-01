@@ -12,11 +12,55 @@ import Movie from "../../models/Movie";
 import config from "../../config";
 import Cast from "../../models/CastMember";
 
-const getCredits = async (index) => {
+const getExtraData = async (id, lng_code) => {
+  let langResponse, creditsResponse, langData, creditsData, lang;
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+
+  try {
+    creditsResponse = await fetch(
+      `https://api.themoviedb.org/3/tv/${id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+    );
+    creditsData = await creditsResponse.json();
+    langResponse = await fetch(
+      `https://restcountries.eu/rest/v2/lang/${lng_code}?fields=languages`
+    );
+    langData = await langResponse.json();
+    if (langData[0].languages[0].iso639_1 === lng_code) {
+      lang = langData[0].languages[0].name;
+      // console.log(lang);
+    } else if (langData[0].languages[0].iso639_1 === lng_code || !langData) {
+      lang = "no language";
+    }
+  } catch (err) {
+    throw err;
+  }
+
+  const castMembers = [];
+  const length = creditsData.credits.cast.length;
+
+  for (let i = 0; i < length; i++) {
+    if (creditsData.credits.cast !== undefined) {
+      castMembers.push(
+        new Cast(
+          creditsData.credits.cast[i].id,
+          creditsData.credits.cast[i].character,
+          creditsData.credits.cast[i].name,
+          posterBaseUrl + creditsData.credits.cast[i].profile_path
+        )
+      );
+    } else {
+      return;
+    }
+  }
+  return { lang: lang, cast: castMembers };
+};
+
+const getCredits = async (id) => {
   let response, creditsData;
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   try {
     response = await fetch(
-      `https://api.themoviedb.org/3/tv/${resData.results[index].id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+      `https://api.themoviedb.org/3/tv/${id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
     );
     creditsData = await response.json();
     // console.log("credits", creditsData);
@@ -25,23 +69,26 @@ const getCredits = async (index) => {
   }
 
   const castMembers = [];
-  const length =
-    creditsData.credits.cast.length > 10 ? 10 : creditsData.credits.cast.length;
+  const length = creditsData.credits.cast.length;
 
-  for (let i = 0; i < 6; i++) {
-    castMembers.push(
-      new Cast(
-        creditsData.credits.cast[i].id,
-        creditsData.credits.cast[i].character,
-        creditsData.credits.cast[i].name,
-        posterBaseUrl + creditsData.credits.cast[i].profile_path
-      )
-    );
+  for (let i = 0; i < length; i++) {
+    if (creditsData.credits.cast !== undefined) {
+      castMembers.push(
+        new Cast(
+          creditsData.credits.cast[i].id,
+          creditsData.credits.cast[i].character,
+          creditsData.credits.cast[i].name,
+          posterBaseUrl + creditsData.credits.cast[i].profile_path
+        )
+      );
+    } else {
+      return;
+    }
   }
 
   console.log(castMembers);
 
-  return { cast: castMembers };
+  return castMembers;
 };
 
 const getLanguageNamefromCode = async (lng_code) => {
@@ -137,7 +184,6 @@ export const loadAll = () => {
 
       const loadedTrendingMoviesLength = trendingMovies.results.length;
 
-      // loadedTrendingMovies =F
       let loadedTrendingMovies = await Promise.all(
         trendingMovies.results
           .slice(0, 5) // use slice instead of a loop
@@ -168,6 +214,7 @@ export const loadAll = () => {
               ? trendingMovie.release_date
               : trendingMovie.first_air_date,
             [],
+            // cast,
             trendingMovie.overview,
             trendingMovie.vote_average,
             language,
@@ -184,16 +231,23 @@ export const loadAll = () => {
           .map((
             trendingTVShow // map movie to [language,movie]
           ) =>
-            getLanguageNamefromCode(
-              // get async language
+            //   getLanguageNamefromCode(
+            //     // get async language
+            //     trendingTVShow.original_language
+            //     // resolve to [language,movie]
+            //   ).then((language) => [language, trendingTVShow])
+            // ) // sorry, forgot to return here
+            //   getCredits(trendingTVShow.id).then((cast) => [cast, trendingTVShow])
+            // )
+            getExtraData(
+              trendingTVShow.id,
               trendingTVShow.original_language
-              // resolve to [language,movie]
-            ).then((language) => [language, trendingTVShow])
-          ) // sorry, forgot to return here
+            ).then((extraData) => [extraData, trendingTVShow])
+          )
       ).then((
         results // results is [[language,movie],[language,movie]]
       ) =>
-        results.map(([language, trendingTVShow]) => {
+        results.map(([extraData, trendingTVShow]) => {
           const hasUserSaved = getState().UserMovies.userMovies.find(
             (userMovie) => userMovie.id === trendingTVShow.id.toString()
             // snippet does not have conditional chaining
@@ -203,10 +257,10 @@ export const loadAll = () => {
             trendingTVShow.name,
             posterBaseUrl + trendingTVShow.poster_path,
             trendingTVShow.first_air_date,
-            [],
+            extraData.cast,
             trendingTVShow.overview,
             trendingTVShow.vote_average,
-            language,
+            extraData.language,
             hasUserSaved ? hasUserSaved.location : ""
           );
         })
@@ -292,11 +346,11 @@ export const searchMovies = (MovieTitle) => {
           return new Movie( // create new Movie
             searchedMovie.id.toString(),
             searchedMovie.title,
-              // .toLowerCase()
-              // .replace(
-              //   MovieTitle,
-              //   <Text style={{ fontFamily: "apple-bold" }}>{MovieTitle}</Text>
-              // ),
+            // .toLowerCase()
+            // .replace(
+            //   MovieTitle,
+            //   <Text style={{ fontFamily: "apple-bold" }}>{MovieTitle}</Text>
+            // ),
             posterBaseUrl + searchedMovie.poster_path,
             searchedMovie.release_date,
             [],
@@ -378,4 +432,3 @@ export const loadMoviesWithGenres = (genreId, page_no) => {
     }
   };
 };
-
