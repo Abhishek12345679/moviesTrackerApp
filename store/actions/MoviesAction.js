@@ -18,7 +18,7 @@ const getExtraData = async (id, lng_code) => {
 
   try {
     creditsResponse = await fetch(
-      `https://api.themoviedb.org/3/tv/${id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${config.TMDB_API_KEY}&language=en-US&append_to_response=credits`
     );
     creditsData = await creditsResponse.json();
     langResponse = await fetch(
