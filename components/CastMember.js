@@ -5,14 +5,14 @@ import Colors from "../constants/Colors";
 const CastMember = (props) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.item}
-        onPress={() => {
-          /** to the artists page */
-        }}
-      >
-        <Image source={{ uri: props.posterUrl }} style={styles.image} />
-      </TouchableOpacity>
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => {
+        /** to the artists page */
+      }}
+    >
+      <Image source={{ uri: props.posterUrl }} style={styles.image} />
+
       <View style={styles.description}>
         <Text style={styles.text}>
           {props.castName.toString().substr(0, 10)}...
@@ -21,28 +21,29 @@ const CastMember = (props) => {
           as {props.character.toString().substr(0, 12)}...
         </Text>
       </View>
+    </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
     height: 150,
   },
   item: {
-    width: 75,
-    height: 75,
-    borderRadius: 75 / 2,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     marginHorizontal: 10,
-    backgroundColor: "#000",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
   description: {
-    justifyContent: "center",
-    alignItems: "center",
+    height: "25%",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     marginVertical: 10,
   },
   text: {
@@ -53,9 +54,9 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   },
   image: {
-    width: 75,
-    height: 75,
-    borderRadius: 75 / 2,
+    width: 80,
+    height: 80,
+    borderRadius: 80 / 2,
     overflow: "hidden",
   },
 });

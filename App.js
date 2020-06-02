@@ -3,6 +3,7 @@ import MoviesReducer from "./store/reducers/MoviesReducer";
 import UserMoviesReducer from "./store/reducers/UserReducers";
 
 import { combineReducers, applyMiddleware, createStore } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
 import ReduxThunk from "redux-thunk";
 import { Provider } from "react-redux";
 
@@ -14,8 +15,6 @@ import NavigationContainer from "./navigation/NavigationContainer";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 export default function App() {
-  // require("react-native").unstable_enableLogBox();
-  // YellowBox.ignoreWarnings = ["Warning: VirtualizedLists"];
   const [fontLoaded, setFontLoaded] = useState();
 
   const rootReducer = combineReducers({
@@ -23,7 +22,10 @@ export default function App() {
     UserMovies: UserMoviesReducer,
   });
 
-  const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+  const store = createStore(
+    rootReducer,
+    composeWithDevTools(applyMiddleware(ReduxThunk))
+  );
 
   const fetchFonts = () => {
     return Fonts.loadAsync({

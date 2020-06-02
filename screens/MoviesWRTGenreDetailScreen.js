@@ -202,21 +202,22 @@ const MoviesWRTGenreDetailScreen = (props) => {
         <View style={styles.plotcontainer}>
           <Text style={styles.plotText}>{selectedMovie.plot}</Text>
         </View>
-
-        <Text style={styles.text}>Cast</Text>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-          horizontal={true}
-          data={selectedMovie.cast}
-          renderItem={(itemData) => (
-            <CastMember
-              castName={itemData.item.name}
-              posterUrl={itemData.item.profileUrl}
-              character={itemData.item.character}
-            />
-          )}
-        />
+        <View style={styles.castContainer}>
+          <Text style={styles.text}>Cast</Text>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id}
+            horizontal={true}
+            data={selectedMovie.cast}
+            renderItem={(itemData) => (
+              <CastMember
+                castName={itemData.item.name}
+                posterUrl={itemData.item.profileUrl}
+                character={itemData.item.character}
+              />
+            )}
+          />
+        </View>
 
         <View style={{ width: "100%", height: 65, alignItems: "center" }}>
           <TouchableOpacity
@@ -334,6 +335,10 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontFamily: "apple-regular",
     fontSize: 12,
+  },
+  castContainer: {
+    height: 200,
+    height: 100,
   },
 });
 

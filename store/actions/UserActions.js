@@ -27,7 +27,7 @@ export const addStory = (id, title, genres, language, movieLink) => {
       );
 
       const resData = await response.json();
-      console.log(resData);
+      // console.log(resData);
       dispatch({
         type: ADD_STORY,
         userStories: {
@@ -56,7 +56,7 @@ export const loadStory = () => {
       }
       const resData = await response.json();
 
-      console.log(resData);
+      // console.log(resData);
       const loadedData = [];
 
       for (const key in resData) {
@@ -93,7 +93,7 @@ export const loadMovies = () => {
       }
       const resData = await response.json();
 
-      console.log(resData);
+      // console.log(resData);
       const loadedData = [];
 
       for (const key in resData) {
@@ -143,7 +143,7 @@ export const saveMovies = (id, title, posterUrl, year, location) => {
       );
 
       const resData = await response.json();
-      console.log(resData);
+      // console.log(resData);
 
       dispatch({
         type: SAVE_MOVIES,

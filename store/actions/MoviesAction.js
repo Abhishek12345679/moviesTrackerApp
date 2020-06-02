@@ -1,3 +1,4 @@
+import React from "react";
 export const SEARCH_MOVIES = "SEARCH_MOVIES";
 export const LOAD_MOVIES_WITH_GENRES = "LOAD_MOVIES_WITH_GENRES";
 export const CLEAR_SEARCH_LIST = "CLEAR_SEARCH_LIST";
@@ -8,6 +9,7 @@ import Movie from "../../models/Movie";
 
 import config from "../../config";
 import Cast from "../../models/CastMember";
+import { useMemo } from "react";
 
 const getExtraData = async (type, id, lng_code) => {
   let langResponse, creditsResponse, langData, creditsData, lang;
@@ -121,6 +123,8 @@ export const clearGenreScreen = () => {
   };
 };
 
+// React.memo(loadAll, [loadAll]);
+// useMemo(loadAll, [loadAll]);
 export const loadAll = () => {
   const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   let hasUserSaved;
@@ -303,14 +307,14 @@ export const loadAll = () => {
   };
 };
 
+//FIXME: fix something so that cast integration works with search
 export const searchMovies = (MovieTitle) => {
   let response;
-  let hasUserSaved;
-  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+  const posterBaseUrl = "https://image.tmdb.org/t/p/w185";
   return async (dispatch, getState) => {
     try {
       response = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${config.TMDB_API_KEY}&query=${MovieTitle}&page=1`
+        `https://api.themoviedb.org/3/search/multi?api_key=${config.TMDB_API_KEY}&query=${MovieTitle}&page=1`
       );
 
       if (!response.ok) {
@@ -320,10 +324,10 @@ export const searchMovies = (MovieTitle) => {
       const resData = await response.json();
       console.log("search results: ", resData);
 
-      const length = resData.results.length;
+      // const length = resData.results.length;
       let searchedMovies = await Promise.all(
         resData.results
-          .slice(0, 1) // use slice instead of a loop
+          // .slice(0, 1) // use slice instead of a loop
           .map((
             searchedMovie // map movie to [language,movie]
           ) =>

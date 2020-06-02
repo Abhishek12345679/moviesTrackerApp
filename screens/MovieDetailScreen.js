@@ -227,21 +227,18 @@ const MovieDetailScreen = (props) => {
           data={selectedMovie.cast}
           renderItem={renderCastItem}
         />
-
-        <View>
-          <View style={styles.savebtnContainer}>
-            <TouchableOpacity
-              disabled={!!alreadySaved}
-              style={styles.addtomymoviesbtn}
-              onPress={openActionSheet}
-            >
-              {!loading ? (
-                <Text style={styles.text}>{buttonText}</Text>
-              ) : (
-                <ActivityIndicator size="small" color={Colors.lightblue} />
-              )}
-            </TouchableOpacity>
-          </View>
+        <View style={styles.savebtnContainer}>
+          <TouchableOpacity
+            disabled={!!alreadySaved}
+            style={styles.addtomymoviesbtn}
+            onPress={openActionSheet}
+          >
+            {!loading ? (
+              <Text style={styles.text}>{buttonText}</Text>
+            ) : (
+              <ActivityIndicator size="small" color={Colors.lightblue} />
+            )}
+          </TouchableOpacity>
         </View>
         <View style={styles.plotcontainer}>
           <Text style={{ ...styles.plotText, color: Colors.grey }}>
@@ -257,12 +254,12 @@ const ConnectedApp = connectActionSheet(MovieDetailScreen);
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: Colors.primaryColor,
   },
 
   header: {
-    flex: 1,
+    // flex: 1,
     height: Dimensions.get("window").height,
     backgroundColor: "#000",
     shadowColor: "#000",
@@ -339,6 +336,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 65,
     alignItems: "center",
+    marginTop: 20,
   },
   plotcontainer: {
     padding: 20,
