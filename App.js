@@ -3,7 +3,7 @@ import MoviesReducer from "./store/reducers/MoviesReducer";
 import UserMoviesReducer from "./store/reducers/UserReducers";
 
 import { combineReducers, applyMiddleware, createStore } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
+// import { composeWithDevTools } from "redux-devtools-extension";
 import ReduxThunk from "redux-thunk";
 import { Provider } from "react-redux";
 
@@ -22,10 +22,13 @@ export default function App() {
     UserMovies: UserMoviesReducer,
   });
 
-  const store = createStore(
-    rootReducer,
-    composeWithDevTools(applyMiddleware(ReduxThunk))
-  );
+  //debug_mode
+  // const store = createStore(
+  //   rootReducer,
+  //   composeWithDevTools(applyMiddleware(ReduxThunk))
+  // );
+
+  const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
   const fetchFonts = () => {
     return Fonts.loadAsync({

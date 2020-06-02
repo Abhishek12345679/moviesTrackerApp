@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   // ActionSheetIOS,
   FlatList,
+  Image,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -170,12 +171,16 @@ const MovieDetailScreen = (props) => {
         style={styles.header}
       >
         <View style={styles.row}>
-          <MovieItem
+          {/* <MovieItem
             footerStyle={styles.hideFooter}
             style={styles.movieItem}
             id={selectedMovieId}
             posterUrl={selectedMovie.posterUrl}
             ratings={selectedMovie.ratings}
+          /> */}
+          <Image
+            source={{ uri: selectedMovie.posterUrl }}
+            style={styles.movieItem}
           />
           {!selectedMovieTitle > 15 ? (
             <View style={styles.basicdetails}>
@@ -254,30 +259,18 @@ const ConnectedApp = connectActionSheet(MovieDetailScreen);
 
 const styles = StyleSheet.create({
   screen: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: Colors.primaryColor,
   },
-
   header: {
-    // flex: 1,
-    height: Dimensions.get("window").height,
-    backgroundColor: "#000",
-    shadowColor: "#000",
-    shadowOpacity: 0.7,
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    shadowRadius: 10,
-    padding: 10,
+    width: "100%",
+    height: "100%",
   },
   movieItem: {
-    width: 185,
-    height: 185,
+    width: "100%",
+    height: 250,
     shadowColor: "#fff",
     shadowOpacity: 0.2,
-    marginTop: 10,
-    marginStart: 15,
     shadowOffset: {
       width: 1,
       height: 2,
@@ -316,12 +309,11 @@ const styles = StyleSheet.create({
     fontFamily: "apple-bold",
     color: "#c2c2c2",
   },
-  row: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-  },
+  // row: {
+  //   flexDirection: "column",
+  //   alignItems: "center",
+  //   justifyContent: "space-between",
+  // },
   addtomymoviesbtn: {
     marginBottom: 5,
     marginHorizontal: 20,
