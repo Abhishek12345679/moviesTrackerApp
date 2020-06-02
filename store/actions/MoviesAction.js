@@ -9,11 +9,11 @@ import Movie from "../../models/Movie";
 
 import config from "../../config";
 import Cast from "../../models/CastMember";
-import { useMemo } from "react";
+// import { useMemo } from "react";
 
 const getExtraData = async (type, id, lng_code) => {
   let langResponse, creditsResponse, langData, creditsData, lang;
-  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+  // const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
 
   try {
     if (type === "movies") {
@@ -51,7 +51,7 @@ const getExtraData = async (type, id, lng_code) => {
           creditsData.credits.cast[i].id,
           creditsData.credits.cast[i].character,
           creditsData.credits.cast[i].name,
-          posterBaseUrl + creditsData.credits.cast[i].profile_path
+          creditsData.credits.cast[i].profile_path
         )
       );
     } else {
@@ -126,7 +126,7 @@ export const clearGenreScreen = () => {
 // React.memo(loadAll, [loadAll]);
 // useMemo(loadAll, [loadAll]);
 export const loadAll = () => {
-  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+  // const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   let hasUserSaved;
   const loadedStories = [];
   return async (dispatch, getState) => {
@@ -216,7 +216,7 @@ export const loadAll = () => {
             trendingMovie.media_type === "movie"
               ? trendingMovie.title
               : trendingMovie.name,
-            posterBaseUrl + trendingMovie.poster_path,
+            trendingMovie.poster_path,
             trendingMovie.media_type === "movie"
               ? trendingMovie.release_date
               : trendingMovie.first_air_date,
@@ -257,7 +257,7 @@ export const loadAll = () => {
           return new Movie( // create new Movie
             trendingTVShow.id.toString(),
             trendingTVShow.name,
-            posterBaseUrl + trendingTVShow.poster_path,
+            trendingTVShow.poster_path,
             trendingTVShow.first_air_date,
             extraData.cast,
             trendingTVShow.overview,
@@ -310,7 +310,7 @@ export const loadAll = () => {
 //FIXME: fix something so that cast integration works with search
 export const searchMovies = (MovieTitle) => {
   let response;
-  const posterBaseUrl = "https://image.tmdb.org/t/p/w185";
+  // const posterBaseUrl = "https://image.tmdb.org/t/p/w185";
   return async (dispatch, getState) => {
     try {
       response = await fetch(
@@ -353,7 +353,7 @@ export const searchMovies = (MovieTitle) => {
             //   MovieTitle,
             //   <Text style={{ fontFamily: "apple-bold" }}>{MovieTitle}</Text>
             // ),
-            posterBaseUrl + searchedMovie.poster_path,
+           searchedMovie.poster_path,
             searchedMovie.release_date,
             [],
             searchedMovie.overview,
@@ -376,7 +376,7 @@ export const searchMovies = (MovieTitle) => {
 export const loadMoviesWithGenres = (genreId, page_no) => {
   let response;
   let hasUserSaved;
-  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+  // const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
   return async (dispatch, getState) => {
     // await dispatch(clearGenreScreen());
     try {
@@ -417,7 +417,7 @@ export const loadMoviesWithGenres = (genreId, page_no) => {
           return new Movie( // create new Movie
             movieWRTGenre.id.toString(),
             movieWRTGenre.title,
-            posterBaseUrl + movieWRTGenre.poster_path,
+            movieWRTGenre.poster_path,
             movieWRTGenre.release_date,
             extraData.cast,
             movieWRTGenre.overview,

@@ -41,12 +41,14 @@ const SeeAllScreen = (props) => {
     movieType = "anime";
   }
 
+  const posterBaseUrl = "http://image.tmdb.org/t/p/";
+
   const renderItem = ({ item }) => (
     <MovieItem
       style={{ width: 175, height: 175 }}
       id={item.id}
       movieTitle={item.title}
-      posterUrl={item.posterUrl}
+      posterUrl={posterBaseUrl + "w185" + item.posterUrl}
       year={item.year}
       ratings={item.ratings}
       onPress={() => {
@@ -72,7 +74,7 @@ const SeeAllScreen = (props) => {
         data={movies}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-      />
+      />{" "}
     </View>
   );
 };

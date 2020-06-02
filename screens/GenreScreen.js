@@ -86,6 +86,7 @@ const GenreScreen = (props) => {
 
   //   return unsubscribe;
   // }, [navigation]);
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
 
   const moviesWRTGenre = useSelector(genreMovies);
 
@@ -94,7 +95,7 @@ const GenreScreen = (props) => {
       style={{ width: 175, height: 175 }}
       id={item.id}
       movieTitle={item.title}
-      posterUrl={item.posterUrl}
+      posterUrl={posterBaseUrl + item.posterUrl}
       year={item.year}
       onPress={() => {
         props.navigation.navigate({

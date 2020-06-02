@@ -142,7 +142,7 @@ export const saveMovies = (id, title, posterUrl, year, location) => {
         }
       );
 
-      const resData = await response.json();
+      // const resData = await response.json();
       // console.log(resData);
 
       dispatch({

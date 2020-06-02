@@ -5,9 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Dimensions,
   ActivityIndicator,
-  // ActionSheetIOS,
   FlatList,
   Image,
 } from "react-native";
@@ -15,7 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { connectActionSheet } from "@expo/react-native-action-sheet";
 
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../constants/Colors";
 
@@ -56,6 +54,7 @@ const MovieDetailScreen = (props) => {
   selectedMovie = movies.find((movie) => movie.id === selectedMovieId);
   // console.log("selectedMovie", selectedMovie);
 
+  const posterBaseUrl = "http://image.tmdb.org/t/p/";
   const selectedMovieTitle = selectedMovie.title;
 
   const alreadySaved = user_movies.find(
@@ -128,7 +127,7 @@ const MovieDetailScreen = (props) => {
             UserActions.saveMovies(
               selectedMovieId,
               selectedMovie.title,
-              selectedMovie.posterUrl,
+              posterBaseUrl + selectedMovie.posterUrl,
               selectedMovie.year,
               "CURRENTLY_WATCHING"
             )
@@ -159,7 +158,7 @@ const MovieDetailScreen = (props) => {
   const renderCastItem = ({ item }) => (
     <CastMember
       castName={item.name}
-      posterUrl={item.profileUrl}
+      posterUrl={posterBaseUrl + "w92/" + item.profileUrl}
       character={item.character}
     />
   );
@@ -171,53 +170,38 @@ const MovieDetailScreen = (props) => {
         style={styles.header}
       >
         <View style={styles.row}>
-          {/* <MovieItem
-            footerStyle={styles.hideFooter}
-            style={styles.movieItem}
-            id={selectedMovieId}
-            posterUrl={selectedMovie.posterUrl}
-            ratings={selectedMovie.ratings}
-          /> */}
-          <Image
-            source={{ uri: selectedMovie.posterUrl }}
-            style={styles.movieItem}
-          />
-          {!selectedMovieTitle > 15 ? (
-            <View style={styles.basicdetails}>
-              <View>
-                <Text style={styles.text}>{selectedMovieTitle}</Text>
-              </View>
-              <View style={styles.ratingsContainer}>
-                <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
-                <AntDesign name="star" color="gold" size={23} />
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.yearText}>{selectedMovie.language} | </Text>
-                <Text style={styles.yearText}>
-                  {selectedMovie.year.substr(0, 4)}
-                </Text>
+          <View style={styles.overlayCont}>
+            <Image
+              source={{
+                uri: posterBaseUrl + "w300/" + selectedMovie.posterUrl,
+              }}
+              style={styles.movieItem}
+            />
+            <View style={styles.overlay}>
+              <Text style={styles.fancyText}>{selectedMovieTitle}</Text>
+            </View>
+            <View style={styles.overlayedBookmarkBtn}>
+              <View style={styles.bookmarkBtn}>
+                <Entypo name="bookmark" size={25} color={Colors.primaryColor} />
               </View>
             </View>
-          ) : (
-            <View style={{ ...styles.basicdetails, marginHorizontal: 75 }}>
-              <View>
-                <Text style={{ ...styles.text, fontSize: 15 }}>
-                  {selectedMovieTitle}
-                </Text>
-              </View>
+          </View>
+          <View style={styles.basicdetails}>
+            <View>
+              <Text style={styles.text}>{selectedMovieTitle}</Text>
+            </View>
 
-              <View style={styles.ratingsContainer}>
-                <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
-                <AntDesign name="star" color="gold" size={23} />
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.yearText}>{selectedMovie.language} | </Text>
-                <Text style={styles.yearText}>
-                  {selectedMovie.year.substr(0, 4)}
-                </Text>
-              </View>
+            <View style={styles.ratingsContainer}>
+              <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
+              <AntDesign name="star" color="gold" size={23} />
             </View>
-          )}
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.yearText}>{selectedMovie.language} | </Text>
+              <Text style={styles.yearText}>
+                {selectedMovie.year.substr(0, 4)}
+              </Text>
+            </View>
+          </View>
         </View>
         <View style={styles.plotcontainer}>
           <Text style={styles.plotText}>
@@ -277,8 +261,33 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 10,
   },
-  hideFooter: {
-    backgroundColor: null,
+  overlay: {
+    width: "100%",
+    height: 250,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    position: "absolute",
+    justifyContent: "flex-end",
+    alignItems: "flex-start",
+  },
+  overlayCont: {
+    width: "100%",
+    height: 250,
+  },
+  overlayedBookmarkBtn: {
+    width: "100%",
+    height: 250,
+    position: "absolute",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+    marginTop: 20,
+  },
+  bookmarkBtn: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: Colors.white,
+    alignItems: "center",
+    justifyContent: "center",
   },
   basicdetails: {
     flexDirection: "column",
@@ -289,6 +298,13 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontSize: 15,
     padding: 3,
+  },
+  fancyText: {
+    fontFamily: "fancy-font",
+    // fontFamily: "apple-bold",
+    color: "#fff",
+    fontSize: 40,
+    marginStart: 10,
   },
   headerText: {
     fontFamily: "apple-bold",
@@ -309,11 +325,6 @@ const styles = StyleSheet.create({
     fontFamily: "apple-bold",
     color: "#c2c2c2",
   },
-  // row: {
-  //   flexDirection: "column",
-  //   alignItems: "center",
-  //   justifyContent: "space-between",
-  // },
   addtomymoviesbtn: {
     marginBottom: 5,
     marginHorizontal: 20,

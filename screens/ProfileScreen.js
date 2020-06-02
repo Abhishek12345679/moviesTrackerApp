@@ -90,11 +90,13 @@ const ProfileScreen = (props) => {
 
   const renderMovieItem = ({ item }) => (
     <MovieItem
-      posterUrl={item.posterUrl}
+      posterUrl={posterBaseUrl + "w185" + item.posterUrl}
       movieTitle={item.title}
       year={item.year}
     />
   );
+
+  const posterBaseUrl = "http://image.tmdb.org/t/p/";
 
   return (
     <ScrollView

@@ -8,7 +8,6 @@ import {
   StatusBar,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Image,
   RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -88,6 +87,8 @@ const MoviesScreen = (props) => {
     return (~~(Math.random() * 16)).toString(16);
   });
 
+  const posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+
   const renderTrendingMoviesItem = ({ item }) => (
     <SkeletonContent
       boneColor="#303030"
@@ -100,7 +101,7 @@ const MoviesScreen = (props) => {
         style={styles.new_releases}
         id={item.id}
         movieTitle={item.title}
-        posterUrl={item.posterUrl}
+        posterUrl={posterBaseUrl + item.posterUrl}
         year={item.year}
         onPress={() => {
           props.navigation.navigate({
@@ -140,8 +141,8 @@ const MoviesScreen = (props) => {
       <StoryItem
         style={{ ...styles.storyItem, backgroundColor: randomColor }}
         // imageStyle={{ ...styles.storyImage, backgroundColor: randomColor }}
+        // posterUrl={item.posterUrl}
         id={item.id}
-        posterUrl={item.posterUrl}
         onPress={() => {
           props.navigation.navigate({
             name: "viewStoryModal",
@@ -166,7 +167,7 @@ const MoviesScreen = (props) => {
         style={styles.new_releases}
         id={item.id}
         movieTitle={item.title}
-        posterUrl={item.posterUrl}
+        posterUrl={posterBaseUrl + item.posterUrl}
         year={item.year}
         onPress={() => {
           props.navigation.navigate({

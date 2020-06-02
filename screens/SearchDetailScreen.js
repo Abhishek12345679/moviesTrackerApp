@@ -40,7 +40,7 @@ const SearchDetailScreen = (props) => {
       searchValue={searchValue.trim()}
       setScrollEnabled={(enabled) => setScrollEnabled(enabled)}
       movieTitle={item.title}
-      posterUrl={item.posterUrl}
+      posterUrl={posterBaseUrl + "w92/" + item.posterUrl}
       year={item.year}
       onPress={() => {
         props.navigation.navigate({
@@ -54,6 +54,8 @@ const SearchDetailScreen = (props) => {
       }}
     />
   );
+
+  const posterBaseUrl = "http://image.tmdb.org/t/p/";
 
   return (
     <View style={styles.screen}>
