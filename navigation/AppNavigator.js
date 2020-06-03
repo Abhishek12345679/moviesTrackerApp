@@ -1,5 +1,6 @@
 import React from "react";
 import { View, TouchableOpacity, Text, Dimensions } from "react-native";
+
 import {
   Ionicons,
   AntDesign,
@@ -46,6 +47,8 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Colors from "../constants/Colors";
 import addStoryModal from "../screens/addStoryModal";
+import HeaderSearchComponent from "../components/HeaderSearchComponent";
+import { useNavigation } from "@react-navigation/native";
 
 // const deviceWidth = Dimensions.get("window").width;
 
@@ -177,6 +180,7 @@ const moviesScreenNavigator = () => {
 const NewReleasesStackNavigator = createStackNavigator();
 
 const newReleasesNavigator = () => {
+  const navigation = useNavigation();
   return (
     <NewReleasesStackNavigator.Navigator
       initialRouteName="MovieScreen"
@@ -192,7 +196,15 @@ const newReleasesNavigator = () => {
       <NewReleasesStackNavigator.Screen
         name="MovieScreen"
         component={MoviesScreen}
-        options={{ ...MovieScreenOptions, headerShown: true }}
+        options={{
+          ...MovieScreenOptions,
+          headerShown: true,
+          headerRight: () => (
+            <HeaderSearchComponent
+              onpress={() => navigation.navigate(SearchDetailScreen)}
+            />
+          ),
+        }}
       />
       <NewReleasesStackNavigator.Screen
         name="addstoryModal"

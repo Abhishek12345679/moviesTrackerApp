@@ -14,9 +14,11 @@ const MovieListItem = (props) => {
         <Image style={styles.image} source={{ uri: props.posterUrl }} />
         <View style={styles.column}>
           <Text style={styles.text}>
-            {props.movieTitle
-              .toLowerCase()
-              .replace(props.searchValue, props.searchValue)}
+            {
+              props.movieTitle
+              // .toLowerCase()
+              // .replace(props.searchValue, props.searchValue)
+            }
             {/* how to highlight this text */}
           </Text>
           <Text style={styles.yearText}>{props.year}</Text>

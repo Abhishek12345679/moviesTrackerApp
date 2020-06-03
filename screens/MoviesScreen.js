@@ -25,6 +25,7 @@ import { useScrollToTop } from "@react-navigation/native";
 
 import SkeletonContent from "react-native-skeleton-content";
 import { createSelector } from "reselect";
+import HeaderSearchComponent from "../components/HeaderSearchComponent";
 
 const stories = createSelector(
   (state) => state.UserMovies.stories,
@@ -400,6 +401,19 @@ const MoviesScreen = (props) => {
       </View>
     </ScrollView>
   );
+};
+
+export const screenOptions = (navData) => {
+  return {
+    headerTitle: "Products",
+    headerRight: () => (
+      <HeaderSearchComponent
+        onPress={() => {
+          navData.navigation.navigate("SearchDetailScreen");
+        }}
+      />
+    ),
+  };
 };
 
 const styles = StyleSheet.create({

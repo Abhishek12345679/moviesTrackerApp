@@ -34,7 +34,11 @@ const getExtraData = async (type, id, lng_code) => {
     if (langData[0].languages[0].iso639_1 === lng_code) {
       lang = langData[0].languages[0].name;
       // console.log(lang);
-    } else if (langData[0].languages[0].iso639_1 === lng_code || !langData) {
+    } else if (
+      langData[0].languages[0].iso639_1 !== lng_code ||
+      !langData ||
+      !langData[0].languages
+    ) {
       lang = "no language";
     }
   } catch (err) {
@@ -55,7 +59,7 @@ const getExtraData = async (type, id, lng_code) => {
         )
       );
     } else {
-      return;
+      castMembers = ["no data"];
     }
   }
   return { lang: lang, cast: castMembers };
@@ -307,7 +311,10 @@ export const loadAll = () => {
   };
 };
 
-//FIXME: fix something so that cast integration works with search
+//TODO: fix something so that cast integration works with search
+//TODO: edge cases: title,cast,language,not found ... take them out.
+//TODO: Kind of works some times fails
+
 export const searchMovies = (MovieTitle) => {
   let response;
   const posterBaseUrl = "https://image.tmdb.org/t/p/w185";
@@ -327,20 +334,22 @@ export const searchMovies = (MovieTitle) => {
       // const length = resData.results.length;
       let searchedMovies = await Promise.all(
         resData.results
-          // .slice(0, 1) // use slice instead of a loop
+          .slice(0, 6) // use slice instead of a loop
           .map((
             searchedMovie // map movie to [language,movie]
           ) =>
-            getLanguageNamefromCode(
+            getExtraData(
               // get async language
+              "movies",
+              searchedMovie.id,
               searchedMovie.original_language
               // resolve to [language,movie]
-            ).then((language) => [language, searchedMovie])
+            ).then((extraData) => [extraData, searchedMovie])
           ) // sorry, forgot to return here
       ).then((
         results // results is [[language,movie],[language,movie]]
       ) =>
-        results.map(([language, searchedMovie]) => {
+        results.map(([extraData, searchedMovie]) => {
           const hasUserSaved = getState().UserMovies.userMovies.find(
             (userMovie) => userMovie.id === searchedMovie.id.toString()
             // snippet does not have conditional chaining
@@ -355,10 +364,10 @@ export const searchMovies = (MovieTitle) => {
             // ),
             posterBaseUrl + searchedMovie.poster_path,
             searchedMovie.release_date,
-            [],
+            extraData.cast,
             searchedMovie.overview,
             searchedMovie.vote_average,
-            language,
+            extraData.lang,
             hasUserSaved ? hasUserSaved.location : ""
           );
         })
