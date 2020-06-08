@@ -46,22 +46,22 @@ const getExtraData = async (type, id, lng_code) => {
   }
 
   const castMembers = [];
-  // const length = creditsData.credits.cast.length;
+  const length = creditsData.credits.cast.length;
 
-  // for (let i = 0; i < length; i++) {
-  //   if (creditsData.credits.cast !== undefined) {
-  //     castMembers.push(
-  //       new Cast(
-  //         creditsData.credits.cast[i].id,
-  //         creditsData.credits.cast[i].character,
-  //         creditsData.credits.cast[i].name,
-  //         posterBaseUrl + creditsData.credits.cast[i].profile_path
-  //       )
-  //     );
-  //   } else {
-  //     castMembers = ["no data"];
-  //   }
-  // }
+  for (let i = 0; i < length; i++) {
+    if (creditsData.credits.cast !== undefined) {
+      castMembers.push(
+        new Cast(
+          creditsData.credits.cast[i].id,
+          creditsData.credits.cast[i].character,
+          creditsData.credits.cast[i].name,
+          posterBaseUrl + creditsData.credits.cast[i].profile_path
+        )
+      );
+    } else {
+      castMembers = ["no data"];
+    }
+  }
   return { lang: lang, cast: castMembers };
 };
 

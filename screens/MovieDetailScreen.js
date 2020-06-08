@@ -166,13 +166,13 @@ const MovieDetailScreen = (props) => {
     );
   };
 
-  // const renderCastItem = ({ item }) => (
-  //   <CastMember
-  //     castName={item.name}
-  //     posterUrl={item.profileUrl}
-  //     character={item.character}
-  //   />
-  // );
+  const renderCastItem = ({ item }) => (
+    <CastMember
+      castName={item.name}
+      posterUrl={item.profileUrl}
+      character={item.character}
+    />
+  );
 
   return (
     <ScrollView style={styles.screen}>
@@ -227,14 +227,14 @@ const MovieDetailScreen = (props) => {
             {selectedMovie.plot.toString().substr(0, 500)}...
           </Text>
         </View>
-        {/* <Text style={styles.text}>Cast</Text>
+        <Text style={styles.text}>Cast</Text>
         <FlatList
           keyExtractor={(item) => item.id.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={selectedMovie.cast}
           renderItem={renderCastItem}
-        /> */}
+        />
         <View style={styles.savebtnContainer}>
           <TouchableOpacity
             disabled={!!alreadySaved}
