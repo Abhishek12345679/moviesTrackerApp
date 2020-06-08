@@ -180,7 +180,6 @@ const moviesScreenNavigator = () => {
 const NewReleasesStackNavigator = createStackNavigator();
 
 const newReleasesNavigator = () => {
-  const navigation = useNavigation();
   return (
     <NewReleasesStackNavigator.Navigator
       initialRouteName="MovieScreen"
@@ -196,15 +195,7 @@ const newReleasesNavigator = () => {
       <NewReleasesStackNavigator.Screen
         name="MovieScreen"
         component={MoviesScreen}
-        options={{
-          ...MovieScreenOptions,
-          headerShown: true,
-          headerRight: () => (
-            <HeaderSearchComponent
-              onpress={() => navigation.navigate(SearchDetailScreen)}
-            />
-          ),
-        }}
+        options={MovieScreenOptions}
       />
       <NewReleasesStackNavigator.Screen
         name="addstoryModal"

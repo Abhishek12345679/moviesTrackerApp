@@ -80,13 +80,13 @@ const ProfileScreen = (props) => {
     });
   }, [setLoading]);
 
-  if (loading) {
-    return (
-      <View style={styles.screen}>
-        <ActivityIndicator size="small" color={Colors.lightblue} />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={styles.screen}>
+  //       <ActivityIndicator size="small" color={Colors.lightblue} />
+  //     </View>
+  //   );
+  // }
 
   const renderMovieItem = ({ item }) => (
     <MovieItem
@@ -96,19 +96,22 @@ const ProfileScreen = (props) => {
     />
   );
 
-  return (
-    <ScrollView
-      ref={scrollRef}
-      style={styles.screen}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          tintColor={Colors.lightblue}
-        />
-      }
-    >
-      <View style={styles.header}>
+  const boards = useSelector((state) => state.UserMovies.boards);
+
+  // return (
+  // <ScrollView
+  //   ref={scrollRef}
+  //   style={styles.screen}
+  //   refreshControl={
+  //     <RefreshControl
+  //       refreshing={refreshing}
+  //       onRefresh={onRefresh}
+  //       tintColor={Colors.lightblue}
+  //     />
+  //   }
+  // >
+  {
+    /* <View style={styles.header}>
         <TouchableOpacity
           activeOpacity={0.86}
           style={styles.profilepicture}
@@ -186,8 +189,37 @@ const ProfileScreen = (props) => {
           keyExtractor={(item) => item.id}
           renderItem={renderMovieItem}
         />
-      </View>
+      </View> */
+  }
+  {
+    /* 
     </ScrollView>
+  ); */
+  }
+  return (
+    <View style={styles.screen}>
+      {boards.map((board) => (
+        <TouchableOpacity
+          activeOpacity={0.75}
+          key={board.key}
+          style={{
+            height: 100,
+            width: "100%",
+            justifyContent: "flex-end",
+            alignItems: "flex-end",
+            backgroundColor: Colors.lightblue,
+            marginVertical: 10,
+            borderRadius: 10,
+          }}
+        >
+          <Text
+            style={{ ...styles.titleText, marginEnd: 20, marginVertical: 10 }}
+          >
+            {board.title}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
   );
 };
 

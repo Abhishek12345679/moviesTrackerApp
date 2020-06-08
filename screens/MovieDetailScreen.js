@@ -10,6 +10,7 @@ import {
   // ActionSheetIOS,
   FlatList,
   Image,
+  Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -25,6 +26,7 @@ import CastMember from "../components/CastMember";
 import * as UserActions from "../store/actions/UserActions";
 
 // import SkeletonContent from "react-native-skeleton-content";
+import DialogInput from "react-native-dialog-input";
 
 const MovieDetailScreen = (props) => {
   const { showActionSheetWithOptions } = props;
@@ -39,6 +41,7 @@ const MovieDetailScreen = (props) => {
   const moviesType = props.route.params.moviesType;
 
   const user_movies = useSelector((state) => state.UserMovies.userMovies);
+  const boards = useSelector((state) => state.UserMovies.boards);
 
   // is it neccesary to optimize here ? if yes, then how to do it ?
   if (moviesType === "TV") {
@@ -85,12 +88,15 @@ const MovieDetailScreen = (props) => {
       text = "Want to Watch";
     } else if (saved_location === "Add_to_My_Movies") {
       text = "Add to My Movies";
+    } else {
+      text = saved_location.toLowerCase();
     }
     return text;
   };
 
   let [buttonText, setButtonText] = useState(buttonTextGenerator());
   const [loading, setLoading] = useState(false);
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
 
   const openActionSheet = () => {
     showActionSheetWithOptions(
@@ -100,6 +106,7 @@ const MovieDetailScreen = (props) => {
           "Add to Watched",
           "Currently Watching",
           "Want to Watch",
+          "Add New",
         ],
         cancelButtonIndex: 0,
       },
@@ -136,7 +143,7 @@ const MovieDetailScreen = (props) => {
           setTimeout(() => {
             setLoading(false);
           }, 3000);
-        } else if (buttonIndex == 3) {
+        } else if (buttonIndex === 3) {
           setLoading(true);
           setButtonText("Want to Watch");
           dispatch(
@@ -151,18 +158,21 @@ const MovieDetailScreen = (props) => {
           setTimeout(() => {
             setLoading(false);
           }, 3000);
+        } else if (buttonIndex === 4) {
+          setIsDialogVisible(true);
+          //show an alert window to create a new board
         }
       }
     );
   };
 
-  const renderCastItem = ({ item }) => (
-    <CastMember
-      castName={item.name}
-      posterUrl={item.profileUrl}
-      character={item.character}
-    />
-  );
+  // const renderCastItem = ({ item }) => (
+  //   <CastMember
+  //     castName={item.name}
+  //     posterUrl={item.profileUrl}
+  //     character={item.character}
+  //   />
+  // );
 
   return (
     <ScrollView style={styles.screen}>
@@ -171,13 +181,6 @@ const MovieDetailScreen = (props) => {
         style={styles.header}
       >
         <View style={styles.row}>
-          {/* <MovieItem
-            footerStyle={styles.hideFooter}
-            style={styles.movieItem}
-            id={selectedMovieId}
-            posterUrl={selectedMovie.posterUrl}
-            ratings={selectedMovie.ratings}
-          /> */}
           <Image
             source={{ uri: selectedMovie.posterUrl }}
             style={styles.movieItem}
@@ -224,14 +227,14 @@ const MovieDetailScreen = (props) => {
             {selectedMovie.plot.toString().substr(0, 500)}...
           </Text>
         </View>
-        <Text style={styles.text}>Cast</Text>
+        {/* <Text style={styles.text}>Cast</Text>
         <FlatList
           keyExtractor={(item) => item.id.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={selectedMovie.cast}
           renderItem={renderCastItem}
-        />
+        /> */}
         <View style={styles.savebtnContainer}>
           <TouchableOpacity
             disabled={!!alreadySaved}
@@ -250,6 +253,34 @@ const MovieDetailScreen = (props) => {
             This is the intellectual property of Moviéy (2020-)
           </Text>
         </View>
+        <DialogInput
+          isDialogVisible={isDialogVisible}
+          title={"Create a New Board"}
+          message={"Enter a New Name for a new board"}
+          hintInput={"Inspirations"}
+          submitInput={(inputText) => {
+            //FIXME:need an action-reducer pattern here
+            dispatch(
+              UserActions.addBoard(
+                Math.random().toString(),
+                inputText.toUpperCase(),
+                inputText
+              )
+            );
+            setButtonText(inputText);
+            dispatch(
+              UserActions.saveMovies(
+                selectedMovieId,
+                selectedMovie.title,
+                selectedMovie.posterUrl,
+                selectedMovie.year,
+                inputText.toUpperCase()
+              )
+            );
+            setIsDialogVisible(false);
+          }}
+          closeDialog={() => setIsDialogVisible(false)}
+        />
       </LinearGradient>
     </ScrollView>
   );

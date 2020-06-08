@@ -23,7 +23,7 @@ const MovieItem = (props) => {
       <View>
         <View style={styles.description}>
           <Text style={styles.text}>{props.movieTitle}</Text>
-          <Text style={styles.text}>{props.year}</Text>
+          {/* <Text style={styles.text}>{props.year}</Text> */}
         </View>
       </View>
     </TouchableOpacity>

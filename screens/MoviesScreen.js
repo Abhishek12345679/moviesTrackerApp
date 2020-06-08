@@ -73,8 +73,9 @@ const MoviesScreen = (props) => {
 
   const loadScreen = useCallback(async () => {
     try {
-      await dispatch(MoviesAction.loadAll());
       await dispatch(UserActions.loadStory());
+      await dispatch(UserActions.loadBoards());
+      await dispatch(MoviesAction.loadAll());
     } catch (err) {
       console.log(err);
     }
@@ -405,7 +406,7 @@ const MoviesScreen = (props) => {
 
 export const screenOptions = (navData) => {
   return {
-    headerTitle: "Products",
+    headerTitle: "Movii",
     headerRight: () => (
       <HeaderSearchComponent
         onPress={() => {

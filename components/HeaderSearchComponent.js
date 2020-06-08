@@ -7,7 +7,7 @@ import Colors from "../constants/Colors";
 
 const HeaderSearchComponent = (props) => {
   return (
-    <TouchableOpacity {...props} style={styles.item} onPress={props.onpress}>
+    <TouchableOpacity {...props} style={styles.item}>
       <Ionicons
         name="ios-search"
         size={20}
