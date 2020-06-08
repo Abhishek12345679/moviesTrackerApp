@@ -5,23 +5,29 @@ import Colors from "../constants/Colors";
 const CastMember = (props) => {
   return (
     <View style={styles.container}>
-    <TouchableOpacity
-      style={styles.item}
-      onPress={() => {
-        /** to the artists page */
-      }}
-    >
-      <Image source={{ uri: props.posterUrl }} style={styles.image} />
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() => {
+          /** to the artists page */
+        }}
+      >
+        {props.posterUrl ? (
+          <Image source={{ uri: props.posterUrl }} style={styles.image} />
+        ) : (
+          <View style={styles.image}>
+            <Text style={styles.text}>?</Text>
+          </View>
+        )}
 
-      <View style={styles.description}>
-        <Text style={styles.text}>
-          {props.castName.toString().substr(0, 10)}...
-        </Text>
-        <Text style={{ color: Colors.white, fontSize: 10 }}>
-          as {props.character.toString().substr(0, 12)}...
-        </Text>
-      </View>
-    </TouchableOpacity>
+        <View style={styles.description}>
+          <Text style={styles.text}>
+            {props.castName.toString().substr(0, 10)}...
+          </Text>
+          <Text style={{ color: Colors.white, fontSize: 10 }}>
+            as {props.character.toString().substr(0, 12)}...
+          </Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };

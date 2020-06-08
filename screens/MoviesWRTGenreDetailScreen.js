@@ -202,7 +202,7 @@ const MoviesWRTGenreDetailScreen = (props) => {
         <View style={styles.plotcontainer}>
           <Text style={styles.plotText}>{selectedMovie.plot}</Text>
         </View>
-        <View style={styles.castContainer}>
+        {/* <View style={styles.castContainer}>
           <Text style={styles.text}>Cast</Text>
           <FlatList
             showsHorizontalScrollIndicator={false}
@@ -217,7 +217,7 @@ const MoviesWRTGenreDetailScreen = (props) => {
               />
             )}
           />
-        </View>
+        </View> */}
 
         <View style={{ width: "100%", height: 65, alignItems: "center" }}>
           <TouchableOpacity
