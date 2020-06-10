@@ -5,30 +5,9 @@ import { useSelector } from "react-redux";
 
 import MovieItem from "../components/MovieItem";
 import Colors from "../constants/Colors";
-import { createSelector } from "reselect";
-// import SkeletonContent from "react-native-skeleton-content";
-
-const allmovies = createSelector(
-  (state) => state.Movies.new_releases,
-  (new_releases) => new_releases
-);
 
 const UserMoviesListScreen = (props) => {
-  let movies;
-  let goToMovies = props.route.params.new_releases;
-
-  let movieType;
-
-  if (goToMovies) {
-    movies = useSelector(allmovies);
-    movieType = "Movies";
-  } else if (goToTV) {
-    movies = useSelector(tv);
-    movieType = "TV";
-  } else if (goToAnime) {
-    movies = useSelector(anime);
-    movieType = "anime";
-  }
+  // const location =
 
   const renderItem = ({ item }) => (
     <MovieItem
@@ -38,16 +17,16 @@ const UserMoviesListScreen = (props) => {
       posterUrl={item.posterUrl}
       year={item.year}
       ratings={item.ratings}
-      onPress={() => {
-        props.navigation.navigate({
-          name: "MoviesDetailScreen",
-          params: {
-            movieId: item.id,
-            movieTitle: item.title,
-            moviesType: movieType,
-          },
-        });
-      }}
+      // onPress={() => {
+      //   props.navigation.navigate({
+      //     name: "MoviesDetailScreen",
+      //     params: {
+      //       movieId: item.id,
+      //       movieTitle: item.title,
+      //       moviesType: movieType,
+      //     },
+      //   });
+      // }}
     />
   );
 
@@ -58,10 +37,10 @@ const UserMoviesListScreen = (props) => {
       <FlatList
         contentContainerStyle={styles.flatlist}
         numColumns={2}
-        data={movies}
+        // data={movies}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-      />{" "}
+      />
     </View>
   );
 };

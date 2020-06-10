@@ -41,6 +41,7 @@ const UserMoviesReducer = (state = initialState, action) => {
       return {
         ...state,
         boards: state.boards.concat(action.userBoards),
+        // boards: [...state.boards, ...action.userBoards],
       };
     case ADD_STORY:
       const newStory = new Story(

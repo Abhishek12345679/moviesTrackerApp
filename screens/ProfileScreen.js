@@ -197,7 +197,7 @@ const ProfileScreen = (props) => {
   ); */
   }
   return (
-    <View style={styles.screen}>
+    <ScrollView style={styles.screen}>
       {boards.map((board) => (
         <TouchableOpacity
           activeOpacity={0.75}
@@ -211,6 +211,15 @@ const ProfileScreen = (props) => {
             marginVertical: 10,
             borderRadius: 10,
           }}
+          onPress={() => {
+            props.navigation.navigate({
+              name: "UserMoviesListScreen",
+              params: {
+                loc: board.loc,
+                title: board.title,
+              },
+            });
+          }}
         >
           <Text
             style={{ ...styles.titleText, marginEnd: 20, marginVertical: 10 }}
@@ -219,7 +228,7 @@ const ProfileScreen = (props) => {
           </Text>
         </TouchableOpacity>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 

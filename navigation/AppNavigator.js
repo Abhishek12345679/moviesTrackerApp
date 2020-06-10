@@ -40,6 +40,8 @@ import SeeAllScreen, {
   screenOptions as SeeAllScreenOptions,
 } from "../screens/SeeAllScreen";
 
+import UserMoviesListScreen from "../screens/UserMoviesListScreen";
+
 import {
   createStackNavigator,
   TransitionPresets,
@@ -262,6 +264,11 @@ const ProfileScreenNavigator = () => {
         name="ProfileScreen"
         component={ProfileScreen}
         options={ProfileScreenOptions}
+      />
+      <ProfileScreenStackNavigator.Screen
+        name="UserMoviesListScreen"
+        component={UserMoviesListScreen}
+        // options={ProfileScreenOptions}
       />
     </ProfileScreenStackNavigator.Navigator>
   );
