@@ -52,9 +52,13 @@ export const loadBoards = () => {
       console.log("BOARDS", resData);
       const loadedData = [];
 
-      for (const key in resData) {
+      for (const index in resData) {
         loadedData.push(
-          new Board(resData[key].id, resData[key].loc, resData[key].title)
+          new Board(
+            resData[index].key,
+            resData[index].loc,
+            resData[index].title
+          )
         );
       }
 

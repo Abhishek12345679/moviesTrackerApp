@@ -97,6 +97,7 @@ const ProfileScreen = (props) => {
   );
 
   const boards = useSelector((state) => state.UserMovies.boards);
+  const permBoards = useSelector((state) => state.UserMovies.permBoards);
 
   // return (
   // <ScrollView
@@ -198,6 +199,36 @@ const ProfileScreen = (props) => {
   }
   return (
     <ScrollView style={styles.screen}>
+      {permBoards.map((board) => (
+        <TouchableOpacity
+          activeOpacity={0.75}
+          key={board.key}
+          style={{
+            height: 100,
+            width: "100%",
+            justifyContent: "flex-end",
+            alignItems: "flex-end",
+            backgroundColor: Colors.lightblue,
+            marginVertical: 10,
+            borderRadius: 10,
+          }}
+          onPress={() => {
+            props.navigation.navigate({
+              name: "UserMoviesListScreen",
+              params: {
+                loc: board.loc,
+                title: board.title,
+              },
+            });
+          }}
+        >
+          <Text
+            style={{ ...styles.titleText, marginEnd: 20, marginVertical: 10 }}
+          >
+            {board.title}
+          </Text>
+        </TouchableOpacity>
+      ))}
       {boards.map((board) => (
         <TouchableOpacity
           activeOpacity={0.75}
