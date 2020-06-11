@@ -225,7 +225,7 @@ const ProfileScreen = (props) => {
           <Text
             style={{ ...styles.titleText, marginEnd: 20, marginVertical: 10 }}
           >
-            {board.title}
+            {board.loc}
           </Text>
         </TouchableOpacity>
       ))}

@@ -16,7 +16,7 @@ const genreMovies = createSelector(
 const GenreScreen = (props) => {
   const selectedGenre = props.route.params.genreId;
   const [loading, setLoading] = useState(false);
-  let [page, setPage] = useState(1);
+  let [page, setPage]   = useState(1);
   const [bottomLoading, setBottomLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -37,7 +37,7 @@ const GenreScreen = (props) => {
     try {
       await dispatch(MovieAction.loadMoviesWithGenres(selectedGenre, page + 1));
       setPage(page + 1);
-    } catch (err) {
+    } catch (err) {  
       console.log(err);
     }
 
@@ -48,7 +48,7 @@ const GenreScreen = (props) => {
     try {
       await dispatch(MovieAction.loadMoviesWithGenres(selectedGenre, page));
     } catch (err) {
-      console.log(err);
+      console.log(err);  
       return;
     }
   }, [dispatch]);

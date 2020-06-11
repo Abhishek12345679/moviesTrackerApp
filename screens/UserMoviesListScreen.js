@@ -13,10 +13,12 @@ const UserMoviesListScreen = (props) => {
   const userMovies = useSelector((state) => state.UserMovies.userMovies);
 
   let movies = [];
-  const selectedBoardMovies = userMovies.find(
+  const selectedBoardMovies = userMovies.filter(
     (board) => board.location === location
   );
-  movies = movies.push(selectedBoardMovies);
+  console.log(selectedBoardMovies);
+
+  movies = [...movies, selectedBoardMovies];
 
   console.log(movies);
 
@@ -45,6 +47,7 @@ const UserMoviesListScreen = (props) => {
   // const [isRefreshing, setIsRefreshing] = useState(false);
   return (
     <View style={styles.screen}>
+      <Text style={{ color: "#FFF" }}>{title}</Text>
       <FlatList
         contentContainerStyle={styles.flatlist}
         numColumns={2}
@@ -63,8 +66,6 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
 
