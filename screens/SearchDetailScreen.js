@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, FlatList } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -76,12 +83,22 @@ const SearchDetailScreen = (props) => {
           renderItem={renderListItem}
         />
       ) : (
-        <View style={styles.centered}>
-          <AntDesign name="frowno" size={24} color="white" />
-          <Text style={{ ...styles.text, fontSize: 16 }}>
-            {searchValue} not found
-          </Text>
-        </View>
+        <TouchableWithoutFeedback
+          style={styles.centered}
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+            {!!searchValue && (
+              <Text style={{ ...styles.text, fontSize: 16 }}>
+                {searchValue} not found
+              </Text>
+            )}
+          </View>
+        </TouchableWithoutFeedback>
       )}
     </View>
   );

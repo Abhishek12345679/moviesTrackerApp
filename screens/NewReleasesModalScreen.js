@@ -50,7 +50,7 @@ const NewReleasesModalScreen = (props) => {
           Watch what you wish
         </Text>
         <Text style={{ ...styles.text, fontSize: 12 }}>
-          with ❤️ from the Movii Community
+          with ❤️ from the Movi Community
         </Text>
       </View>
       <View style={styles.form}>

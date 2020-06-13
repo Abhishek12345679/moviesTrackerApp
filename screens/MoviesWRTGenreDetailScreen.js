@@ -23,6 +23,8 @@ import * as UserActions from "../store/actions/UserActions";
 import Colors from "../constants/Colors";
 import { createSelector } from "reselect";
 
+import DialogInput from "react-native-dialog-input";
+
 const GenreMovies = createSelector(
   (state) => state.Movies.moviesWRTGenre,
   (moviesWRTGenre) => moviesWRTGenre
@@ -76,11 +78,14 @@ const MoviesWRTGenreDetailScreen = (props) => {
       text = "Want to Watch";
     } else if (saved_location === "Add_to_My_Movies") {
       text = "Add to My Movies";
+    } else {
+      text = saved_location.toLowerCase();
     }
     return text;
   };
 
   let [buttonText, setButtonText] = useState(buttonTextGenerator());
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
 
   const openActionSheet = () => {
     showActionSheetWithOptions(
@@ -90,6 +95,7 @@ const MoviesWRTGenreDetailScreen = (props) => {
           "Add to Watched",
           "Currently Watching",
           "Want to Watch",
+          "Add New",
         ],
         cancelButtonIndex: 0,
       },
@@ -141,6 +147,9 @@ const MoviesWRTGenreDetailScreen = (props) => {
           setTimeout(() => {
             setLoading(false);
           }, 3000);
+        } else if (buttonIndex === 4) {
+          setIsDialogVisible(true);
+          //show an alert window to create a new board
         }
       }
     );
@@ -237,6 +246,34 @@ const MoviesWRTGenreDetailScreen = (props) => {
             This is the intellectual property of Moviéy (2020-)
           </Text>
         </View>
+        <DialogInput
+          isDialogVisible={isDialogVisible}
+          title={"Create a New Board"}
+          message={"Enter a New Name for a new board"}
+          hintInput={"Inspirations"}
+          submitInput={(inputText) => {
+            //FIXME:need an action-reducer pattern here
+            dispatch(
+              UserActions.addBoard(
+                Math.random().toString(),
+                inputText.toUpperCase(),
+                inputText
+              )
+            );
+            setButtonText(inputText);
+            dispatch(
+              UserActions.saveMovies(
+                selectedMovieId,
+                selectedMovie.title,
+                selectedMovie.posterUrl,
+                selectedMovie.year,
+                inputText.toUpperCase()
+              )
+            );
+            setIsDialogVisible(false);
+          }}
+          closeDialog={() => setIsDialogVisible(false)}
+        />
       </LinearGradient>
     </ScrollView>
   );

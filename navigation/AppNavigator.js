@@ -188,7 +188,7 @@ const newReleasesNavigator = () => {
       mode="modal"
       screenOptions={{
         ...defaultStackNavigationOptions,
-        headerTitle: "Movii",
+        headerTitle: "Movi",
         gestureEnabled: true,
         cardOverlayEnabled: true,
         ...TransitionPresets.ModalPresentationIOS,

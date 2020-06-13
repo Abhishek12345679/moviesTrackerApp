@@ -98,22 +98,35 @@ const MovieDetailScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [isDialogVisible, setIsDialogVisible] = useState(false);
 
+  // console.log(boards);
+  let boardstest = [
+    "Add New",
+    "Cancel",
+    "Add to Watched",
+    "Currently Watching",
+    "Want to Watch",
+  ];
+
+  boards.forEach((item) => {
+    boardstest.push(item.title);
+  });
+
   const openActionSheet = () => {
     showActionSheetWithOptions(
       {
-        options: [
-          "Cancel",
-          "Add to Watched",
-          "Currently Watching",
-          "Want to Watch",
-          "Add New",
-        ],
-        cancelButtonIndex: 0,
+        // options: [
+        //   "Cancel",
+        //   "Add to Watched",
+        //   "Currently Watching",
+        //   "Want to Watch",
+        //   "Add New",
+        // ],
+        options: boardstest,
       },
       (buttonIndex) => {
-        if (buttonIndex === 0) {
+        if (buttonIndex === 1) {
           //cancel
-        } else if (buttonIndex === 1) {
+        } else if (buttonIndex === 2) {
           setLoading(true);
           setButtonText("Watched");
           dispatch(
@@ -128,7 +141,7 @@ const MovieDetailScreen = (props) => {
           setTimeout(() => {
             setLoading(false);
           }, 3000);
-        } else if (buttonIndex === 2) {
+        } else if (buttonIndex === 3) {
           setLoading(true);
           setButtonText("Currently Watching");
           dispatch(
@@ -143,7 +156,7 @@ const MovieDetailScreen = (props) => {
           setTimeout(() => {
             setLoading(false);
           }, 3000);
-        } else if (buttonIndex === 3) {
+        } else if (buttonIndex === 4) {
           setLoading(true);
           setButtonText("Want to Watch");
           dispatch(
@@ -158,9 +171,24 @@ const MovieDetailScreen = (props) => {
           setTimeout(() => {
             setLoading(false);
           }, 3000);
-        } else if (buttonIndex === 4) {
+        } else if (buttonIndex === 1) {
           setIsDialogVisible(true);
           //show an alert window to create a new board
+        } else {
+          setLoading(true);
+          setButtonText(boardstest[buttonIndex]);
+          dispatch(
+            UserActions.saveMovies(
+              selectedMovieId,
+              selectedMovie.title,
+              selectedMovie.posterUrl,
+              selectedMovie.year,
+              boardstest[buttonIndex].toUpperCase()
+            )
+          );
+          setTimeout(() => {
+            setLoading(false);
+          }, 3000);
         }
       }
     );

@@ -406,7 +406,7 @@ const MoviesScreen = (props) => {
 
 export const screenOptions = (navData) => {
   return {
-    headerTitle: "Movii",
+    headerTitle: "Movi",
     headerRight: () => (
       <HeaderSearchComponent
         onPress={() => {
