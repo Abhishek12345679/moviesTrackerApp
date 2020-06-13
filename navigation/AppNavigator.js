@@ -175,6 +175,15 @@ const moviesScreenNavigator = () => {
         component={MoviesDetailScreen}
         options={MoviesDetailScreenOptions}
       />
+      <MoviesScreenStackNavigator.Screen
+        name="SearchDetailScreen"
+        component={SearchDetailScreen}
+        options={{
+          ...SearchDetailScreenOptions,
+          headerShown: false,
+          ...TransitionPresets.FadeFromBottomAndroid,
+        }}
+      />
     </MoviesScreenStackNavigator.Navigator>
   );
 };
