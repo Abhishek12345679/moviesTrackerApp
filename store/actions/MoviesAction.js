@@ -136,9 +136,9 @@ export const loadAll = () => {
   return async (dispatch, getState) => {
     try {
       //stories response
-      const moviesResponse = await fetch(
-        `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=tokyo`
-      );
+      // const moviesResponse = await fetch(
+      //   `https://www.omdbapi.com/?apikey=${config.OMDB_API_KEY}&s=tokyo`
+      // );
       // trending movies
       const TrendingMoviesResponse = await fetch(
         `https://api.themoviedb.org/3/trending/all/day?api_key=${config.TMDB_API_KEY}`
@@ -156,7 +156,7 @@ export const loadAll = () => {
       );
 
       if (
-        !moviesResponse.ok ||
+        // !moviesResponse.ok ||
         !TrendingMoviesResponse.ok ||
         !trendingTVResponse.ok ||
         !trendingAnimeResponse.ok
@@ -164,7 +164,7 @@ export const loadAll = () => {
         throw new Error("failed response");
       }
 
-      const movies = await moviesResponse.json();
+      // const movies = await moviesResponse.json();
       const trendingMovies = await TrendingMoviesResponse.json();
       const trendingTV = await trendingTVResponse.json();
       const trendingAnime = await trendingAnimeResponse.json();
@@ -173,18 +173,18 @@ export const loadAll = () => {
 
       //stories array
 
-      const loadedMoviesLength = movies.Search.length;
+      // const loadedMoviesLength = movies.Search.length;
 
-      for (let i = 0; i < 6; i++) {
-        loadedStories.push(
-          new Movie(
-            movies.Search[i].imdbID,
-            movies.Search[i].Title,
-            movies.Search[i].Poster,
-            movies.Search[i].Year
-          )
-        );
-      }
+      // for (let i = 0; i < 6; i++) {
+      //   loadedStories.push(
+      //     new Movie(
+      //       movies.Search[i].imdbID,
+      //       movies.Search[i].Title,
+      //       movies.Search[i].Poster,
+      //       movies.Search[i].Year
+      //     )
+      //   );
+      // }
 
       //trending movies array
 
@@ -300,7 +300,7 @@ export const loadAll = () => {
 
       dispatch({
         type: LOAD_ALL,
-        movies: loadedStories,
+        // movies: loadedStories,
         new_releases: loadedTrendingMovies,
         new_tv_shows: loadedNewTVShows,
         anime: loadedAnime,

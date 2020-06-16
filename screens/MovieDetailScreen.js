@@ -43,6 +43,8 @@ const MovieDetailScreen = (props) => {
   const user_movies = useSelector((state) => state.UserMovies.userMovies);
   const boards = useSelector((state) => state.UserMovies.boards);
 
+  const [shrunkenPlotState, setShrunkenPlotState] = useState(true);
+
   // is it neccesary to optimize here ? if yes, then how to do it ?
   if (moviesType === "TV") {
     movies = useSelector((state) => state.Movies.new_tv_shows);
@@ -205,54 +207,92 @@ const MovieDetailScreen = (props) => {
   return (
     <ScrollView style={styles.screen}>
       <LinearGradient
-        colors={["black", Colors.lightblue]}
+        colors={[Colors.lightblue, "black"]}
         style={styles.header}
       >
         <View style={styles.row}>
-          <Image
-            source={{ uri: selectedMovie.posterUrl }}
-            style={styles.movieItem}
-          />
-          {!selectedMovieTitle > 15 ? (
-            <View style={styles.basicdetails}>
-              <View>
-                <Text style={styles.text}>{selectedMovieTitle}</Text>
-              </View>
-              <View style={styles.ratingsContainer}>
-                <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
-                <AntDesign name="star" color="gold" size={23} />
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.yearText}>{selectedMovie.language} | </Text>
-                <Text style={styles.yearText}>
-                  {selectedMovie.year.substr(0, 4)}
-                </Text>
-              </View>
-            </View>
-          ) : (
-            <View style={{ ...styles.basicdetails, marginHorizontal: 75 }}>
-              <View>
-                <Text style={{ ...styles.text, fontSize: 15 }}>
-                  {selectedMovieTitle}
-                </Text>
-              </View>
+          <LinearGradient
+            colors={[Colors.lightblue, "black"]}
+            style={{
+              ...styles.movieItem,
+              // position: "absolute",
+              opacity: 0.7,
+              // justifyContent: "flex-end",
+              // alignItems: "flex-end",
+            }}
+          >
+            <Image
+              source={{ uri: selectedMovie.posterUrl }}
+              style={styles.movieItem}
+            />
+          </LinearGradient>
+          <View
+            style={{
+              ...styles.movieItem,
+              justifyContent: "flex-end",
+              alignItems: "flex-end",
+              position: "absolute",
+              marginTop: 12.5,
+              paddingHorizontal: 10,
+            }}
+          >
+            <TouchableOpacity
+              disabled={!!alreadySaved}
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: Colors.primaryColor,
+              }}
+              onPress={openActionSheet}
+            >
+              {!loading ? (
+                <AntDesign name="plus" size={23} color="#fff" />
+              ) : (
+                <ActivityIndicator size="small" color={Colors.lightblue} />
+              )}
+            </TouchableOpacity>
+          </View>
+          <View style={styles.basicdetails}>
+            <View style={{ flexDirection: "column" }}>
+              <Text style={styles.text}>{selectedMovieTitle}</Text>
 
-              <View style={styles.ratingsContainer}>
-                <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
-                <AntDesign name="star" color="gold" size={23} />
-              </View>
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.yearText}>{selectedMovie.language} | </Text>
                 <Text style={styles.yearText}>
-                  {selectedMovie.year.substr(0, 4)}
+                  {selectedMovie.year.substr(0, 4)} |
                 </Text>
+                <Text style={styles.yearText}>{selectedMovie.language} | </Text>
+                <Text style={styles.yearText}> Runtime </Text>
               </View>
             </View>
-          )}
+            <View style={styles.ratingsContainer}>
+              <Text style={styles.ratingsText}>{selectedMovie.ratings}</Text>
+              <AntDesign name="star" color="gold" size={23} />
+            </View>
+          </View>
         </View>
+
         <View style={styles.plotcontainer}>
-          <Text style={styles.plotText}>
-            {selectedMovie.plot.toString().substr(0, 500)}...
+          {shrunkenPlotState ? (
+            <Text style={styles.plotText}>
+              {selectedMovie.plot.toString().substr(0, 100)}...
+            </Text>
+          ) : (
+            <Text style={styles.plotText}>{selectedMovie.plot.toString()}</Text>
+          )}
+          <Text
+            style={{
+              ...styles.plotText,
+              color: "#fff",
+              fontFamily: "apple-bold",
+            }}
+            onPress={() => {
+              setShrunkenPlotState((state) => !state);
+            }}
+          >
+            See more
           </Text>
         </View>
         {/* <Text style={styles.text}>Cast</Text>
@@ -263,24 +303,22 @@ const MovieDetailScreen = (props) => {
           data={selectedMovie.cast}
           renderItem={renderCastItem}
         /> */}
-        <View style={styles.savebtnContainer}>
+        {/* <View style={styles.savebtnContainer}>
           <TouchableOpacity
             disabled={!!alreadySaved}
             style={styles.addtomymoviesbtn}
             onPress={openActionSheet}
           >
-            {!loading ? (
-              <Text style={styles.text}>{buttonText}</Text>
-            ) : (
-              <ActivityIndicator size="small" color={Colors.lightblue} />
-            )}
+            
           </TouchableOpacity>
-        </View>
+        </View> */}
+
         <View style={styles.plotcontainer}>
           <Text style={{ ...styles.plotText, color: Colors.grey }}>
             This is the intellectual property of Moviéy (2020-)
           </Text>
         </View>
+
         <DialogInput
           isDialogVisible={isDialogVisible}
           title={"Create a New Board"}
@@ -327,7 +365,7 @@ const styles = StyleSheet.create({
   },
   movieItem: {
     width: "100%",
-    height: 250,
+    height: 300,
     shadowColor: "#fff",
     shadowOpacity: 0.2,
     shadowOffset: {
@@ -335,18 +373,24 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowRadius: 10,
+    marginBottom: 10,
   },
   hideFooter: {
     backgroundColor: null,
   },
   basicdetails: {
-    flexDirection: "column",
+    flexDirection: "row",
+    // marginStart: 20,
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    marginTop: 20,
   },
   text: {
     // fontFamily: "fancy-font",
     fontFamily: "apple-bold",
     color: "#FFF",
-    fontSize: 15,
+    fontSize: 17,
     padding: 3,
   },
   headerText: {
@@ -364,8 +408,8 @@ const styles = StyleSheet.create({
     padding: 3,
   },
   yearText: {
-    fontSize: 12,
-    fontFamily: "apple-bold",
+    fontSize: 16,
+    fontFamily: "apple-regular",
     color: "#c2c2c2",
   },
   // row: {
@@ -390,7 +434,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   plotcontainer: {
-    padding: 20,
+    padding: 10,
     marginVertical: 10,
     alignItems: "center",
     justifyContent: "center",

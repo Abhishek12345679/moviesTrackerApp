@@ -88,5 +88,4 @@ const UserMoviesReducer = (state = initialState, action) => {
       return state;
   }
 };
-
 export default UserMoviesReducer;

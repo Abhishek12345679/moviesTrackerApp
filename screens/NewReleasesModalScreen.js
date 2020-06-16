@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import Colors from "../constants/Colors";
 import * as Linking from "expo-linking";
+import * as WebBrowser from "expo-web-browser";
 
 const Wrapper = (props) => {
   return (
@@ -14,7 +15,8 @@ const Wrapper = (props) => {
 
 const Anchor = (props) => {
   const handlePress = () => {
-    Linking.openURL(props.href);
+    WebBrowser.openBrowserAsync(props.href);
+    // Linking.openURL(props.href);
     // props.onPress && props.onPress();
   };
 
