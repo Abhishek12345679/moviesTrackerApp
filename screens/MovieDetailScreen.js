@@ -1,4 +1,5 @@
 //TODO: do the same changes for genreDetailScreen
+//TODO: outsource home and extra fragments
 
 import React, { useState } from "react";
 import {
@@ -263,7 +264,7 @@ const MovieDetailScreen = (props) => {
               height: 30,
               alignItems: "center",
               justifyContent: "center",
-              marginTop:10
+              marginTop: 10,
             }}
           >
             <SegmentedControlIOS

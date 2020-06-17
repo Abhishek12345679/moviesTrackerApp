@@ -356,14 +356,14 @@ export const searchMovies = (MovieTitle) => {
           );
           return new Movie( // create new Movie
             searchedMovie.id.toString(),
-            searchedMovie.title,
-            // .toLowerCase()
-            // .replace(
-            //   MovieTitle,
-            //   <Text style={{ fontFamily: "apple-bold" }}>{MovieTitle}</Text>
-            // ),
+            searchedMovie.media_type === "movie"
+              ? searchedMovie.title
+              : searchedMovie.name,
             posterBaseUrl + searchedMovie.poster_path,
-            searchedMovie.release_date,
+            searchedMovie.media_type === "movie"
+              ? searchedMovie.release_date
+              : searchedMovie.first_air_date,
+            // [],
             extraData.cast,
             searchedMovie.overview,
             searchedMovie.vote_average,
