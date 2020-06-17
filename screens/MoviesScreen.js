@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Image,
   RefreshControl,
+  SafeAreaView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -131,9 +132,9 @@ const MoviesScreen = (props) => {
       layout={[
         {
           key: "story",
-          width: 80,
-          height: 80,
-          borderRadius: 40,
+          width: 60,
+          height: 60,
+          borderRadius: 30,
           marginHorizontal: 10,
           marginVertical: 7.5,
         },
@@ -228,178 +229,184 @@ const MoviesScreen = (props) => {
     >
       {/* new releases stories */}
       <StatusBar barStyle="light-content" />
-      <SkeletonContent
-        boneColor="#303030"
-        highlightColor="#252525"
-        containerStyle={styles.headerCont}
-        isLoading={loading || refreshing}
-        layout={[styles.headerTextSkeleton]}
-      >
-        <View style={styles.headerCont}>
-          <Text style={styles.headerText}> New Releases </Text>
+      <SafeAreaView style={{ flex: 1 }}>
+        <SkeletonContent
+          boneColor="#303030"
+          highlightColor="#252525"
+          containerStyle={styles.headerCont}
+          isLoading={loading || refreshing}
+          layout={[styles.headerTextSkeleton]}
+        >
+          <View style={styles.headerCont}>
+            <Text style={styles.headerText}> New Releases </Text>
+          </View>
+        </SkeletonContent>
+        <View>
+          <FlatList
+            ListHeaderComponent={
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate("addstoryModal")}
+                style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: 30,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderColor: Colors.lightblue,
+                  borderWidth: 2,
+                  marginHorizontal: 10,
+                }}
+              >
+                <Ionicons name="ios-add" size={30} color="#fff" />
+              </TouchableOpacity>
+            }
+            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            data={Stories}
+            renderItem={renderStoriesItem}
+            contentContainerStyle={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />
         </View>
-      </SkeletonContent>
-      <View>
-        <FlatList
-          ListHeaderComponent={
-            <TouchableOpacity
-              onPress={() => props.navigation.navigate("addstoryModal")}
-              style={{
-                width: 90,
-                height: 90,
-                borderRadius: 45,
-                alignItems: "center",
-                justifyContent: "center",
-                borderColor: Colors.lightblue,
-                borderWidth: 1,
-                marginHorizontal: 10,
-              }}
-            >
-              <Ionicons name="ios-add" size={30} color="#fff" />
-            </TouchableOpacity>
-          }
-          keyExtractor={(item) => item.id}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          data={Stories}
-          renderItem={renderStoriesItem}
-        />
-      </View>
 
-      <View>
-        <SkeletonContent
-          boneColor="#303030"
-          containerStyle={styles.headerCont}
-          highlightColor="#252525"
-          containerStyle={styles.headerCont}
-          isLoading={loading || refreshing}
-          layout={[styles.headerTextSkeleton]}
-        >
-          <View style={styles.headerCont}>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                props.navigation.navigate({
-                  name: "SeeAllScreen",
-                  params: {
-                    new_releases: true,
-                    headerTitle: "Trending Movies",
-                  },
-                });
-              }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.headerText}> Movies </Text>
-                <Ionicons
-                  style={{ marginStart: 5 }}
-                  name="ios-arrow-forward"
-                  size={22}
-                  color={Colors.lightblue}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </SkeletonContent>
-        <FlatList
-          contentContainerStyle={{
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          keyExtractor={(item) => item.id}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          data={new_releases}
-          renderItem={renderTrendingMoviesItem}
-        />
-      </View>
+        <View>
+          <SkeletonContent
+            boneColor="#303030"
+            containerStyle={styles.headerCont}
+            highlightColor="#252525"
+            containerStyle={styles.headerCont}
+            isLoading={loading || refreshing}
+            layout={[styles.headerTextSkeleton]}
+          >
+            <View style={styles.headerCont}>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  props.navigation.navigate({
+                    name: "SeeAllScreen",
+                    params: {
+                      new_releases: true,
+                      headerTitle: "Trending Movies",
+                    },
+                  });
+                }}
+              >
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.headerText}> Movies </Text>
+                  <Ionicons
+                    style={{ marginStart: 5 }}
+                    name="ios-arrow-forward"
+                    size={22}
+                    color={Colors.lightblue}
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </SkeletonContent>
+          <FlatList
+            contentContainerStyle={{
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            data={new_releases}
+            renderItem={renderTrendingMoviesItem}
+          />
+        </View>
 
-      {/* TV SHOWS */}
+        {/* TV SHOWS */}
 
-      <View>
-        <SkeletonContent
-          boneColor="#303030"
-          containerStyle={styles.headerCont}
-          highlightColor="#252525"
-          containerStyle={styles.headerCont}
-          isLoading={loading || refreshing}
-          layout={[styles.headerTextSkeleton]}
-        >
-          <View style={styles.headerCont}>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                props.navigation.navigate({
-                  name: "SeeAllScreen",
-                  params: {
-                    new_tv_shows: true,
-                    headerTitle: "Trending TV Shows",
-                  },
-                });
-              }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.headerText}> TV Shows </Text>
-                <Ionicons
-                  style={{ marginStart: 5 }}
-                  name="ios-arrow-forward"
-                  size={22}
-                  color={Colors.lightblue}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </SkeletonContent>
-        <FlatList
-          keyExtractor={(item) => item.id}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          data={new_tv_shows}
-          renderItem={renderTrendingTVItem}
-        />
-      </View>
+        <View>
+          <SkeletonContent
+            boneColor="#303030"
+            containerStyle={styles.headerCont}
+            highlightColor="#252525"
+            containerStyle={styles.headerCont}
+            isLoading={loading || refreshing}
+            layout={[styles.headerTextSkeleton]}
+          >
+            <View style={styles.headerCont}>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  props.navigation.navigate({
+                    name: "SeeAllScreen",
+                    params: {
+                      new_tv_shows: true,
+                      headerTitle: "Trending TV Shows",
+                    },
+                  });
+                }}
+              >
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.headerText}> TV Shows </Text>
+                  <Ionicons
+                    style={{ marginStart: 5 }}
+                    name="ios-arrow-forward"
+                    size={22}
+                    color={Colors.lightblue}
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </SkeletonContent>
+          <FlatList
+            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            data={new_tv_shows}
+            renderItem={renderTrendingTVItem}
+          />
+        </View>
 
-      {/* Anime */}
+        {/* Anime */}
 
-      <View>
-        <SkeletonContent
-          boneColor="#303030"
-          containerStyle={styles.headerCont}
-          highlightColor="#252525"
-          containerStyle={styles.headerCont}
-          isLoading={loading || refreshing}
-          layout={[styles.headerTextSkeleton]}
-        >
-          <View style={styles.headerCont}>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                props.navigation.navigate({
-                  name: "SeeAllScreen",
-                  params: {
-                    moviesType: "anime",
-                    goToAnime: true,
-                    headerTitle: "Trending Anime",
-                  },
-                });
-              }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.headerText}> Anime </Text>
-                <Ionicons
-                  style={{ marginStart: 5 }}
-                  name="ios-arrow-forward"
-                  size={22}
-                  color={Colors.lightblue}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </SkeletonContent>
-        <FlatList
-          keyExtractor={(item) => item.id}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          data={anime}
-          renderItem={renderAnimeItem}
-        />
-      </View>
+        <View>
+          <SkeletonContent
+            boneColor="#303030"
+            containerStyle={styles.headerCont}
+            highlightColor="#252525"
+            containerStyle={styles.headerCont}
+            isLoading={loading || refreshing}
+            layout={[styles.headerTextSkeleton]}
+          >
+            <View style={styles.headerCont}>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  props.navigation.navigate({
+                    name: "SeeAllScreen",
+                    params: {
+                      moviesType: "anime",
+                      goToAnime: true,
+                      headerTitle: "Trending Anime",
+                    },
+                  });
+                }}
+              >
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.headerText}> Anime </Text>
+                  <Ionicons
+                    style={{ marginStart: 5 }}
+                    name="ios-arrow-forward"
+                    size={22}
+                    color={Colors.lightblue}
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </SkeletonContent>
+          <FlatList
+            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            data={anime}
+            renderItem={renderAnimeItem}
+          />
+        </View>
+      </SafeAreaView>
     </ScrollView>
   );
 };
@@ -436,9 +443,9 @@ const styles = StyleSheet.create({
     marginEnd: 5,
   },
   storyItem: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     shadowColor: Colors.white,
     shadowOpacity: 0,
     shadowOffset: {
@@ -450,13 +457,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  storyImage: {
-    width: 65,
-    height: 65,
-    borderRadius: 65 / 2,
-  },
   new_releases: {
-    // flex: 1,
     width: 150,
     height: 250,
     marginHorizontal: 7.5,
@@ -472,7 +473,6 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 5,
     marginStart: 10,
-    // marginVertical: 5,
     alignItems: "center",
   },
   headerTextSkeleton: {

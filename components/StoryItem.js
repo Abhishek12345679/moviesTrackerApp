@@ -9,12 +9,7 @@ const StoryItem = (props) => {
       onPress={props.onPress}
       style={styles.movieItem}
     >
-      <View style={{...styles.background,...props.style}}>
-        {/* <Image
-          resizeMode="cover"
-          source={{ uri: props.posterUrl }}
-          style={styles.image}
-        /> */}
+      <View style={{ ...styles.background, ...props.style }}>
       </View>
     </TouchableOpacity>
   );
@@ -22,8 +17,8 @@ const StoryItem = (props) => {
 
 const styles = StyleSheet.create({
   movieItem: {
-    width: 90,
-    height: 90,
+    width: 60,
+    height: 60,
     shadowColor: "#000",
     shadowOpacity: 0.7,
     shadowOffset: {

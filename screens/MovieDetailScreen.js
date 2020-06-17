@@ -1,3 +1,5 @@
+//TODO: do the same changes for genreDetailScreen
+
 import React, { useState } from "react";
 import {
   View,
@@ -11,6 +13,7 @@ import {
   FlatList,
   Image,
   Alert,
+  SegmentedControlIOS,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -20,8 +23,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../constants/Colors";
 
-import MovieItem from "../components/MovieItem";
-import CastMember from "../components/CastMember";
+// import CastMember from "../components/CastMember";
 
 import * as UserActions from "../store/actions/UserActions";
 
@@ -35,7 +37,6 @@ const MovieDetailScreen = (props) => {
 
   selectedMovieId = props.route.params.movieId;
 
-  // const new_releases = props.route.params.new_releases;
   const all_movies = props.route.params.all_movies;
   const searched_movies = props.route.params.searched_movies;
   const moviesType = props.route.params.moviesType;
@@ -44,6 +45,7 @@ const MovieDetailScreen = (props) => {
   const boards = useSelector((state) => state.UserMovies.boards);
 
   const [shrunkenPlotState, setShrunkenPlotState] = useState(true);
+  const [index, setIndex] = useState(0);
 
   // is it neccesary to optimize here ? if yes, then how to do it ?
   if (moviesType === "TV") {
@@ -196,13 +198,13 @@ const MovieDetailScreen = (props) => {
     );
   };
 
-  const renderCastItem = ({ item }) => (
-    <CastMember
-      castName={item.name}
-      posterUrl={item.profileUrl}
-      character={item.character}
-    />
-  );
+  // const renderCastItem = ({ item }) => (
+  //   <CastMember
+  //     castName={item.name}
+  //     posterUrl={item.profileUrl}
+  //     character={item.character}
+  //   />
+  // );
 
   return (
     <ScrollView style={styles.screen}>
@@ -232,7 +234,7 @@ const MovieDetailScreen = (props) => {
               justifyContent: "flex-end",
               alignItems: "flex-end",
               position: "absolute",
-              marginTop: 12.5,
+              marginTop: 25,
               paddingHorizontal: 10,
             }}
           >
@@ -255,6 +257,25 @@ const MovieDetailScreen = (props) => {
               )}
             </TouchableOpacity>
           </View>
+          <View
+            style={{
+              width: "100%",
+              height: 30,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop:10
+            }}
+          >
+            <SegmentedControlIOS
+              style={{ width: 200, height: 30, padding: 0 }}
+              backgroundColor="#ccc"
+              values={["Home", "Extra"]}
+              selectedIndex={index}
+              onChange={(event) => {
+                setIndex(event.nativeEvent.selectedSegmentIndex);
+              }}
+            />
+          </View>
           <View style={styles.basicdetails}>
             <View style={{ flexDirection: "column" }}>
               <Text style={styles.text}>{selectedMovieTitle}</Text>
@@ -275,6 +296,9 @@ const MovieDetailScreen = (props) => {
         </View>
 
         <View style={styles.plotcontainer}>
+          <View style={styles.textWrapper}>
+            <Text style={{ ...styles.text, color: "black" }}>Plot</Text>
+          </View>
           {shrunkenPlotState ? (
             <Text style={styles.plotText}>
               {selectedMovie.plot.toString().substr(0, 100)}...
@@ -287,12 +311,13 @@ const MovieDetailScreen = (props) => {
               ...styles.plotText,
               color: "#fff",
               fontFamily: "apple-bold",
+              marginTop: 3,
             }}
             onPress={() => {
               setShrunkenPlotState((state) => !state);
             }}
           >
-            See more
+            {shrunkenPlotState ? "See more" : "See Less"}
           </Text>
         </View>
         {/* <Text style={styles.text}>Cast</Text>
@@ -303,17 +328,8 @@ const MovieDetailScreen = (props) => {
           data={selectedMovie.cast}
           renderItem={renderCastItem}
         /> */}
-        {/* <View style={styles.savebtnContainer}>
-          <TouchableOpacity
-            disabled={!!alreadySaved}
-            style={styles.addtomymoviesbtn}
-            onPress={openActionSheet}
-          >
-            
-          </TouchableOpacity>
-        </View> */}
 
-        <View style={styles.plotcontainer}>
+        <View style={{ ...styles.plotcontainer }}>
           <Text style={{ ...styles.plotText, color: Colors.grey }}>
             This is the intellectual property of Moviéy (2020-)
           </Text>
@@ -347,6 +363,9 @@ const MovieDetailScreen = (props) => {
           }}
           closeDialog={() => setIsDialogVisible(false)}
         />
+        <View
+          style={{ width: "100%", height: 50, backgroundColor: "#000" }}
+        ></View>
       </LinearGradient>
     </ScrollView>
   );
@@ -412,37 +431,23 @@ const styles = StyleSheet.create({
     fontFamily: "apple-regular",
     color: "#c2c2c2",
   },
-  // row: {
-  //   flexDirection: "column",
-  //   alignItems: "center",
-  //   justifyContent: "space-between",
-  // },
-  addtomymoviesbtn: {
-    marginBottom: 5,
-    marginHorizontal: 20,
-    backgroundColor: "black",
-    width: 200,
-    height: 60,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  savebtnContainer: {
-    width: "100%",
-    height: 65,
-    alignItems: "center",
-    marginTop: 20,
-  },
   plotcontainer: {
-    padding: 10,
+    paddingHorizontal: 10,
     marginVertical: 10,
-    alignItems: "center",
-    justifyContent: "center",
   },
   plotText: {
     color: Colors.white,
     fontFamily: "apple-regular",
-    fontSize: 12,
+    fontSize: 15,
+  },
+  textWrapper: {
+    width: 75,
+    height: 25,
+    borderRadius: 10,
+    backgroundColor: Colors.white,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
   },
 });
 
